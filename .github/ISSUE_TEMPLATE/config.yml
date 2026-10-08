@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 安全問題
+    url: https://github.com/mpragnarok/FocusCat/security/advisories/new
+    about: 請不要開公開 issue，用 GitHub 的私下回報（見 SECURITY.md）

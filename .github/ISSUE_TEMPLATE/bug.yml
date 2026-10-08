@@ -1,0 +1,58 @@
+name: 回報一個問題
+description: 有東西壞了，或行為跟說明不一樣
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **能從 App 回報的話，不用填這張表。**
+        在 FocusCat 打開「回報問題」，填好三欄後按「打開 GitHub」。標題、內容和除錯資訊都會自動帶好，個資也會先遮掉。
+
+        這張表給 App 打不開、沒辦法從 App 回報的時候用。
+        下面三欄和 App 裡的三欄一樣。
+
+        **安全性的問題請不要在這裡開**，做法見 SECURITY.md。
+  - type: textarea
+    id: what
+    attributes:
+      label: 發生什麼事
+      description: 你看到的，例如「按了完成，那件還在」
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 本來預期什麼
+      description: 你以為會怎樣
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎麼重現
+      description: 一步一步寫，讓別人照著做能看到一樣的事
+      placeholder: |
+        1. 打開 FocusCat
+        2. 按「開始」
+        3. …
+  - type: input
+    id: version
+    attributes:
+      label: FocusCat 版本
+      description: 設定視窗（⌘,）最底下那一行，例如「版本 0.6.7（…）」。App 打不開就寫你下載的 zip 檔名。
+      placeholder: 版本 0.6.7（…）
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS 版本與晶片
+      description: 「關於這台 Mac」上的版本號，順便寫是 Apple Silicon（M 系列）還是 Intel
+      placeholder: macOS 14.6（M2）
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: 其他（選填）
+      description: |
+        截圖、畫面上的錯誤訊息。
+        貼之前請看一下，裡面有沒有你的待辦、會議名稱或個資，不想公開就先刪掉。

@@ -1,0 +1,25 @@
+name: 提一個想法
+description: 想要某個功能，或覺得某個行為應該不一樣
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        FocusCat 刻意做得小：平常同一時間只有一件「正在做」，時間到也不會自己開始下一段。
+        跟這兩條牴觸的想法，可能會說不做。但還是歡迎提，說明「為什麼需要」比說明「怎麼做」更有用。
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你卡在什麼事情上
+      description: 先講情境，不用先講解法
+      placeholder: 我常常…，結果…
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 你想到的做法（選填）
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 現在你怎麼繞過去（選填）
