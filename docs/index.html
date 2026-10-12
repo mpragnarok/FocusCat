@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FocusCat｜Mac 選單列上的番茄鐘</title>
+<meta name="description" content="FocusCat 是住在 Mac 選單列上的番茄鐘。同時追好幾件事、等好幾個 AI 跑完，也知道現在該盯哪一件。">
+<link rel="icon" href="img/focuscat-app-icon.png">
+<style>
+:root{
+  --bg:#F4F3EF; --card:#FFFFFF; --control:#E8E6E1; --primary:#B5402F; --on-primary:#FFFFFF;
+  --text:#1D1D1F; --muted:#5C5B57; --work:#A63A2B; --sage:#53754B; --blue:#2B6DC6; --line:#E2DFD8;
+  --shadow:0 10px 30px rgba(40,30,20,.10);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1C1E; --card:#2A2A2D; --control:#3A3A3E; --primary:#B5402F; --on-primary:#FFFFFF;
+    --text:#F2F2F2; --muted:#B4B2AC; --work:#FF9180; --sage:#8FBF82; --blue:#5AA2FF; --line:#3A3A3E;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C1C1E; --card:#2A2A2D; --control:#3A3A3E; --text:#F2F2F2; --muted:#B4B2AC; --work:#FF9180;
+  --sage:#8FBF82; --blue:#5AA2FF; --line:#3A3A3E; --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.65;font-size:17px}
+::selection{background:#F8ECEA;color:#1D1D1F}
+a{color:var(--blue);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* 頂端 */
+.hero{padding:72px 0 40px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:48px;align-items:center}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.brand img{width:56px;height:56px;border-radius:14px}
+.brand span{font-weight:700;font-size:22px;letter-spacing:-.01em}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.15;letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance}
+.lede{font-size:19px;color:var(--muted);margin:0 0 28px;max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 22px;border-radius:12px;
+  font-weight:600;font-size:16px;text-decoration:none;transition:transform .15s ease-out,box-shadow .15s ease-out}
+.btn-primary{background:var(--primary);color:var(--on-primary);box-shadow:0 4px 14px rgba(181,64,47,.28)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(181,64,47,.32)}
+.btn-secondary{background:var(--control);color:var(--text)}
+.req{font-size:14px;color:var(--muted);margin-top:14px}
+.menubar{display:inline-flex;align-items:center;gap:10px;margin-top:26px;padding:8px 14px;border-radius:10px;
+  background:#1E1E1E;color:#ddd;font-size:13px}
+.menubar img{height:22px}
+.hero-shot{justify-self:center;width:min(340px,100%);border-radius:18px;box-shadow:var(--shadow);background:var(--card)}
+
+/* 影片 */
+.video{padding:24px 0 56px}
+.video-frame{background:#000;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/9}
+.video-frame video{display:block;width:100%;height:100%}
+.video-cap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted);margin-top:10px}
+
+/* 功能 */
+section h2{font-size:clamp(26px,3.4vw,34px);letter-spacing:-.015em;line-height:1.25;margin:0 0 10px;text-wrap:balance}
+.sec-lede{color:var(--muted);margin:0 0 36px;max-width:40em}
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center;padding:36px 0;border-top:1px solid var(--line)}
+.feature:nth-child(even) .feature-text{order:2}
+.feature h3{font-size:22px;margin:0 0 10px;letter-spacing:-.01em}
+.feature p{margin:0 0 10px;color:var(--muted)}
+.feature .ver{font-size:13px;color:var(--muted)}
+.shot{border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:var(--card);justify-self:center;width:min(380px,100%)}
+.shot img{display:block;width:100%}
+.crop{aspect-ratio:var(--ar)}
+.crop img{margin-top:calc(var(--y) * -1)}
+.band{background:#1E1E1E;width:min(460px,100%);padding:8px}
+
+.deep{padding:64px 0 24px;border-top:1px solid var(--line);margin-top:24px}
+.deep-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:start}
+.points{list-style:none;padding:0;margin:0;display:grid;gap:18px}
+.points b{display:block;font-size:17px;margin-bottom:4px}
+.points span{color:var(--muted);font-size:16px}
+.code-card{margin:0;background:#1E1E1E;color:#E8E6E1;border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.code-card figcaption{font-size:13px;color:#B4B2AC;margin-bottom:10px}
+.code-card pre{margin:0;overflow-x:auto;font:14px/1.6 ui-monospace,"SF Mono",Menlo,monospace}
+.code-card p{margin:12px 0 0;font-size:13px;color:#B4B2AC}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:28px}
+.tri{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0}
+.tri .kind{display:inline-block;font:600 12px/1 ui-monospace,"SF Mono",Menlo,monospace;color:#A63A2B;background:#F8ECEA;border-radius:6px;padding:5px 8px;margin-bottom:12px}
+.tri b{display:block;font-size:17px;margin-bottom:6px}
+.tri>span:last-child{color:var(--muted);font-size:15px}
+.tri code{font-size:.9em;background:var(--control);padding:1px 5px;border-radius:5px}
+#ai .band{margin:0 auto}
+/* 安裝 */
+.install{padding:64px 0 24px;border-top:1px solid var(--line);margin-top:24px}
+.steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.steps b{display:block;font-size:17px;margin-bottom:6px}
+.steps span{color:var(--muted);font-size:15px}
+.steps .num{color:#fff}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--primary);color:#fff;font-weight:700;font-size:14px;margin-bottom:10px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:40px}
+.facts div{padding:4px 0}
+.facts b{display:block;margin-bottom:4px}
+.facts span{color:var(--muted);font-size:15px}
+footer{padding:48px 0 64px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);margin-top:56px}
+footer a{color:var(--muted)}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;padding-top:48px;gap:32px}
+  .feature{grid-template-columns:1fr;gap:22px}
+  .feature:nth-child(even) .feature-text{order:0}
+  .steps,.facts{grid-template-columns:1fr}
+  .deep-grid,.trio{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}.btn-primary:hover{transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <div class="brand"><img src="img/focuscat-app-icon.png" alt="FocusCat 圖示"><span>FocusCat</span></div>
+      <h1>同時盯好幾件事，<br>也知道現在該做哪一件</h1>
+      <p class="lede">FocusCat 是住在 Mac 選單列上的番茄鐘。手上在做哪幾件、在等誰、AI 跑到哪一步，打開面板就看得到。換去做別件之前，它會先問你一句「做到哪」。可以自己寫外掛把別的地方的事接進來，也能直接跟 Claude Code 一起用。</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/mpragnarok/FocusCat/releases/latest">下載最新版</a>
+        <a class="btn btn-secondary" href="#video">看 30 秒介紹</a>
+      </div>
+      <p class="req">macOS 13 以上，Apple Silicon 與 Intel 都可以。不用會寫程式。</p>
+      <div class="menubar" aria-label="選單列上的樣子"><img src="img/focuscat-menubar-work.png" alt="選單列上的角色與倒數 25:00">選單列上：一個小角色，旁邊是這一段還剩幾分鐘</div>
+    </div>
+    <img class="hero-shot" src="img/focuscat-panel-work-light.png" alt="FocusCat 面板：最上面是正在做的那件與番茄倒數，下面是在等和接下來">
+  </header>
+
+  <section class="video" id="video" aria-label="介紹影片">
+    <div class="video-frame">
+      <video controls preload="metadata" playsinline poster="img/promo-poster.jpg">
+        <source src="media/focuscat-promo-30s-v3.mp4" type="video/mp4">
+        你的瀏覽器不能播這支影片，可以<a href="media/focuscat-promo-30s-v3.mp4">直接下載</a>。
+      </video>
+    </div>
+    <div class="video-cap"><span>30 秒介紹</span></div>
+  </section>
+
+  <section aria-labelledby="what">
+    <h2 id="what">一個人同時跑好幾件事，最容易掉的是「我剛剛做到哪」</h2>
+    <p class="sec-lede">番茄是 25 分鐘工作、5 分鐘休息，做滿四輪休息 15 分鐘。時間到不會自己開始下一段，要你自己按。除了計時，FocusCat 幫你記下面這幾件事。</p>
+
+    <div class="feature">
+      <div class="feature-text">
+        <h3>一起做好幾件，主要那件釘著</h3>
+        <p>「現在」可以同時放好幾件。主要那件標實心圖釘，番茄的時間算在它身上。拖到第一個，就變成主要那件。</p>
+      </div>
+      <div class="shot crop" style="--ar:680/560;--y:0%"><img src="img/focuscat-panel-together-primary-light.png" alt="一起做兩件，主要那件有圖釘"></div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-text">
+        <h3>放下前，留一句「做到哪」</h3>
+        <p>換去做別件、晚點再做、放進「在等」時，面板最上面會問一句原因和做到哪。回來時，那件旁邊就寫著「上次做到：…」。不想寫，按 Enter 跳過。</p>
+      </div>
+      <div class="shot crop" style="--ar:680/260;--y:0%"><img src="img/focuscat-panel-reason-ask-light.png" alt="為什麼晚點再做？卡住了、被打斷、有更急的"></div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-text">
+        <h3>等別人的事，放著也看得到</h3>
+        <p>等 PM 回、等 QA 驗的事放進「在等」，不算專心時間，旁邊寫著等了多久。等的是 Jira 卡的話，卡片有動靜就叫你。</p>
+      </div>
+      <div class="shot crop" style="--ar:680/400;--y:79%"><img src="img/focuscat-panel-watching.png" alt="在等：等 PM 確認規格，有進展了"></div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-text">
+        <h3>AI 在背景跑，輪到你才叫你</h3>
+        <p>「自動化」那一區列出每件背景工作在哪一步、跑了幾分鐘。只有停下來等你的那件會變成「要你處理」並跳通知，還在跑的只列著，不吵你。</p>
+        <p class="ver">要你的腳本或 AI 把狀態寫成一份小檔案，FocusCat 去讀。</p>
+      </div>
+      <div class="shot crop" style="--ar:680/520;--y:113%"><img src="img/focuscat-panel-automation-light.png" alt="自動化：要你處理一件、編譯中一件、排隊中一件、做完一件"></div>
+    </div>
+
+
+    <div class="feature">
+      <div class="feature-text">
+        <h3>下班前看一眼今天</h3>
+        <p>按「今天小結」，看今天做了幾個番茄、做完幾件、中途換了幾次。</p>
+      </div>
+      <div class="shot crop" style="--ar:680/330;--y:0%"><img src="img/focuscat-panel-day-summary-light.png" alt="今天小結"></div>
+    </div>
+  </section>
+
+  <section class="deep" id="plugins" aria-labelledby="plugins-h">
+    <h2 id="plugins-h">外掛：把別的地方的事接進來</h2>
+    <p class="sec-lede">外掛是一支小程式，用什麼語言寫都可以。FocusCat 送一行 JSON 給它，它回一份 JSON，裡面是要列進建議清單的事。你的待辦散在哪裡，就寫一支外掛去那裡拿。</p>
+    <div class="deep-grid">
+      <div class="deep-text">
+        <ul class="points">
+          <li><b>附了兩支外掛</b><span>Jira：你在等的卡有動靜就叫你。自動化工作：讀你的腳本或 AI 寫的狀態檔，列出每件背景工作跑到哪一步，輪到你才跳通知。</span></li>
+          <li><b>每一件可以帶按鈕</b><span>除了標題，還能帶一行說明、網址、狀態字，和最多 4 顆按鈕：打開網址、FocusCat 內建的動作、或交回給外掛處理。</span></li>
+          <li><b>寫好先試跑</b><span>到「設定 ▸ 外掛」點進那支外掛，按「試跑」，會告訴你哪裡不對、怎麼修。新外掛預設關著，你打開它才會跑。</span></li>
+          <li><b>帳號不外流</b><span>Jira 的帳號和 token 只交給附帶的 Jira 外掛，別的外掛要了也拿不到。</span></li>
+        </ul>
+      </div>
+      <figure class="code-card" aria-label="外掛回給 FocusCat 的 JSON 範例">
+        <figcaption>外掛回給 FocusCat 的樣子</figcaption>
+<pre><code>{
+  "contract": 1,
+  "candidates": [
+    { "key": "mine:42",
+      "title": "回覆客戶的信",
+      "url": "https://…" }
+  ]
+}</code></pre>
+        <p>每一件的 key 寫成「外掛名字＋冒號＋你自己的編號」。</p>
+      </figure>
+    </div>
+  </section>
+
+  <section class="deep" id="ai" aria-labelledby="ai-h">
+    <h2 id="ai-h">跟 Claude Code 一起用</h2>
+    <p class="sec-lede">在「設定 ▸ 外掛 ▸ Claude Code 套件」按「安裝…」，一次裝好下面三樣。Claude 會知道你現在在做哪幾件，你也不用離開 Claude Code 去看番茄。</p>
+    <div class="trio">
+      <div class="tri"><span class="kind">hook</span><b>Claude 知道你在專注什麼</b><span>你每次跟 Claude 說話，它都看得到你現在在做哪幾件。新的要求不是其中一件時，它會先問你：要換掉、一起做，還是晚點再做。想要的話，也能請它在你忘了按番茄時提醒一句。</span></div>
+      <div class="tri"><span class="kind">skill</span><b>用說的就能操作</b><span>跟 Claude 說「這件事丟進來」「幫我暫停番茄鐘」「今天做了幾個番茄」，它會照做。查詢隨時可以；要動到你的清單或番茄之前，一定先問你。</span></div>
+      <div class="tri"><span class="kind">mod</span><b>輸入框上方的番茄那一行</b><span>寫著番茄還剩幾分、正在做哪一件。FocusCat 沒在跑時改成灰字「讀不到番茄狀態」，不會留著舊的倒數。打 <code>/focus-panel</code> 可以打開面板。</span></div>
+    </div>
+    <div class="shot band"><img src="img/focuscat-claude-kit-band-dark.png" alt="Claude Code 輸入框上方：番茄 12:30・寫番茄鐘使用手冊；FocusCat 沒在跑時是灰字「讀不到番茄狀態」"></div>
+  </section>
+
+  <section class="install" id="install" aria-labelledby="install-h">
+    <h2 id="install-h">安裝只要三步</h2>
+    <p class="sec-lede">第一次打開時 macOS 會擋一下，這是因為 App 沒有付費的 Apple 開發者簽章，跟 App 本身有沒有問題無關。</p>
+    <ol class="steps">
+      <li><span class="num">1</span><b>下載</b><span>到 <a href="https://github.com/mpragnarok/FocusCat/releases/latest">Releases</a> 下載 FocusCat 的 zip，點兩下解壓縮。</span></li>
+      <li><span class="num">2</span><b>拖進「應用程式」</b><span>打開 Finder，把 FocusCat 拖進左邊的「應用程式」。</span></li>
+      <li><span class="num">3</span><b>第一次按右鍵 →「打開」</b><span>還是被擋，就到「系統設定 → 隱私權與安全性」按「仍要打開」。只有第一次要做。</span></li>
+    </ol>
+    <div class="facts">
+      <div><b>有新版會告訴你</b><span>面板最下面會出現一張小卡。FocusCat 不會自己換掉自己，要你下載後再裝一次。</span></div>
+      <div><b>資料留在你的電腦</b><span>沒有帳號。檢查新版時，只問 GitHub 最新版是幾號，不送出你的任何資料；不想要可以在設定關掉。</span></div>
+      <div><b>遇到問題</b><span>從 App 裡「回報問題…」會打開 <a href="https://github.com/mpragnarok/FocusCat/issues">GitHub issue</a> 頁，內容已經填好，送出前都可以改。</span></div>
+    </div>
+  </section>
+
+  <footer>
+    頁面上的截圖都是示意畫面，用假資料產生。 · <a href="https://github.com/mpragnarok/FocusCat">GitHub</a> · <a href="https://github.com/mpragnarok/FocusCat/blob/main/SECURITY.md">安全問題怎麼回報</a>
+  </footer>
+</main>
+</body>
+</html>
