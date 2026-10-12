@@ -1,0 +1,1320 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FocusCat 使用手冊</title>
+<style>
+:root{
+  --bg:#FAF9F5; --fg:#141413; --muted:#5E5D59; --line:#E3DACC; --card:#FFFFFF;
+  --accent:#D97757; --ok:#788C5D; --warn-bg:#FBEDE6; --ok-bg:#EEF2E8;
+  --code-bg:#F1EEE6; --code-fg:#141413;
+  --serif:"Iowan Old Style","Songti TC",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1B19; --fg:#ECE9E1; --muted:#A8A49A; --line:#3A3833; --card:#252420;
+    --accent:#E8906F; --ok:#9DB57F; --warn-bg:#3A2A22; --ok-bg:#2A3124;
+    --code-bg:#2C2B27; --code-fg:#ECE9E1;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C1B19; --fg:#ECE9E1; --muted:#A8A49A; --line:#3A3833; --card:#252420;
+  --accent:#E8906F; --ok:#9DB57F; --warn-bg:#3A2A22; --ok-bg:#2A3124;
+  --code-bg:#2C2B27; --code-fg:#ECE9E1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--sans);font-size:17px;line-height:1.75;overflow-wrap:anywhere}
+.wrap{max-width:820px;margin:0 auto;padding:32px 16px 80px}
+h1,h2,h3{font-family:var(--serif);line-height:1.3}
+h1{font-size:2rem;margin:0 0 .3em}
+h2{font-size:1.45rem;margin:2.6em 0 .6em;padding-top:.6em;border-top:1px solid var(--line)}
+h3{font-size:1.12rem;margin:1.8em 0 .4em}
+p{margin:.5em 0}
+.sub{color:var(--muted);margin:0 0 1.2em}
+.when{display:inline-block;font-size:.85rem;background:var(--ok-bg);color:var(--fg);border-left:3px solid var(--ok);padding:2px 10px;margin:.2em 0 .6em}
+.note{background:var(--warn-bg);border-left:3px solid var(--accent);padding:10px 14px;margin:1em 0}
+.noshot{color:var(--muted);font-size:.9rem}
+nav.toc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 18px}
+nav.toc ol{margin:.3em 0;padding-left:1.4em}
+nav.toc ol.sub{margin:.15em 0 .4em;font-size:.92em;list-style:disc}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);color:var(--code-fg);padding:1px 5px;border-radius:4px}
+pre{font-family:var(--mono);font-size:.85rem;background:var(--code-bg);color:var(--code-fg);padding:12px 14px;border-radius:6px;white-space:pre-wrap;word-break:break-all;overflow-x:hidden;margin:.6em 0}
+pre code{background:none;padding:0}
+figure{margin:1em 0}
+figure img{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
+figure img.small{max-width:320px}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin:.8em 0;table-layout:fixed}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--card)}
+.trouble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 16px 12px;margin:1em 0}
+.trouble h3{margin-top:.8em}
+.trouble dl{margin:0}
+.trouble dt{font-weight:600;margin-top:.6em}
+.trouble dd{margin:0 0 0 0}
+ul.issues li{margin:.5em 0}
+.src{font-size:.82rem;color:var(--muted)}
+.theme-btn{float:right;font:inherit;font-size:.8rem;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:2px 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+<button class="theme-btn" type="button" id="themeBtn">切換深淺色</button>
+<h1>FocusCat 使用手冊</h1>
+<p class="sub">版本 0.6.14 · 2026-10-12 · 網頁版 · <a href="../">回到介紹頁</a></p>
+
+<nav class="toc">
+<strong>目錄</strong>
+<ol>
+<li><a href="#what">這是什麼</a></li>
+<li><a href="#focuscat">FocusCat：選單列的角色</a>
+<ol class="sub">
+<li><a href="#character-motion">角色什麼時候跑、什麼時候走</a></li>
+<li><a href="#pomodoro">番茄鐘</a></li>
+<li><a href="#break-reminder">休息提醒</a></li>
+<li><a href="#current-focus">現在專注</a></li>
+<li><a href="#motion">面板的小動畫</a></li>
+<li><a href="#long-title">名稱太長的時候</a></li>
+<li><a href="#together">同時追好幾件</a></li>
+<li><a href="#compact">專心時面板自動縮小</a></li>
+<li><a href="#watching">在等</a></li>
+<li><a href="#categories">類別與看板</a></li>
+<li><a href="#automation">自動化工作</a></li>
+<li><a href="#insights">外掛寫的一段文字</a></li>
+<li><a href="#quick-add">丟一件進來</a></li>
+<li><a href="#morning-three">早上三件事、今天小結</a></li>
+<li><a href="#meetings">開會的時候</a></li>
+<li><a href="#dnd">開始番茄時打開勿擾模式</a></li>
+<li><a href="#states">每個狀態長什麼樣</a></li>
+<li><a href="#settings">設定視窗</a></li>
+<li><a href="#hover">滑鼠移上去</a></li>
+<li><a href="#update-notice">有新版的時候</a></li>
+<li><a href="#skins">換角色</a></li>
+<li><a href="#storage">它把東西記在哪</a></li>
+<li><a href="#claude-kit">一鍵安裝到 Claude Code</a></li>
+<li><a href="#permissions">要你自己按的系統詢問</a></li>
+</ol></li>
+<li><a href="#plugins">自己寫外掛</a>
+<ol class="sub">
+<li><a href="#plugin-step1">第一步：建範本</a></li>
+<li><a href="#plugin-step2">第二步：改「改這裡」那一段</a></li>
+<li><a href="#plugin-step3">第三步：試跑</a></li>
+<li><a href="#plugin-step4">第四步：打開</a></li>
+<li><a href="#plugin-settings">讓外掛有自己的設定</a></li>
+<li><a href="#plugin-fields">外掛的類別、狀態、按鈕和文字（0.6.1）</a></li>
+<li><a href="#plugin-errors">常見的錯誤</a></li>
+</ol></li>
+<li><a href="#daily">每天怎麼用</a>
+<ol class="sub">
+<li><a href="#pick-one">選一件開始</a></li>
+<li><a href="#switch">換一件</a></li>
+<li><a href="#park">晚點再做</a></li>
+<li><a href="#reorder">排順序</a></li>
+<li><a href="#row-note">寫註解</a></li>
+<li><a href="#rename">改名稱</a></li>
+<li><a href="#done">完成</a></li>
+<li><a href="#remove">移除一件</a></li>
+<li><a href="#daily-quick-add">丟一件進來</a></li>
+<li><a href="#sources">管理來源</a></li>
+<li><a href="#tell-claude">跟 Claude 說</a></li>
+</ol></li>
+<li><a href="#reminders">提醒會從哪裡來</a></li>
+<li><a href="#trouble">出問題怎麼辦</a></li>
+<li><a href="#report">回報問題</a></li>
+<li><a href="#data">我的資料存在哪</a></li>
+<li><a href="#tests">跑測試</a></li>
+<li><a href="#maintain">給維護的人</a></li>
+</ol>
+</nav>
+
+<!-- 1 -->
+<h2 id="what">1. 這是什麼</h2>
+<p>一組幫你「一次只做一件事」的小工具。</p>
+<p>選單列的角色旁邊寫著這一段還剩幾分鐘、現在在做哪一件；點一下角色，就看得到接下來要做什麼。</p>
+<p>快到期的事，它會自己跳出來提醒，不用你記得去看。</p>
+<p>在 Finder、Dock 和通知裡，它的圖示是番茄紅底上的白色角色頭，頭頂一片番茄葉（0.6.2 換的）。</p>
+<figure><img class="small" src="img/focuscat-app-icon.png" alt="App 圖示：紅色圓角方形，中間一個白色角色頭，有兩個挖空的圓眼、倒三角鼻子，頭頂一撮綠葉"><figcaption>App 圖示</figcaption></figure>
+
+<!-- 2 -->
+<h2 id="focuscat">2. FocusCat：選單列的角色</h2>
+<span class="when">什麼時候用：從早到晚，它就待在選單列</span>
+<p>選單列右上角有一個小角色。工作中它在跑，休息時換成休息的樣子，沒在計時就慢慢走。
+角色的樣子可以換，見下面「換角色」。選單列上只有角色和時間。</p>
+<p>點一下角色就打開面板。上面是番茄鐘與現在這件事，下面是「接下來」，有到期日的排最前面、用紅字標出來。
+再下面是一排膠囊：晚點再做、今天做完、建議加進來、快到期，每一顆有自己的小圖示、寫著件數。一排放不下就排到第二行。點一顆就在原地展開那一區，再點一次收起。</p>
+<figure><img src="img/focuscat-panel-focus-light.png" alt="FocusCat 面板：上面是番茄鐘與現在這件事，下面是接下來、晚點再做、丟一件進來；標題右邊有「Jira」「對話」「筆記收件」「手動」這類來源小標籤"><figcaption>點一下角色就會打開這個面板</figcaption></figure>
+<p>每一列標題右邊的<strong>小標籤</strong>寫這件事從哪來：Jira 的卡寫「Jira」（不管你是打卡號丟進來的還是外掛帶進來的）、
+跟 Claude 說的寫「對話」、外掛帶進來的寫外掛的名字、自己加的來源寫那個來源的名字。
+現在、在等、接下來、建議加進來、晚點再做，每一列都有。標題太長會被截掉，標籤不會。</p>
+<p>自己在面板打字丟進來的也標，寫「手動」。</p>
+
+<h3 id="character-motion">角色什麼時候跑、什麼時候走</h3>
+<table>
+<tr><th>狀態</th><th>角色</th></tr>
+<tr><td>工作中</td><td>正常速度跑</td></tr>
+<tr><td>休息中</td><td>換成休息的樣子（設定 → 外觀可以關掉，關掉就跟工作時一樣在跑）</td></tr>
+<tr><td>暫停</td><td>定格，選單列的時間前面有暫停符號</td></tr>
+<tr><td>沒在計時</td><td>更慢地走（設定裡可以關掉，關掉就定格站著）</td></tr>
+<tr><td>開會中</td><td>定格，選單列顯示 🎧 和會議名稱</td></tr>
+</table>
+<p>螢幕鎖住或睡著的時候角色會停下來，不會為了畫看不到的動畫耗電。</p>
+
+<h3 id="pomodoro">番茄鐘</h3>
+<p>工作 25 分鐘、短休 5 分鐘、四輪之後長休 15 分鐘（時間可以在設定裡改）。
+<strong>不會自己開始下一段</strong>——要不要繼續由你按。</p>
+<p>分鐘數在「設定 → 番茄」改。沒在跑的時候改，選單列和面板上的時間馬上換成新的。
+正在跑的時候改，這一段照舊跑完，下一段才用新的分鐘數。</p>
+<p>上面那張卡的倒數底下有一排小圓點，是這一輪第幾個番茄：做到第幾個就亮幾顆；亮滿的那一個番茄做完，接著就是長休。
+圓點有幾顆，跟「每幾個番茄長休一次」一樣。用 VoiceOver 的話會唸「第 1 個番茄，共 4 個」。
+隔天開始的第一個番茄從第 1 顆重新算，昨天沒做滿的不會接到今天。</p>
+<p>一段時間到的時候會發生三件事：</p>
+<ul>
+<li><strong>面板自己打開</strong>。它會出現在你上次自己點開面板的那個螢幕，不會跟著滑鼠換到另一個螢幕。選單列擠不下、角色被藏起來時，也放在上次的位置。不想要就到「設定 → 提醒 → 時間到的時候」關掉「打開面板」。</li>
+<li><strong>響一聲</strong>。聲音在「設定 → 提醒 → 提示音」的下拉選單選：Mac 內建的提示音（低音、吹氣、瓶子、青蛙、放克、玻璃聲、英雄、摩斯、叮聲、啵、呼嚕、Sosumi、潛艇聲、叮噹）、角色的叫聲，或關。選的時候會當場播一次。</li>
+<li><strong>角色做「時間到」的表情</strong>：面板上的角色坐下來，旁邊冒兩道響鈴線，3 秒後恢復。</li>
+</ul>
+<p><strong>角色的叫聲</strong>：內建的白底虎斑附一段叫聲。自己放的角色要有叫聲，就在那個角色的資料夾放一個聲音檔（見<a href="#skin-sound">「換角色」</a>）。
+目前的角色沒有叫聲時，提示音那一列會寫「目前的角色沒有叫聲，先用玻璃聲代替」，旁邊有一顆「去加叫聲」，按了會切到「設定 → 外觀 → 角色造型」。
+有叫聲時，那一列底下寫用的是什麼叫聲：內建角色寫它是什麼叫聲，自己放的角色寫「用目前角色的叫聲」。</p>
+<figure><img src="img/focuscat-settings-window-remind-character.png" alt="設定 → 提醒：提示音選「角色的叫聲」，底下寫「目前的角色沒有叫聲，先用玻璃聲代替」，下拉選單左邊有一顆「去加叫聲」"><figcaption>目前的角色沒有叫聲：先用玻璃聲代替，旁邊有「去加叫聲」（圖裡的「範例造型」是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-settings-window-remind-character-sound.png" alt="設定 → 提醒：提示音選「角色的叫聲」，內建角色時底下寫它是什麼叫聲"><figcaption>內建角色有叫聲：底下寫它是什麼叫聲</figcaption></figure>
+<p>另外還會跳一則通知。不想要就關掉「設定 → 提醒 → 時間到的時候 → 跳通知」。</p>
+<p>做完一個番茄，角色頭上會冒一顆愛心，「今天完成 N 個」加一。</p>
+<figure><img src="img/focuscat-settings-window-remind.png" alt="設定 → 提醒整頁：「時間到的時候」一組是跳通知、打開面板、提示音（下拉選單，預設玻璃聲）；「到期的事」一組是到期的事跳通知；「休息」一組是休息時提醒我"><figcaption>設定 → 提醒（整頁）</figcaption></figure>
+
+<h3 id="break-reminder">休息提醒</h3>
+<p>工作段一結束，面板會跳出來（「打開面板」開著時），最上面寫「<strong>該休息了</strong>」，
+主按鈕是「<strong>開始休息</strong>」，旁邊有一顆「<strong>跳過休息</strong>」（不休息，直接開始下一段工作）。</p>
+<p>按了「開始休息」，上面那張卡換成休息畫面：</p>
+<ul>
+<li>一個綠色的圓環，跟工作時那個圓環一樣，休息過了多少就繞多少，繞滿一圈休息就結束。</li>
+<li>圓環中間是角色休息的樣子，幾張圖輪著換（造型只有一張休息圖就一直是那一張）。系統開了「減少動態效果」的話，停在第一張不換。</li>
+<li>圓環底下是剩下的時間，大字，例如「3:42」；再下面一行小字寫短休或長休，暫停時多寫「暫停中」。</li>
+<li>休息時面板會出現一句提醒，例如「喝口水再回來」「站起來走兩步吧」。同一天同一輪固定是同一句。</li>
+<li>長休有另一組句子，例如「離開螢幕久一點，好嗎」。句子裡不寫幾分鐘，因為長休多長是你自己設的；剩幾分鐘看大字的倒數。</li>
+<li><strong>回來工作</strong>：休息結束，直接開始下一段工作（休息暫停中按也一樣）。</li>
+<li><strong>今天不再提醒休息</strong>：今天休息時不再跳出來，<strong>明天 00:00 自己恢復</strong>。</li>
+<li>休息時「接下來」只露第一件（休息完要做的那一件），其他的收在「還有 N 件」，按一下照樣全部展開。</li>
+</ul>
+<p>「休息時提醒我」關掉時沒有休息畫面，面板最上面的主按鈕在休息中寫「<strong>回來工作</strong>」，按一下就直接開始工作，不必再按一次開始。</p>
+<figure><img src="img/focuscat-panel-rest.png" alt="休息中的面板：上面那張卡換成休息畫面，一個綠色圓環，中間是角色休息的樣子；圓環下面大字寫剩下的時間、小字寫「短休」，再下面是一句提醒；按鈕是「回來工作」「今天不再提醒休息」"><figcaption>休息中：上面那張卡換成休息畫面</figcaption></figure>
+<figure><img src="img/focuscat-panel-long-rest-light.png" alt="長休中的面板：綠色圓環中間是角色休息的樣子，圓環下面大字「15:00」、旁邊綠字「長休」，再下面一句「今天做很多了，好好休息」；按鈕是「回來工作」「今天不再提醒休息」"><figcaption>長休：句子不寫幾分鐘，剩多久看倒數（句子每天輪著換）</figcaption></figure>
+<p>休息走完<strong>不會自己開始工作</strong>，跟以前一樣要你按。</p>
+<p>設定在「設定 → 提醒 → 休息」：</p>
+<table>
+<tr><th>設定</th><th>預設</th></tr>
+<tr><td>休息時提醒我（休息一開始就打開面板，提醒你起來動一動）</td><td>開</td></tr>
+</table>
+<p>「今天不再提醒休息」要在休息畫面上按。今天按過的話，這一組最後會多一列「已靜音到明天 00:00」，旁邊有一顆「恢復提醒」；平常沒有這一列。</p>
+
+<h3 id="current-focus">現在專注</h3>
+<p>平常一次做一件（要同時追好幾件，見下一段「同時追好幾件」）。卡上三顆按鈕：主按鈕（開始、暫停、繼續…）、<strong>完成</strong>、<strong>⋯</strong>。
+<strong>換一件</strong>和<strong>晚點再做</strong>是「⋯」選單最上面兩項。
+「換一件」按下去就是「被打斷」，這件回到「接下來」。
+卡住了就按「晚點再做」，勾「做到哪？」旁邊的「卡住了」；有更急的事，按「接下來」、「晚點再做」或「建議加進來」那一列右邊的「開始」：手上已經有一件時<strong>按下去就換過去</strong>，手上那件回到「接下來」，記成「有更急的」。
+換完，選單列角色底下會跳一個小視窗（見下面「換一件」）。
+按下去那一刻，如果手上那件已經被換掉了（例如用快捷鍵、指令列或 agent），或讀不到現在在做哪件，就不換；小視窗會寫原因，請你再按一次「開始」。</p>
+<p>換走的時候可以留一句「做到哪」，下次回到這件事時它會顯示出來。</p>
+<p>鍵盤也按得到：面板開著時，<strong>空白鍵</strong>就是那顆主按鈕（開始、暫停、繼續…），<strong>⌘↩</strong> 是「完成」。
+面板剛打開時游標不在任何輸入框裡（用 ⌘Tab 切到別的 app 再切回來，游標留在原本的地方，正在改的名稱也不會被取消）；點進輸入框之後空白鍵就是打字（框是空的也一樣），點框以外的地方或按 Esc 離開之後，空白鍵又是主按鈕。按鈕滑過去的提示也寫著這兩個鍵。</p>
+<p>「現在」那張卡右上的「⋯」是一個下拉選單，裡面有「在等（不算專心）」：手上這件卡在等別人，就把它移到「在等」那一格（見下一段）。</p>
+<p>同一個選單最上面那行 <code>🍅 1 / 3 個</code> 是<strong>預計幾個番茄</strong>：按「預計多一個番茄」估一個數字，按「預計少一個番茄」減，
+減到 0 就是不估。「今天小結」會列出「當初估幾個、實際做了幾個」。</p>
+
+<h3 id="motion">面板的小動畫</h3>
+<p>面板有幾個小動畫：</p>
+<ul>
+<li>面板從選單列的角色那裡長出來，收起時縮回去。收到一半再點角色，它會從當下的大小長回來，不用等它收完。</li>
+<li>按「完成」後，「已完成」那一行前面彈出一個綠色圓圈，勾一筆畫上去。</li>
+<li>倒數時只有變了的那一格數字往下滾。數字寬度不變，旁邊的字不會跟著晃。</li>
+<li>滑鼠移到「接下來」這類清單的一列上，那一列淡淡亮起、微微浮起。</li>
+<li>macOS 26 上，面板的底是系統的玻璃材質。更舊的系統、或系統設定開了「降低透明度」，是實心底。</li>
+</ul>
+<p>系統設定開了「減少動態效果」的話，這些動畫都換成很短的淡入淡出：不縮放、不移動、不回彈。</p>
+<figure><img src="img/focuscat-motion-frames-light.png" alt="五排逐格圖，每排從 0 毫秒拍到 400 毫秒：面板從選單列的紅點長出來；「已完成」前面的綠色圓圈打勾；倒數 25:00 滾成 24:59；滑鼠移到一列上那一列慢慢亮起；最下面左邊是實心底的面板、右邊是玻璃底的面板"><figcaption>小動畫的逐格圖：同一個動畫在 0、80、160、240、400 毫秒的樣子（圖裡的事情都是假資料）</figcaption></figure>
+
+<h3 id="long-title">名稱太長的時候</h3>
+<p>面板上每一列，<strong>第一行只放名稱</strong>，最多兩行，再長就在尾端截掉、補「…」。滑鼠停在名稱上看得到全名，VoiceOver 也唸全名。
+來源標籤、狀態、按鈕都放第二行：左邊是資訊，右邊是按鈕。現在、接下來、在等、建議、晚點再做、快到期、今天做完、類別看板都是這樣排。</p>
+<figure><img src="img/focuscat-panel-long-title-light.png" alt="面板：上面那張卡的名稱「DEMO-1234 修正報表匯出時日期欄位在跨時區使用者看到錯一天的問題」排成兩行，來源標籤「Jira」在下一行；接下來、在等的長名稱也是第一行放名稱、第二行放標籤和按鈕"><figcaption>名稱太長：第一行只放名稱，標籤和按鈕在第二行（圖裡的事情都是假資料）</figcaption></figure>
+<p>「設定 → 外觀 → 選單列顯示」選「角色＋時間＋標題」時，選單列會寫現在這件的名稱。最多 12 個字，多的變成「…」，滑過去看得到全名。好幾件一起做時，只寫主要那件。</p>
+<figure><img class="small" src="img/focuscat-menubar-long-title.png" alt="選單列：角色在跑，旁邊是時間和名稱的前 12 個字，後面接「…」"><figcaption>選單列・名稱只放前 12 個字</figcaption></figure>
+<p class="src">12 個字來自 <code>pomodoro/Sources/PomodoroCore/Presentation.swift</code> 的 <code>MenuBarText.maxTitleLength</code>。</p>
+
+<h3 id="together">同時追好幾件</h3>
+<span class="when">什麼時候用：手上真的有兩三件要一起盯，例如一邊改欄位、一邊等審查留言、一邊回信</span>
+<p>「現在」可以放好幾件，不限件數。大家共用上面那一個番茄鐘計時。</p>
+<p><strong>怎麼加進來：</strong>手上已經有一件時，「現在」那張卡最下面有一顆「加一件到現在」（前面一個圈起來的加號、後面一個小箭頭），點開挑「接下來」裡的任一件。
+也可以點「接下來」或「晚點再做」那一列右邊的「⋯」，選「加到現在（一起做）」。</p>
+<p><strong>畫面長這樣：</strong>上面的狀態字寫「工作中・一起做 3 件」。底下一件一列：第一行是名稱，第二行右邊有自己的圖釘、「完成」和「⋯」。
+超過 3 件時只先列 3 件，按「還有 N 件」看全部，按「收起」收回去。</p>
+<figure><img src="img/focuscat-panel-together-light.png" alt="面板：狀態字寫「工作中・一起做 3 件」，底下三列「改報表欄位」「盯審查意見」「回信給 PM」，每列右邊有「完成」和「⋯」，再下面是「暫停」與「加一件到現在」"><figcaption>一起做 3 件：一件一列，每列有自己的「完成」和「⋯」（圖裡的事情都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-together-dark.png" alt="深色模式的面板，一起做 3 件"><figcaption>深色模式</figcaption></figure>
+<figure><img src="img/focuscat-panel-together-more-light.png" alt="面板：一起做 4 件，只先列 3 件，底下有「還有 1 件」"><figcaption>超過 3 件時只先列 3 件</figcaption></figure>
+<p><strong>每一件自己動：</strong></p>
+<ul>
+<li>按那一列的「完成」，只有那一件做完，其他件繼續計時。</li>
+<li>那一列的「⋯」裡有「換一件」「晚點再做」「移出現在（放回接下來）」。「移出現在」不算被打斷，也不會問「做到哪」。</li>
+<li>第一件是主要的那件：整塊淡紅底，上面寫「主要・番茄算給這件」，字也比較大。其他件字小一號。</li>
+<li>想換一件當主要，按那一列第二行右邊的<strong>空心圖釘</strong>（滑過去寫「換成主要（番茄只算這一件）」）。那一件換到第一位，圖釘變實心；原本的第一件排到第二，圖釘變回空心。主要那件的實心圖釘按不下去：主要只能換給別件，不能取消。</li>
+<li>點「接下來」某一列的「開始」，選單列角色底下的小視窗會先問「要換掉哪一件？」。挑一件按「換過去」才會換，按「取消」或 Esc 什麼都不換。</li>
+</ul>
+<figure><img src="img/focuscat-panel-together-primary-light.png" alt="面板：一起做好幾件，第一件整塊淡紅底、字比較大，寫著「主要・番茄算給這件」；其他件字小一號；每一列第一行是名稱，第二行左邊是來源標籤，右邊是圖釘（主要那件實心、其他件空心）、「完成」和「⋯」"><figcaption>有兩件以上時，主要那件放大、淡紅底、實心圖釘；其他件是空心圖釘，按了就換成主要。（圖裡的事情都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-switch-pick.png" alt="小視窗：上面寫「要換成「整理收件夾」」，問「要換掉哪一件？」，列出手上三件，第一件已選；底下是「取消」與「換過去」"><figcaption>好幾件時點「開始」：先問要換掉哪一件</figcaption></figure>
+<p><strong>選單列：</strong>只有一件時照舊；兩件以上，時間後面寫「・3 件」。</p>
+<figure><img class="small" src="img/focuscat-menubar-together.png" alt="選單列：角色在跑，旁邊寫「25:00・3 件」"><figcaption>選單列・一起做 3 件</figcaption></figure>
+<p><strong>時間怎麼算：</strong>每一件都記自己跟著的時間。「今天小結」第一行的專心時間只算一次實際經過的時間，後面註明「一起做的只算一次」；
+底下每一件列自己的時間，有跟別件重疊的標「一起做」。三件一起做 25 分鐘，專心時間是 25 分，不是 75 分。</p>
+<figure><img src="img/focuscat-panel-together-summary-light.png" alt="今天小結：第一行「完成 4 個番茄，專心時間 1 小時 40 分（一起做的只算一次）」，底下一件一行，例如「改報表欄位 1 小時 15 分（一起做 50 分）」"><figcaption>今天小結：專心時間只算一次，每一件列自己的時間</figcaption></figure>
+<p><strong>跟 Claude 說：</strong>Claude 那邊的「目前專注」提醒會列出全部。你這次要做的是其中一件，它就不會問要不要換。
+指令列是 <code>focus join &lt;key&gt;</code>（加到現在）、<code>focus leave &lt;key&gt;</code>（移出現在）、<code>focus primary &lt;key&gt;</code>（設為主要）；
+好幾件時 <code>focus done</code>、<code>focus park</code>、<code>focus switch</code> 要帶那一件的 key，不帶會被擋下。</p>
+
+<h3 id="compact">專心時面板自動縮小</h3>
+<p>工作計時中、手上也有一件事的時候，打開面板只看得到那一件：角色、事情名稱、剩下的時間、一條細進度條、第幾個番茄的小圓點、暫停與完成。</p>
+<p>底下一行摘要寫「接下來 3・在等 1・晚點再做 2」。點它就展開「接下來」與「在等」，再點一次收起。
+關掉面板再打開，又是縮小的。丟一件進來那一格一直都在。</p>
+<p>這些時候不縮：暫停中、休息中、沒在計時、開會中、在等的事有一件到了、在等的事 Jira 讀不到要你自己按。</p>
+<p>面板開著時才開始工作，這一次不會突然縮小，下次打開才縮。反過來，縮小時你按了暫停、或等的事到了，會當場變回完整的。</p>
+<p>不想要就到「設定 → 外觀 → 面板」關掉「專心時面板自動縮小」。</p>
+<figure><img src="img/focuscat-panel-compact-light.png" alt="縮小版的面板：上面是角色、「工作中」、事情名稱與剩下的時間、一條細進度條、第幾個番茄的小圓點與「專心時間 25 分鐘」，按鈕是「暫停」「完成」「⋯」；下面一行「接下來 3・在等 1・晚點再做 2」，最下面是丟一件進來"><figcaption>專心時的縮小版：點中間那一行摘要才展開接下來與在等</figcaption></figure>
+
+<h3 id="watching">在等</h3>
+<p>有些事不是你在做，是在等別人：等 PM 回信、等 Jira 卡被推到下一關。
+這種事放進「在等」這一格。它在「現在」下面、「接下來」上面，<strong>只有在等東西的時候才出現</strong>。</p>
+<ul>
+<li><strong>等待不算專心時間</strong>。「今天小結」會多一行「「在等」N 件（等到 M 件），等待不算專心時間」。</li>
+<li><strong>可以同時等好幾件。</strong>面板一次列 3 件（有進展的排前面），再多就收成「還有 N 件」，點一下全部展開。</li>
+<li>怎麼放進來：「接下來」每一列的 ⋯ 裡、或「現在」那張卡的 ⋯ 裡，都有「在等（不算專心）」。</li>
+</ul>
+<p>那一格底下的一行字告訴你它怎麼知道「到了」：</p>
+<table>
+<tr><th>寫著</th><th>意思</th></tr>
+<tr><td>等了 12 分鐘・Jira 一變就叫你</td><td>是 Jira 或外掛帶來的卡。app 每 5 分鐘問一次那一支外掛，面板關著也問</td></tr>
+<tr><td>等了 12 分鐘・到了按『等到了』</td><td>是你自己記的事，app 沒辦法幫你看，到了自己按</td></tr>
+<tr><td>Jira 外掛沒開，到了要自己按</td><td>本來可以幫你看，但那支外掛關著（設定 → 外掛）</td></tr>
+<tr><td>有進展了（Jira）</td><td>卡動了。這時會跳一則通知「等的事有進展了」，<strong>面板不會自己跳出來</strong></td></tr>
+</table>
+<figure><img src="img/focuscat-panel-watching.png" alt="「在等」那一格同時等兩件：上面是「等 PM 確認規格」，底下綠字「有進展了（Jira）」，按鈕只剩「換過來做」；下面是「等設計師回覆」，寫著「等了 32 分鐘・到了按『等到了』」，有「換過來做」和「等到了」兩顆"><figcaption>同時等兩件：Jira 那張卡有進展了，另一件還在等（只等一件的樣子見上面每一張面板圖：「等了 12 分鐘・Jira 一變就叫你」）</figcaption></figure>
+<p>每一件都有自己的按鈕，按哪一件就只動那一件：<strong>換過來做</strong>會在那一列先問「換掉，還是一起做？」：<strong>一起做</strong>把它加進「現在」、原本那件照舊是主要；<strong>換掉</strong>把它拿到「現在」（原本在做的回「接下來」最前面）。手上沒在做事時這顆寫<strong>開始做</strong>，按了直接開始；<strong>等到了</strong>是手動標到了（到了之後這顆就不見）；<strong>完成</strong>是那件其實已經做完了，按了就從在等拿掉、算進今天做完（不算專心時間）。
+⋯ 裡還有「不等了，放回接下來」「不等了，晚點再做」。有進展的通知也是一件一則。</p>
+<figure><img src="img/focuscat-panel-watch-start-light.png" alt="手上沒在做事時，「在等」那一件「等 PM 確認規格」底下綠字「有進展了（Jira）」，按鈕是紅色的「開始做」和「完成」"><figcaption>手上沒事：按鈕寫「開始做」，按了直接開始</figcaption></figure>
+<figure><img src="img/focuscat-panel-watch-ask-light.png" alt="手上有事時按了「換過來做」：那一列原地問「換掉「寫番茄鐘使用手冊」，還是一起做？」，按鈕是紅色的「一起做」、「換掉」，右邊是「不要」"><figcaption>手上有事：按「換過來做」後，那一列原地問換掉還是一起做</figcaption></figure>
+<figure><img src="img/focuscat-panel-watch-together-light.png" alt="選了「一起做」之後：上面那張卡寫「還沒開始・一起做 2 件」，主要那件「寫番茄鐘使用手冊」淡紅底、實心圖釘，底下是「等 PM 確認規格」，「在等」那一格不見了"><figcaption>選「一起做」之後：它加進「現在」，原本那件照舊是主要（圖裡的事情都是假資料）</figcaption></figure>
+
+<h3 id="categories">類別與看板</h3>
+<span class="when">什麼時候用：有些事不想算進專心時間（例如回訊息），或某支外掛帶來的事想放在面板的一張卡裡集中看</span>
+<p>每一件事都屬於一個<strong>類別</strong>。手動加的事都是「一般」；外掛帶來的事，跟著那支外掛的類別。
+沒碰過類別的話，只有「一般」一類，用起來跟以前一樣。</p>
+<p>到「設定 → 類別」管。每一類有五個設定：</p>
+<table>
+<tr><th>設定</th><th>關掉或改了會怎樣</th></tr>
+<tr><td>算專心時間</td><td>這類事拿到「現在」的時間不算進專心時間；今天小結多一行「不算專心：…」。番茄數照算</td></tr>
+<tr><td>放進建議</td><td>這類外掛的卡不出現在「建議加進來」</td></tr>
+<tr><td>輪到我時通知</td><td>外掛說「輪到你」時，跳一則「等的事有進展」通知。第一次看到的不跳</td></tr>
+<tr><td>這一類可以拖曳換順序</td><td>關掉的話，這類事在面板上不能用滑鼠拖，位置也固定：別的事拖過去會跳過它。「⋯」的上移、下移和 ⌥↑／⌥↓ 照常能排它（0.6.10，預設打開；0.6.14 起位置固定；見「排順序」）</td></tr>
+<tr><td>在面板上給「X」一張自己的卡</td><td>打開：這類事只出現在那張卡。關掉：跟其他事一起放在現在、接下來、晚點再做、在等（0.6.14 以前叫「放在面板：照舊／自己一區」，存的設定不變）</td></tr>
+</table>
+<p><strong>頁面最上面「面板長這樣」</strong>（0.6.14）：先列面板上固定的四區，每一區一句放什麼。固定的區不能改名，也不能刪。再列有自己一張卡的類別。
+類別管的是「這件事是哪一種」，固定的區管的是「這件事現在在哪一步」。</p>
+<figure><img src="img/focuscat-settings-categories-overview.png" alt="設定 → 類別最上面「面板長這樣」：現在（手上正在做的事，番茄算給它。）、接下來（排好、接著要做的事。）、晚點再做（現在不做，晚一點再回來做。）、在等（等別人回、等 CI 跑完，等待不算專心。），一行灰字「上面這幾區是固定的，不能改名或刪除。」，最後是「建置」（類別：自己一張卡，只放這一類的事。）"><figcaption>類別頁最上面「面板長這樣」（假資料）</figcaption></figure>
+<p>放在自己一張卡的類別，「這一類可以拖曳換順序」會變灰，旁邊寫「這一類放在自己的卡上，不能拖曳」。那張卡上的順序由外掛給。這類事拿到接下來、在等之後，照樣能拖。</p>
+<figure><img src="img/focuscat-settings-category-own-card.png" alt="「建置」那一類：「這一類可以拖曳換順序」開關變灰，說明「這一類放在自己的卡上，不能拖曳」；下一列「在面板上給「建置」一張自己的卡」開關打開，說明「打開：這類事只出現在那張卡。關掉：跟其他事一起放在現在、接下來、晚點再做、在等。」"><figcaption>放在自己一張卡的類別：拖曳開關變灰（假資料）</figcaption></figure>
+<figure><img src="img/focuscat-settings-category-reorder.png" alt="設定 → 類別：「一般」與「建置」兩類，每一類多一列開關「這一類可以拖曳換順序」，說明「關掉的話，這類事不能用滑鼠拖，位置也固定：別的事拖過去會跳過它。「⋯」和 ⌥↑／⌥↓ 照常能排它。」；「建置」那一類這個開關是關的"><figcaption>設定 → 類別：每一類都有「這一類可以拖曳換順序」（假資料）</figcaption></figure>
+<p>名字前面那顆圖示點開可以換（從一份固定的清單挑，旁邊一定配名字）。「改名」原地改，Enter 存、Esc 不存；名字空白、重複、超過 20 字，底下會寫原因。
+「新增類別」加一類；「刪除…」會先問一次；「一般」不能刪。外掛可以自己建它要的類別，那一類會標「由外掛 X 建立」。
+類別設定讀不懂時，頁面只剩一行紅字和「重設成預設」。</p>
+<p>外掛算哪一類，在「設定 → 外掛」點進那一支，改「類別」選單；選最後一項「外掛建議的（…）」就回到外掛自己建議的那一類。指令列是 <code>focus categories</code> 與 <code>focus plugins category</code>。</p>
+<figure><img src="img/focuscat-settings-window-categories.png" alt="設定 → 類別：上面一行說明「一件事從哪支外掛來，就跟著那支外掛的類別。手動加的事都是「一般」。」，下面是「面板長這樣」：現在、接下來、晚點再做、在等各一句放什麼，灰字「上面這幾區是固定的，不能改名或刪除。」「目前沒有類別有自己的卡。」，再下面露出「一般」那一類的開頭"><figcaption>設定 → 類別：剛裝好只有「一般」，最上面先看到「面板長這樣」</figcaption></figure>
+<p><strong>看板：</strong>打開「在面板上給「X」一張自己的卡」，面板在「在等」後面多一張卡。卡頭是類別的圖示和名字，右上寫「5 件・3 件輪到你」。每一列這樣排：</p>
+<ul>
+<li>第一行是名稱。點了會開網頁的，名稱後面有一個小箭頭。</li>
+<li>第二行左邊是外掛給的狀態字和一行說明。狀態字像是「輪到你」「可能卡住」「失敗」，一定寫出字來，不只靠顏色。</li>
+<li>第二行右邊最多一顆按鈕，其他的收在「⋯」。</li>
+</ul>
+<p>按鈕只有三種：打開網址、內建的動作（拿到現在、加到接下來、放進在等）、交回外掛處理。交回外掛時，那一列寫「交回外掛中…」；失敗了寫紅字原因。</p>
+<p>外掛讀不到時，卡還在，寫出原因，上一次的內容留著。這一類一件都沒有時不畫這張卡。縮小版只寫一句，例如「建置 5 件，3 件輪到你」。</p>
+<figure><img src="img/focuscat-panel-board-light.png" alt="面板：「在等」下面一張「建置」卡，卡頭一把鎚子，右上「5 件・3 件輪到你」；每一列第一行是名稱，第二行是狀態字（輪到你、可能卡住、失敗、跑著、排隊中）和說明，有的列右邊有「打開連結」（前面一個地球圖示）或「重跑」，每列最右邊是「⋯」；「接下來」第一件底下有一行外掛寫的文字"><figcaption>類別看板（外掛與事情都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-board-dark.png" alt="深色模式的類別看板"><figcaption>深色模式</figcaption></figure>
+
+<h3 id="automation">自動化工作</h3>
+<span class="when">什麼時候用：你有腳本或 AI 在背景跑工作，想在面板上看它跑到哪、要不要你出手</span>
+<p>裝了「自動化工作」外掛，面板會多一區「自動化」。你的腳本或 AI 背景工作，每一件都列在這一區。
+它只讀狀態檔，不會執行檔案裡的任何東西。</p>
+<p><strong>怎麼裝：</strong>到「設定 → 外掛」，在「可以加的外掛」找到「自動化工作」，按「安裝」。
+裝好會多一個類別「自動化」：不算專心時間、不進建議、在面板自己一區、輪到你時通知。這四項都能在<a href="#categories">「設定 → 類別」</a>改。</p>
+<p><strong>工作怎麼出現：</strong>你的腳本把狀態寫成一份 JSON，放進 <code>~/Library/Application Support/FocusCat/automation/</code>。
+這個資料夾外掛不會幫你建，第一次要自己建。</p>
+<p><strong>一件工作會是這幾種樣子：</strong></p>
+<table>
+<tr><th>這一列寫什麼</th><th>意思</th><th>通知你嗎</th></tr>
+<tr><td>名稱，例如「跑測試：編譯中（12 分）」</td><td>正在跑。腳本有寫現在在哪一步，名稱後面就接「：步驟中（N 分）」，N 是這一步做了多久</td><td>不通知</td></tr>
+<tr><td>「【排隊中】…」</td><td>排隊，還沒開始</td><td>不通知</td></tr>
+<tr><td>「【做完了】…」</td><td>做完了。會一直列著，等你的腳本把它從狀態檔拿掉</td><td>不通知</td></tr>
+<tr><td>「【要你處理】…」</td><td>停下來等你，後面接它寫的原因</td><td>通知</td></tr>
+<tr><td>「【失敗了】…」</td><td>失敗了，後面接它寫的原因</td><td>通知</td></tr>
+<tr><td>「【可能卡住了】…」</td><td>腳本太久沒更新狀態檔，後面寫幾分鐘沒動</td><td>通知</td></tr>
+</table>
+<p>通知只在一件工作「變成」要你處理、失敗了或可能卡住了的那一刻跳一次。第一次看到時就已經是這樣的，不跳。
+「設定 → 類別」裡「自動化」的「輪到我時通知」關掉的話，都不跳。
+狀態檔標成乾跑（只是試跑、不算數）的，名稱前面多「乾跑」兩個字，一律不通知。</p>
+<p>有一份狀態檔讀不懂時，整張卡寫「讀不到」，並講是哪個檔，不會當成沒事。</p>
+<figure><img src="img/focuscat-panel-automation-light.png" alt="面板上的「自動化」卡，卡頭一道閃電，右上「4 件・1 件輪到你」：「【要你處理】登入頁文案 — 等你看過再合併」狀態是綠字「要你處理」，右邊一顆「看報告」，前面一個報表圖示；「跑測試：編譯中（12 分）」狀態「進行中」；「【排隊中】匯出報表」狀態「排隊中」；「【做完了】整理說明文件」狀態「做完了」，右邊一顆「看結果」，前面一個地球圖示；每一列的說明都是「每晚建置」"><figcaption>「自動化」卡：要你處理、在跑（寫了現在在哪一步）、排隊、做完各一件，有文件的那一列多一顆按鈕（工作與文件都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-automation-dark.png" alt="深色模式的「自動化」卡"><figcaption>深色模式</figcaption></figure>
+<p><strong>按鈕打開要你看的東西。</strong>狀態檔可以帶幾份要你看的文件，例如報告或紀錄，最多 4 份。
+那一列會多幾顆按鈕，第一顆直接看得到，其他的收在「⋯」。按了就打開。</p>
+<p id="action-icons">按鈕的字前面可以有一個小圖示，例如報表或時鐘，由腳本或外掛挑。沒挑的話，照連結種類配：本機檔案配文件、本機網站配電腦、網頁配地球。</p>
+<p class="src">圖示的名字清單與配法來自 <code>pomodoro/Sources/PomodoroCore/ActionIcon.swift</code>（<code>defaultFor</code>）。改了那裡要改這裡。</p>
+<p id="local-links"><strong>按鈕能打開哪幾種：</strong></p>
+<ul>
+<li><strong>網頁</strong>：<code>https://</code> 開頭的網址。</li>
+<li><strong>本機網站</strong>：<code>http://localhost</code>、<code>127.0.0.1</code>、<code>[::1]</code> 開頭的網址，可以帶 port，例如你的腳本開的預覽頁。只有自動化工作收這種。別的網站用 <code>http://</code> 不收，要用 https。</li>
+<li><strong>本機檔案</strong>：放在你家目錄底下的報告、紀錄。只收這幾種副檔名：.md、.html、.htm、.pdf、.png、.jpg、.jpeg、.txt。按了用 Mac 預設的 App 打開。別的外掛給的連結也可以開這種檔。</li>
+<li><strong>程式一律不開</strong>：.app、.sh、.command、沒有副檔名的檔都不收。設了執行權限的檔也不開，就算它叫 .md。</li>
+<li><strong>家目錄外面的檔不開</strong>：用捷徑（symlink）繞出去的也不開。</li>
+<li>檔案不在了，面板最上面會寫「找不到檔案：」加檔名。</li>
+</ul>
+<p class="src">副檔名清單來自 <code>pomodoro/Sources/PomodoroCore/LinkPolicy.swift</code> 的 <code>fileExtensions</code>，本機網站的三個主機名稱是同一檔的 <code>loopbackHosts</code>。改了那裡要改這裡。</p>
+<figure><img src="img/focuscat-panel-automation-local-link-light.png" alt="面板最上面紅字「找不到檔案：週報.md」；下面的「自動化」卡有兩件：「【要你處理】說明頁改版 — 本機預覽好了」右邊一顆「看預覽」（本機網站，前面一個電腦圖示），「【做完了】整理週報」右邊一顆「看週報」（本機檔案，前面一個文件圖示）"><figcaption>本機連結：「看預覽」開本機網站，「看週報」開家目錄裡的檔案；檔案不在時最上面寫「找不到檔案」（假資料）</figcaption></figure>
+<p><strong>升級之後：</strong>外掛裝好就是你的檔，升級 FocusCat 不會自己換掉。
+這一版附的自動化工作跟你裝的不一樣時，面板上面會多一段橘字，問你要不要「換成附的版本…」，見<a href="#replace">「換成附的版本」</a>。</p>
+<p><strong>要自己寫狀態檔的人：</strong>格式寫在 外掛規格 <code>plugins.md</code>（裝好的 app 裡附一份：<code>FocusCat.app/Contents/Resources/docs/plugins.md</code>）「自動化工作外掛」那一節。
+不寫程式的話，照<a href="#howto">「怎麼做自己的外掛？」</a>那份教學的範例 3，請 AI 幫你改腳本。</p>
+
+<h3 id="insights">外掛寫的一段文字</h3>
+<p>有一種外掛不帶事情來，只寫一段文字，叫「文字外掛」。它在三個時候更新：番茄結束、打開今天小結、估了幾個番茄之後。寫出來的字畫在下面三個地方之一：</p>
+<ul>
+<li>講某一件事的：畫在那一件底下，一行灰字，前面一顆小燈泡。外掛要提醒你注意時，那一行是橘色。</li>
+<li>沒講哪一件、類別選「自己一區」的：畫在那個類別的看板最下面。</li>
+<li>類別選「照舊」的：畫在今天小結的「回顧」。</li>
+</ul>
+<p>更新中或讀不到時，上一次那段留著。指令列是 <code>focus insights</code>。</p>
+
+<h3 id="quick-add">丟一件進來</h3>
+<p>面板下面那一格打字就送出，它會排在「接下來」最前面，不會打斷你正在做的事。</p>
+<p>不想開面板的話，任何時候按你在 設定 ▸ 收件 ▸ 快捷鍵 ▸ 丟一件進來 選的那一組（沒選過的話，會自動挑一組不跟 macOS 衝突的，多半是 ⌃⇧Space），會跳出一個小輸入框。
+小框最上面寫「丟一件進來」，最下面兩顆：左邊「取消」（Esc），右邊紅色的「送出」（Enter），按鈕上也標著 esc 和 ↩。
+這個小框<strong>就是面板最下面那一格</strong>：一樣可以選來源、按日曆鈕設到期日、當場新增一個來源，打卡號一樣會先預覽標題。
+標題還沒查回來就按 Enter 也沒關係，會先查完再決定存不存。查的時候框下面會寫「正在查 Jira 的 …」，Jira 慢的話這一格會灰掉一陣子。
+存好了會說一句「已記下，排在「接下來」最前面」再自己收起；沒存成（例如卡號不完整、讀不到 Jira）會把原因留在框裡，打的字也留著，不用重打；之後在面板上另外做別的事，框裡那一句也不會換掉。按「取消」或 Esc 關掉。</p>
+<p>從別的地方送進來也可以：指令 <code>focuscat add "回信給客戶"</code>、
+把 <code>.json</code> 丟進資料夾、自己寫腳本，做法寫在
+app 裡附的 <code>connect-your-stuff.html</code>（在 <code>FocusCat.app/Contents/Resources/</code>）。要從 Apple 提醒事項自動收，
+到「設定 → 收件 → 從 Apple 提醒事項收件」打開（第一次會跳系統權限詢問）。</p>
+<figure><img src="img/focuscat-settings-window-inbox.png" alt="設定的收件頁：左邊是側欄；右邊「事情從哪裡來」一組有從 Apple 提醒事項收件、收件資料夾、管理來源，「快捷鍵」一組有丟一件進來"><figcaption>設定 → 收件（外掛在側欄的「外掛」）</figcaption></figure>
+
+<h3 id="morning-three">早上三件事、今天小結</h3>
+<p>「接下來」每一列左邊有一顆小太陽，點它就是「今天先顧這件」（最多三件）。挑過的那幾件太陽會亮著。</p>
+<p>按面板最下面的「今天小結」會給一段小結：幾個番茄、完成了什麼、開會多久、中途換了幾次、估得準不準。
+它只是給你看數字，<strong>計時照跑、清單不動</strong>，按「知道了」收起來。</p>
+<p>有些類別關掉了「算專心時間」，例如「回訊息」。這些事的時間不算進專心時間，小結多一行寫扣了多少，例如「不算專心：回訊息 40 分」。
+沒有這種事就不會出現這一行。番茄顆數照算。</p>
+<figure><img src="img/focuscat-panel-morning-three-light.png" alt="接下來清單上，挑過的那幾件左邊的小太陽是亮的"><figcaption>挑過的那幾件，太陽會亮著</figcaption></figure>
+
+<h3 id="meetings">開會的時候</h3>
+<p>行事曆上有會、或麥克風被別的 app 佔用超過一分鐘，FocusCat 就知道你在開會：
+番茄自動暫停，角色換成開會的樣子。它自己發現會開完了的時候，只在面板上說一聲，
+<strong>要不要繼續番茄由你按</strong>，不會自己接著跑。</p>
+<p>會提早結束、或者行事曆上那一場還沒到時間就散了，按面板上的<strong>「散會」</strong>：
+開會狀態當場收掉，剛才因為開會被暫停的番茄會接回去繼續跑。
+按完之後，就算行事曆上那一場還沒過、麥克風也還被佔著，FocusCat 也不會再把你判回開會——
+要等那一場過了、或麥克風放開過一次，下一場才會重新開始算。
+不小心連按兩次「散會」也一樣，不會被判回開會。</p>
+<p>行事曆上那一場已經結束 15 分鐘，麥克風卻還在用，FocusCat 會問一次<strong>「還在開會嗎？」</strong>：
+面板上多一張卡，另外跳一則通知。按「散會」跟上面一樣收掉；按「還在開」就照舊當成開會中。同一場只問一次。</p>
+<p><strong>你自己按的暫停不會被動到。</strong>會被接回去跑的，只有「從開會那一刻起就一直停著」的那顆番茄。
+中間只要你自己按過一次繼續、跳過或重設，它就不算是因為開會才停的；
+之後你自己按的暫停會一直停在那裡，等你自己按繼續。</p>
+<p>要看行事曆，得先到「設定 → 開會 → 行事曆網址」貼上行事曆的 ICS 網址（Outlook 的「發佈行事曆」那一條，http、https 或 webcal 開頭），按「存起來」就生效。
+沒貼網址的話，「行事曆」那一列會寫「還沒填網址，這一項先不會用到」，這時只靠麥克風判斷，面板上也不會出現行事曆的警告（行事曆不一定要設）。
+行事曆每 5 分鐘重讀一次。偶爾讀不到（網路斷一下、剛睡醒）時，上一次讀到的那一份裡正在開的會照樣算開會，不會因此被當成散會；除此之外只要這次讀不到，面板就寫「行事曆讀不到」，不會當成「現在沒有會議」。</p>
+<p>不想要這個功能就到「設定 → 開會」關掉；行事曆與麥克風也可以只留一個。</p>
+
+<h3 id="dnd">開始番茄時打開勿擾模式</h3>
+<p>macOS 不讓 app 直接開關專注模式，要借「捷徑」App：</p>
+<ol>
+<li>打開「捷徑」，新增一個捷徑，加入動作「設定專注模式」→「勿擾模式・開啟」，取名例如「開勿擾」。</li>
+<li>再做一個一樣但選「關閉」的，例如「關勿擾」。</li>
+<li>回到 FocusCat「設定 → 番茄 → 開始番茄時打開勿擾模式」，按「設定…」把兩個名字填進去。</li>
+</ol>
+<p>之後每次開始工作就自動開、那一段結束（做完、暫停、跳過）就自動關。
+名字打錯的話存檔時會當場告訴你，不會安靜地沒反應。</p>
+
+
+<h3 id="states">每個狀態長什麼樣</h3>
+<p>這幾張都是用假資料拍的（<code>FocusCat --snapshot</code>），不是你的真實畫面。</p>
+<figure><img src="img/focuscat-panel-work-light.png" alt="工作中：主按鈕是「暫停」，角色在跑"><figcaption>工作中</figcaption></figure>
+<figure><img src="img/focuscat-panel-idle-light.png" alt="還沒開始：主按鈕是「開始」"><figcaption>還沒開始</figcaption></figure>
+<figure><img src="img/focuscat-panel-paused-light.png" alt="暫停：主按鈕是「繼續」"><figcaption>暫停</figcaption></figure>
+<figure><img src="img/focuscat-panel-break-light.png" alt="工作段剛結束、休息還沒開始：寫著「該休息了 05:00」，主按鈕是「開始休息」，旁邊是「跳過休息」"><figcaption>工作段結束，等你按開始休息（休息中的樣子見「休息提醒」那一段）</figcaption></figure>
+<figure><img src="img/focuscat-panel-meeting-light.png" alt="開會中：主按鈕是「散會」"><figcaption>開會中（自動暫停）</figcaption></figure>
+<figure><img src="img/focuscat-panel-meeting-ended-light.png" alt="散會橫幅：番茄還停在暫停，主按鈕是「繼續」，橫幅右邊是「繼續番茄」"><figcaption>自己發現散會之後：番茄還停著，按「繼續番茄」才會接著跑</figcaption></figure>
+<figure><img src="img/focuscat-panel-blocked-prompt-light.png" alt="按了晚點再做之後：最上面「為什麼晚點再做？」與那一件的名稱，下面三格「卡住了」「被打斷」「有更急的」，再下面「做到哪？」輸入框和「跳過」"><figcaption>「晚點再做」之後那一格：挑一個原因（可以不挑）、留一句做到哪</figcaption></figure>
+<figure><img src="img/focuscat-panel-day-summary-light.png" alt="今天小結：第一行「完成 5 個番茄，專心時間」與分鐘數，下一行「不算專心：回訊息 40 分」，再來是完成、開會、換過幾次"><figcaption>今天小結</figcaption></figure>
+<figure><img src="img/focuscat-panel-focus-dark.png" alt="深色模式的面板"><figcaption>深色模式</figcaption></figure>
+<figure><img class="small" src="img/focuscat-menubar-work.png" alt="選單列：工作中，角色在跑"><figcaption>選單列・工作中</figcaption></figure>
+<figure><img class="small" src="img/focuscat-menubar-idle.png" alt="選單列：沒在計時"><figcaption>選單列・沒在計時</figcaption></figure>
+<figure><img class="small" src="img/focuscat-menubar-paused.png" alt="選單列：暫停時前面有暫停符號"><figcaption>選單列・暫停</figcaption></figure>
+<figure><img class="small" src="img/focuscat-menubar-meeting.png" alt="選單列：開會中顯示耳機與會議名稱"><figcaption>選單列・開會中</figcaption></figure>
+<figure><img src="img/focuscat-settings-window.png" alt="設定視窗：左邊側欄（番茄、提醒、收件、類別、外掛、開會、外觀、一般），右邊是番茄那一頁"><figcaption>設定視窗・番茄（左邊是側欄）</figcaption></figure>
+
+<figure><img src="img/focuscat-panel-small-screen-light.png" alt="小螢幕：中段會捲動，上面那張卡固定"><figcaption>小螢幕（中段捲動）</figcaption></figure>
+<figure><img src="img/focuscat-fresh-welcome.png" alt="第一次打開的說明"><figcaption>第一次打開</figcaption></figure>
+<figure><img class="small" src="img/focuscat-cats-menubar-dark.png" alt="深色選單列上角色的每個姿勢：跑步、站著、睡覺、完成時的愛心"><figcaption>角色的每個姿勢・深色選單列</figcaption></figure>
+
+<h3 id="settings">設定視窗</h3>
+<p>面板右下角的「設定」（或按 <strong>⌘,</strong>）會開一個獨立視窗。左邊是側欄：番茄、提醒、收件、類別、外掛、開會、外觀、一般。點一項，右邊就換成那一頁。
+按上下鍵也能換頁；游標在輸入框裡時，上下鍵照舊給輸入框。每一頁分成幾個圓角框，每一列左邊是名稱和一行說明，右邊是開關或按鈕。
+關掉用 <strong>⌘W</strong>。最底下那一行小字寫著版本與編譯時間——想確認手上跑的是不是新版就看那一行。</p>
+<p>最底下那排按鈕有「回報問題」，用法見<a href="#report">「回報問題」</a>。
+打包出去的版本，那排還會多一顆「☕ 請我喝咖啡」。</p>
+<figure><img src="img/focuscat-settings-window-look.png" alt="設定的外觀頁：「角色」一組有造型縮圖（排成會換行的格子）與幾個開關；「選單列」一組是選單列顯示；「面板」一組是專心時面板自動縮小"><figcaption>設定視窗・外觀（造型多到一排放不下就換行，圖裡的「範例造型」是假資料）</figcaption></figure>
+<p>每個縮圖底下有兩行小字。第一行說的是<strong>休息時用哪一種圖</strong>：</p>
+<table>
+<tr><th>寫著</th><th>意思</th></tr>
+<tr><td>有休息圖</td><td>這款造型有自己的休息圖（或至少有睡覺圖），休息時用它自己的</td></tr>
+<tr><td>休息借用虎斑</td><td>這款沒有休息圖也沒有睡覺圖，休息時借內建白底虎斑的</td></tr>
+</table>
+<p>第二行寫「有叫聲」或「沒有叫聲」。有叫聲的格子旁邊有「試聽」，按了播一次，不會換掉你選的角色。</p>
+<p>「休息時角色換成休息的樣子」關掉的話，休息時角色就跟工作時一樣在走。</p>
+
+<h3 id="hover">滑鼠移上去</h3>
+<p>沒有底色的按鈕（「收起」「還有 N 件」「加一件到現在」、空心圖釘、太陽、「⋯」、設定側欄、外掛清單每一列），滑鼠移上去會多一層淺灰底，灰字變深，看得出可以按。
+紅底、灰底的按鈕本來就看得出來，不變。</p>
+<p>指標照 Mac 的習慣維持箭頭。只有會開網頁或文件的地方換成手指：看板上有網址的標題（同時加底線）、「怎麼做自己的外掛？」。「⋯」停一下會寫「更多動作」。</p>
+<figure><img src="img/focuscat-hover-compare.png" alt="左右兩欄對照：左邊是一般的樣子，右邊是滑鼠移上去的樣子。收起、加一件到現在、空心圖釘、太陽、更多這幾顆移上去多一層淺灰底；看板標題移上去加底線；完成、開始這兩顆有底的按鈕兩邊一樣"><figcaption>左邊一般、右邊滑鼠移上去（假資料）</figcaption></figure>
+
+<h3 id="update-notice">有新版的時候</h3>
+<p>GitHub 上出了比你手上新的版本，面板最下面（「今天小結」「設定」那排上面）會多一張小卡：「FocusCat 有新版 0.6.10」（版本號是舉例），底下一行寫你現在用的是哪一版。
+它不跳通知、選單列也不多一個點，你打開面板才看得到。</p>
+<ul>
+<li><strong>下載</strong>、<strong>看更新內容</strong>：用瀏覽器打開 GitHub 上那一版的頁面。FocusCat 不會自己換掉自己，下載後照平常的方式裝。</li>
+<li><strong>這版先不要</strong>：卡片收掉，這一版不再提醒。原地留兩行字，第二行是「要反悔到設定&nbsp;▸&nbsp;一般。」下一版出來才會再出現。</li>
+</ul>
+<figure><img src="img/focuscat-panel-update-notice-light.png" alt="面板最下面、「今天小結」「設定」那排上面多一張小卡：粗體「FocusCat 有新版 0.6.11」，下一行灰字「你現在用的是 0.6.10。」，再下面兩顆灰底按鈕「下載」「看更新內容」和一行字按鈕「這版先不要」"><figcaption>有新版時，面板最下面多一張小卡（淺色，假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-notice-dark.png" alt="同一張新版小卡的深色樣子：「FocusCat 有新版 0.6.11」「你現在用的是 0.6.10。」，按鈕「下載」「看更新內容」「這版先不要」"><figcaption>深色的樣子</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-skipped-light.png" alt="按了「這版先不要」之後，小卡的位置留兩行置中灰字：「好，0.6.11 不再提醒。下一版出了才會再出現。」換行「要反悔到設定 ▸ 一般。」"><figcaption>按了「這版先不要」之後留下的兩行字（假資料）</figcaption></figure>
+<p>FocusCat 打開時看一次（上次查完不到 1 小時的話，等滿 1 小時再看），查到之後每天看一次；沒查到（例如沒網路）的話，1 小時後再試。只問 GitHub「最新版是幾號」，不會送出你的任何資料。
+面板上不講「沒查到」，也不跳錯誤；原因寫在設定 ▸ 一般的「新版狀態」那一列，也記在 <code>~/Library/Logs/FocusCat/update-check.log</code>。
+不想要的話，到設定 ▸ 一般把「有新版時告訴我」關掉，關掉之後就完全不連網。</p>
+
+<p><strong>設定 ▸ 一般的「新版狀態」</strong></p>
+<p>「有新版時告訴我」底下那一列寫現在的情況：</p>
+<ul>
+<li><strong>有新版</strong>：「GitHub 上有 X，你用的是 Y。」底下寫什麼時候查的（例如「今天 14:02 查的。」），旁邊有「下載」「看更新內容」。</li>
+<li><strong>按過「這版先不要」</strong>：多一句「你按過「這版先不要」，面板不會提醒這一版。」按<strong>恢復提醒</strong>就反悔，面板那張小卡回來。</li>
+<li><strong>已經是最新版</strong>：寫「已經是最新版。」和查的時間。</li>
+<li><strong>沒查到</strong>：寫「上次沒查到（今天 14:02）。」、原因一句（連不上 GitHub、GitHub 上還沒有公開的版本、一小時內查太多次……）、下一次幾點自動再查。之前查到的新版不會因為這次沒查到就藏起來。</li>
+<li><strong>開關關著</strong>：寫「已關掉，不會連網。」，這時「檢查更新」不能按。</li>
+</ul>
+<p>右邊的<strong>檢查更新</strong>按了馬上去問一次。查詢中按鈕變「查詢中…」；查完 1 分鐘內按鈕變淡，底下寫「剛查過，1 分鐘後可以再查。」（GitHub 一小時最多讓人問 60 次，這樣連按不會把自己鎖住）。
+上次查的結果會存起來，重開 FocusCat 後這一列馬上有東西看；存起來的只有時間、查到沒有、版本號、那一版的網址和沒查到的原因一句。</p>
+<figure><img src="img/focuscat-settings-window-general.png" alt="設定視窗的「一般」頁：「開機後自動打開」開關、「資料存在哪裡」與「換位置」按鈕、「有新版時告訴我」開關（開著）；最下面一列「新版狀態」：「GitHub 上有比手上新的版本」那一句，灰字「你按過「這版先不要」，面板不會提醒這一版。今天 14:02 查的。」，下面三顆按鈕「恢復提醒」「下載」「看更新內容」，右上一顆「檢查更新」"><figcaption>設定 → 一般 → 新版狀態（按過「這版先不要」，假資料）</figcaption></figure>
+<figure><img src="img/focuscat-settings-update-failed.png" alt="設定 → 一般的「新版狀態」沒查到時：橘色一行「上次沒查到（今天 14:02）。」，灰字「連不上 GitHub，可能是沒網路。下一次在 15:02 自動再查。」，右上「檢查更新」"><figcaption>沒查到時照實講原因和下一次的時間（假資料）</figcaption></figure>
+
+<h3 id="skins">換角色</h3>
+<p>「設定 → 外觀 → 角色造型」內建一款白底虎斑。想用自己的圖就放進
+<code>~/Library/Application Support/FocusCat/skins/&lt;名字&gt;/</code>，
+資料夾裡放 <code>run-1.png</code>、<code>run-2.png</code>…（至少一張），想指定站著的樣子再加一張 <code>sit.png</code>；
+放好之後那個名字就會出現在選單裡。</p>
+<p>休息的樣子放 <code>rest-1.png</code>、<code>rest-2.png</code>…；沒放就用 <code>sleep.png</code>，兩種都沒有就借虎斑的。
+張數多的造型不會變成慢動作：跑一圈的時間是固定的，張數多就每一格快一點。</p>
+<p id="skin-sound">要加叫聲：按「打開造型資料夾」。把聲音檔放進那個角色的資料夾，檔名取 <code>sound.m4a</code>（也可以用 <code>.aiff</code> 或 <code>.wav</code>），短短一聲就好。
+再到「設定 → 提醒 → 提示音」選「角色的叫聲」。</p>
+<p>圖太長太扁（寬超過高的 5 倍）、或讀不出來、或資料夾裡根本沒有 <code>run-1.png</code> 的，
+會被跳過——不會靜靜消失：那個資料夾的名字連同原因（例如「圖太長了（100×10），選單列放不下」）
+會列在造型格子下面，一看就知道要改哪一張。</p>
+<p><strong>預設保留原色。</strong>想要那種跟著選單列深淺色自動變的單色剪影，
+就打開造型格子下面那一列的「轉成單色剪影」——<strong>每一款造型都有這個開關，內建那款也有</strong>，
+各記各的，換造型不會互相影響。</p>
+<p class="note">內建那隻虎斑的圖是用兩支腳本產的（重上色、睡覺幀），腳本在原始碼 repo（目前沒有公開）的
+<code>pomodoro/scripts/skins/</code>，想自己重產一份或改顏色可以直接拿去跑，用法寫在檔頭。</p>
+<figure><img class="small" src="img/focuscat-cats-menubar-light.png" alt="淺色選單列上角色的每個姿勢：跑步、站著、睡覺、完成時的愛心"><figcaption>內建造型「白底虎斑」的每個姿勢</figcaption></figure>
+
+<h3 id="storage">它把東西記在哪</h3>
+<p>「資料存在哪裡」是設定 → 一般底下的一個普通設定，只有兩個位置：app 自己的
+<code>~/Library/Application Support/FocusCat/</code>，或跟 Claude 共用的
+<code>~/.claude/state/</code>。選後者時 FocusCat 用的是
+<code>~/.claude/state/focus.db</code>，跟 Claude 看到的是同一顆。</p>
+<p>下面這幾張是<strong>剛裝好、資料放 App Support</strong> 的樣子（送給別人的那一份就長這樣）：</p>
+<figure><img src="img/focuscat-fresh-panel-light.png" alt="剛裝好的面板：沒有裝任何外掛，也沒有 Jira"><figcaption>剛裝好的面板</figcaption></figure>
+<figure><img src="img/focuscat-fresh-panel-dark.png" alt="剛裝好的面板（深色）"><figcaption>剛裝好・深色</figcaption></figure>
+<figure><img class="small" src="img/focuscat-fresh-menubar-idle.png" alt="剛裝好的選單列：沒在計時"><figcaption>剛裝好・選單列</figcaption></figure>
+<figure><img src="img/focuscat-fresh-welcome.png" alt="第一次打開的說明"><figcaption>第一次打開</figcaption></figure>
+<p>剛裝好的 FocusCat 不需要 node，自己記在
+<code>~/Library/Application Support/FocusCat/</code>。要換位置就在設定裡按「換位置」，
+app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的是那一邊的清單，這邊的東西不會跟著搬，
+也不會不見，隨時可以換回來。</p>
+<p>Jira 與其他外掛接不接得上，<strong>跟資料存在哪裡無關</strong>——那由每一支外掛
+各自的開關決定，在設定 → 外掛。</p>
+<figure><img src="img/focuscat-settings-window-plugins.png" alt="設定 → 外掛：上面一張清單，Jira 我的卡、筆記收件各一列，每列左邊是名字和一行狀態（還沒跑過、關著），右邊是開關和一個往右的箭頭；下面一組是「新增外掛」「外掛資料夾」和連結「怎麼做自己的外掛？」；再下面是 Claude Code 套件"><figcaption>設定 → 外掛：第一層是清單</figcaption></figure>
+<p>設定 → 外掛分成兩層。第一層是清單，一支一列，照名字排。每一列寫這一支現在好不好：「還沒跑過」「09:30 跑過」「關著」，有問題時先寫問題。右邊的開關就是這一支開不開。</p>
+<p>新電腦上清單是空的，寫著「還沒有外掛」。下面「可以加的外掛」有「Jira 我的卡」和「自動化工作」：
+要用就按那一列的「安裝」，裝好它就出現在清單裡，開關已經打開。不用就不必理它，預設不會裝。
+自己寫的外掛，按「新增外掛」那一列的「新增…」。也可以直接把外掛放進外掛資料夾，清單就會出現它；「外掛資料夾」那一列按「打開」就看得到那個資料夾。</p>
+<p><strong>點一列，進那一支自己的頁面。</strong>左上角「‹ 外掛」回清單。頁面上有：</p>
+<ul>
+<li><strong>啟用</strong>：跟清單上的開關是同一個。<strong>放進建議</strong>：關掉的話，那支照常跑，只是它的事不進建議清單。外掛關著時也能改，打開後才生效。</li>
+<li><strong>狀態</strong>：上一次自動跑得怎麼樣，右邊「試跑」馬上跑一次，結果寫在底下。按「試跑」不算自動跑過，所以試跑成功後它還是寫「還沒跑過」。</li>
+<li><strong>多久跑一次</strong>：第一項「外掛預設」寫出外掛自己定的時間，其他是固定的幾個選項，最慢「每天一次」。改了只影響這一支。指令列是 <code>focus plugins interval &lt;名字&gt; &lt;秒數&gt;</code>，<code>reset</code> 回到預設。</li>
+<li><strong>類別</strong>：這支外掛的事算哪一類（見<a href="#categories">「類別與看板」</a>）。</li>
+<li><strong>設定</strong>：外掛自己要填的東西（網址、開關、選一個、勾好幾個）。一行字改完按「存」，開關、選單和勾選一改就存好。</li>
+<li><strong>維護</strong>：「移除…」把外掛資料夾丟進垃圾桶、開關記成關，先問一次。卡片、你存的設定都不動。附帶的外掛跟這一版附的不一樣時，這裡還有「換成附的版本…」（見<a href="#replace">下面</a>）。</li>
+</ul>
+<figure><img src="img/focuscat-settings-plugin-jira.png" alt="Jira 我的卡的頁面：最上面「‹ 外掛 Jira 我的卡」和一行說明「把指派給你、還沒做完的卡放進建議」；下面依序是啟用、放進建議、狀態（還沒跑過＋試跑）、多久跑一次（外掛預設（每 5 分鐘））、類別、設定（建議名稱的格式、收哪些狀態、不收哪些狀態，各有「讀取」）、維護（移除外掛）"><figcaption>設定 → 外掛 → Jira 我的卡（假外掛）</figcaption></figure>
+<p id="jira-statuses"><strong>要收哪些 Jira 狀態</strong>，在 Jira 我的卡那一頁的「設定」：「收哪些狀態」按「讀取」，從 Jira 讀一次有哪些狀態，再勾。還沒讀時那一格寫現在用的是什麼，例如「現在：In Progress（預設）」。
+「不收哪些狀態」沒設的話，只排除 Done。以前在舊版設定頁勾過的狀態，升上 0.6.2 會自己搬過來，那一格旁邊標「（從 0.6.1 搬來）」。
+如果那一頁說存的設定讀不懂，按「清掉存的值」，舊版勾過的狀態會在那一刻搬回來。
+指令列是 <code>focus plugins settings jira options include_statuses</code>（看有哪些狀態）與 <code>set include_statuses '["in progress","in review"]'</code>。</p>
+<p>Jira 建議的名字也在那一頁改：「建議名稱的格式」填 <code>{卡號} {標題}</code>，建議就會變成「DEMO-1 卡片標題」；空著按「存」就回到只有標題。指令列是 <code>focus plugins settings jira set title_format "{卡號} {標題}"</code>。</p>
+<p>想自己寫一支，見<a href="#plugins">「自己寫外掛」</a>。清單上寫「還沒跑過」就是還沒跑；跑了但失敗會寫「讀不到：」加原因，兩種不會混在一起。
+開關開著卻掃不到那一支時，那一列會用紅字講（多半是那一支被移走或刪掉了）。</p>
+<p id="replace"><strong>換成附的版本。</strong>附帶的 Jira、自動化工作裝好之後就是你的檔，FocusCat 升級時不會自己換。
+這一版附的跟你裝的不一樣時，清單那一列寫「附的版本不同」。點進去，在「維護」按「換成附的版本…」，確認框會寫舊的搬到哪。
+舊的整份改名留在外掛資料夾（例如 <code>jira.bak-focuscat-20261004-093015</code>），開關和你存的設定都照舊。你自己改過的外掛也能換。
+指令列是 <code>focus plugins install &lt;名字&gt; --replace</code>。</p>
+<p><strong>升級後面板會先講。</strong>升級 FocusCat 之後，附帶的外掛跟這一版附的不同，面板上面那張卡會多一段橘字，一支一段。不會自己換。</p>
+<ul>
+<li>「換成附的版本…」：跟設定頁那顆一樣，先問一次。舊的整份留成備份，開關和存的設定照舊。</li>
+<li>「不用了」：這一版不再問。下次升級還不同的話會再問一次。</li>
+<li>你自己改過的外掛也會出現這一段。換了的話，你改的地方會被蓋掉，要找回來去備份拿。</li>
+</ul>
+<figure><img src="img/focuscat-panel-plugin-update-light.png" alt="面板上面那張卡的「加一件到現在」底下多一段：橘字「附帶的外掛「Jira 我的卡」跟這一版 FocusCat 附的不同」，灰字「自己改過也會這樣顯示。換成附的版本會蓋掉改過的地方，舊的整份留在備份。」，兩顆按鈕「換成附的版本…」「不用了」"><figcaption>升級後，附帶的外掛跟這一版不同時面板上的那一段（假外掛）</figcaption></figure>
+<figure><img src="img/focuscat-settings-plugin-replace.png" alt="Jira 我的卡的頁面，最下面「維護」那一組多一列「附的版本不同／換掉後舊的會備份」，右邊按鈕「換成附的版本…」，下面是「移除外掛」"><figcaption>附的版本不同時，「維護」多一列「換成附的版本…」</figcaption></figure>
+<p class="note">還沒換的舊 Jira 外掛也收得到你在新頁面勾的狀態。「試跑」和設定頁會多一句灰字「舊版外掛照樣收得到；按「換成附的版本…」之後就能改。」，那不是問題，不用 unset。換成附的版本就沒了。</p>
+
+<h3 id="claude-kit">一鍵安裝到 Claude Code</h3>
+<p>想讓 Claude 看得到、改得動 FocusCat 裡的清單，要在 Claude Code 裝一小包東西：<code>focus</code> 指令、
+<code>focuscat</code> 指令、專注提示的 hook（連同它用到的兩支小程式）、一份 skill，0.6.10 起還有輸入框上方的番茄那一行（見<a href="#claude-kit-band">下面</a>）。0.5.0 起這一包<strong>不再帶外掛</strong>，外掛由各人自己加。<strong>app 裡已經帶著這一包</strong>，不用跑 <code>install.sh</code>：</p>
+<ol>
+<li>先把 FocusCat 拖進「應用程式」。直接從下載的地方打開的話，設定裡會多一行提醒你先拖過去。</li>
+<li>點角色 → 設定 → 外掛，往下捲到「Claude Code 套件」。</li>
+<li>按「安裝…」（還沒安裝時只有這一顆按得下去）。確認框會列出要寫幾個檔、寫到哪裡、<code>settings.json</code> 要加哪一段、原檔備份在哪。按「安裝」。</li>
+<li>裝好之後狀態那一列寫「已安裝」加版本號。之後新開的 Claude Code 對話就用得到。</li>
+</ol>
+<p id="claude-kit-band"><strong>輸入框上方的番茄那一行（0.6.10 起）：</strong>裝好套件之後，新開的 Claude Code 對話在輸入框上方多一行，例如「🍅 番茄 12:30 · 寫規格」：番茄還剩幾分、你正在做哪一件。休息時寫「休息 4:10」，暫停時前面多「暫停 ·」，沒在計時就不顯示。FocusCat 沒開、被強制結束（狀態檔超過 90 秒沒更新），或狀態檔讀不到時，這一行是灰字「讀不到番茄狀態」，不會留著舊的倒數，不會擋住你打字。系統時間往回調過時，狀態檔記的時間會比現在晚；晚 5 秒以上也算讀不到。FocusCat 開著的話，大約 30 秒內它寫下一次狀態，這一行就恢復。打 <code>/focus-panel</code> 會打開番茄面板，列出你現在在做的幾件，每件旁邊有「完成」，按了會再問一次「確定完成？」。這一行只讀 FocusCat 的狀態檔，不改任何東西。</p>
+<figure><img src="img/focuscat-claude-kit-band-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行紅字「🍅 番茄 12:30 · 寫番茄鐘使用手冊」；第二格輸入框上方一行灰字「讀不到番茄狀態」"><figcaption>輸入框上方那一行：番茄在跑（上）、讀不到狀態（下）。字是套件的程式用假狀態算出來的，框是示意，實際樣子跟著你的終端機配色（假資料）</figcaption></figure>
+<ul>
+<li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>，Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
+<li><strong>關掉：</strong>在終端機跑 <code>claude plugin disable focuscat-band@skills-dir</code>，或在 Claude Code 裡打 <code>/plugin</code> 找到 focuscat-band 停用。下一個對話起就不顯示，套件更新也不會再打開它。要打開回來就把 <code>disable</code> 換成 <code>enable</code>。這兩個做法都是 Claude Code 自己在 <code>settings.json</code> 記一筆「關著」，FocusCat 不碰。</li>
+<li>不想留這幾個檔，也可以直接刪掉 <code>~/.claude/skills/focuscat-band</code>。套件更新時不會裝回去，跟其他你刪掉的檔一樣列在「你刪掉的檔，不會裝回」。</li>
+</ul>
+<p class="src">依據：<code>mods/focuscat-band/hooks/band.mjs</code>（這一行寫什麼、讀不到時那句、狀態檔位置照 <code>FOCUSCAT_STATE</code>）、<code>mods/focuscat-band/hooks/register.tsx</code>（每秒重讀、<code>/focus-panel</code>）、<code>launchd/kit-files.txt</code>（套件帶哪幾個檔）。改了那裡要改這裡。</p>
+<p id="claude-kit-together"><strong>裝好之後 Claude 會怎麼配合你：</strong>你每次送訊息給 Claude Code，套件會先在背後告訴它幾件事。你不用多講。</p>
+<ul>
+<li><strong>你現在在做哪一件</strong>，這件拿在手上幾分鐘。同時在做好幾件時，它知道全部是哪幾件。</li>
+<li><strong>番茄還剩幾分鐘。</strong>番茄在跑時，它知道「現在在番茄中，還剩 N 分鐘」。休息時是「現在是休息時間」，暫停時是「番茄暫停中」。</li>
+<li><strong>沒有番茄在跑時提醒你。</strong>FocusCat 開著但沒有在計時，它會在回覆開頭用一行提醒你，並問要不要幫你按「開始」。你在那段對話裡說好，它才會按；之前說過好的不算。這句最多每 20 分鐘講一次，不會每句都講。剛關掉 FocusCat 時不提醒。這個提醒預設關閉：要打開，到「設定 → 外掛 → Claude Code 套件」打開「沒在計時時提醒我」，關掉就不再提醒。以前用 <code>touch ~/.claude/state/focuscat-idle-reminder.on</code> 打開過的話，升級後這個開關就是開著的，不用重設。</li>
+<li><strong>你要它做別件事時，它第一句先問你。</strong>手上只有一件：要換過去，還是先記到晚點再做？換的話會問原因：被打斷、卡住，還是有更急的。
+手上有好幾件：要換掉其中哪一件、加進來一起做，還是先記到晚點再做？</li>
+<li><strong>講的是同一件就不問。</strong>你提到那件的卡號，或打出它完整的名稱（至少 4 個字），它就知道是同一件。</li>
+<li><strong>你說好了它才動。</strong>附的 skill 要它先在對話裡講清楚、等你這一次說好，才去換事情、開始或暫停番茄。你叫它記一件事，它可以直接丟進「接下來」。</li>
+</ul>
+<p>讀不到就不講，也不會擋住你送出的訊息。FocusCat 沒開、超過 90 秒沒更新、記的時間比現在晚 5 秒以上（系統時間往回調過），或狀態讀不懂，就不講番茄那一句。
+問不到你在做哪一件，就不講那一句。</p>
+<p class="src">依據：<code>hooks/focus-context.py</code>（專注那句、要換時怎麼問、怎樣算講到同一件、讀不到不擋）、<code>hooks/pomodoro_state.py</code>（番茄那句、90 秒、晚 5 秒 <code>FUTURE_TOLERANCE_SECONDS</code>、沒有番茄在跑那句、20 分鐘 <code>IDLE_REMIND_SECONDS</code> 與開關檔 <code>IDLE_OPT_IN_NAME</code>）、<code>docs/skills/focuscat/SKILL.md</code>「規矩」（先問過才動）。改了那裡要改這裡。</p>
+<figure><img src="img/focuscat-settings-window-kit.png" alt="設定 → 外掛最底下的「Claude Code 套件」：狀態寫「還沒安裝」，右邊三顆按鈕「安裝…」「更新…」「移除…」，後兩顆是灰的；下面兩列開關：「有新版就自動更新」（開著）、「沒在計時時提醒我」（關著）"><figcaption>設定 → 外掛 → Claude Code 套件（還沒安裝）</figcaption></figure>
+<p>之後 app 換新版，打開時會自動更新套件，面板上講一行「Claude Code 套件已自動更新到」加版本號。這是「有新版就自動更新」那個開關管的，預設開著。</p>
+<p>自動更新只換檔，不動 <code>settings.json</code>。Claude Code 的使用者設定裡沒有專注提示的話（例如你自己拿掉了那條 hook），面板警告區會一直講「使用者設定裡沒有專注提示；接在專案設定裡的看不到。」：FocusCat 只看使用者設定，接在某個專案設定裡的它看不到，所以不說成「沒接上」。旁邊有兩顆按鈕：</p>
+<ul>
+<li><strong>接回去</strong>：只把提醒登記回 <code>settings.json</code>，寫之前先備份原檔，不換任何檔。接好那一行就不見了。</li>
+<li><strong>不用了</strong>：記住你不要，之後不再講。</li>
+</ul>
+<p>這裡（設定 → 外掛 → Claude Code 套件）也有同樣兩顆。按過「不用了」的話，這裡留一行「已選擇不接專注提示」和「接回去」，想改回來就按它。</p>
+<p><code>settings.json</code> 是 symlink、開頭有 BOM、有註解或尾逗號，也照樣看得出專注提示有沒有接上。真的看不懂（例如格式壞掉）時，改講「看不懂 settings.json，沒辦法確認專注提示有沒有接上。」，只有「不用了」一顆：這種檔按「接回去」一定失敗。</p>
+<p>自動更新沒成功的話，面板警告區會寫原因，到這裡按「更新…」再試一次。把開關關掉的話，狀態那一列底下會多一行「有新版」，面板上也會提醒一行，按「更新…」才換。第一次安裝一定要自己按；用 <code>install.sh</code> 裝的（開發者模式）不會自動更新。</p>
+<ul>
+<li><strong>你改過的檔不會被蓋掉。</strong>自動更新也一樣，面板那一行會列出這幾個檔。更新時會列在「你改過的檔（不會覆蓋）」底下；真的要換成新版，
+按「這幾個也用新版（舊的備份）」，舊的會另存成 <code>&lt;檔名&gt;.bak-focuscat-&lt;時間&gt;</code>。</li>
+<li><strong>你刪掉的檔不會被裝回去。</strong>更新（自動或手動）都不會把它放回來，這一區多一列「你刪掉的檔，不會裝回」寫出是哪幾個；按「裝回來」只寫回這幾個，不另外問，其他檔不動。更新的確認框也會多一句「你刪掉的 N 個檔不會裝回。」
+<figure><img src="img/focuscat-settings-kit-deleted.png" alt="Claude Code 套件：已安裝 0.0.1，下面是「有新版就自動更新」「沒在計時時提醒我」兩列開關，再下面「你刪掉的檔，不會裝回」寫著 skills/focuscat/SKILL.md，右邊一顆「裝回來」"><figcaption>你刪掉的檔列在這裡（假套件）</figcaption></figure></li>
+<li><strong>專注提示小程式不見了。</strong>如果你刪了 <code>focus-context.py</code>，Claude Code 的設定卻還記著每次先跑它，之後每次送訊息給 Claude Code 都會被擋下。這一區會用紅字講這件事，面板警告區也會講一行「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」兩邊都有兩顆按鈕：「裝回來」只把那個檔放回去；「拿掉那條設定」先備份 <code>settings.json</code> 再拿掉 app 加的那一條，之後 Claude 就不會知道你在做哪件事。
+<figure><img src="img/focuscat-settings-kit-script-missing.png" alt="Claude Code 套件：紅字「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」，下面灰字說明它是 focus-context.py，兩顆按鈕「裝回來」「拿掉那條設定」"><figcaption>設定頁這樣講（假套件）</figcaption></figure>
+<figure><img src="img/focuscat-panel-kit-script-missing.png" alt="面板上面那張卡底下一行橘字警告「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」，下面兩顆「裝回來」「拿掉那條設定」"><figcaption>面板也講一行（假資料）</figcaption></figure></li>
+<li><strong><code>settings.json</code> 只加一條 hook</strong>，寫之前先備份。整份會重新排版，內容不變。
+它讀不懂（例如裡面有註解）的話一個字都不改，改成顯示那幾行讓你自己貼，旁邊有「複製這幾行」。</li>
+<li><strong>以前一起裝的外掛留給你。</strong>0.4 以前的套件會順便裝幾支外掛。更新套件或按「移除…」時，這幾支都不刪，留在外掛資料夾，以後由你自己管。確認框會講是哪幾個檔。</li>
+<li>不要了就按「移除…」：只刪 app 裝的、而且你沒改過的檔；改過的留著並列出來。以前一起裝的外掛不刪。</li>
+<li>用 <code>install.sh</code> 裝過的機器（開發者模式），這一區會寫「這台用 install.sh 裝過（開發者模式），app 不動這些檔」，按鈕全灰。</li>
+</ul>
+<p>裝好之後，資料放 App Support 的人用 Claude 跑 <code>focus now</code>，讀到的也是 app 那一顆，不會是空的。</p>
+
+<h3 id="permissions">要你自己按的系統詢問</h3>
+<ul>
+<li><strong>通知</strong>：第一次啟動會問。沒給的話面板上會一直提醒你沒給。</li>
+<li><strong>行事曆</strong>：不會問。開會偵測讀的是你在「設定 → 開會」貼的網址，不是 Mac 的行事曆 App，所以不需要權限。</li>
+<li><strong>麥克風</strong>：偵測「麥克風有沒有被佔用」不需要錄音權限，但系統可能還是會問一次。</li>
+<li><strong>開機後自動打開</strong>：設定 → 一般 裡打開，系統會請你確認。</li>
+</ul>
+
+<!-- 自己寫外掛 -->
+<h2 id="plugins">3. 自己寫外掛</h2>
+<span class="when">什麼時候用：想讓建議清單也列出別的地方的事（某個檔、某個網站、某支指令的輸出）</span>
+<p>外掛是一支小程式。FocusCat 定時叫它，它回一份清單，清單裡的事就會出現在面板的建議清單。
+正式版附的 Jira 也是一支外掛（設定 → 外掛「可以加的外掛」按「安裝」才會裝）。</p>
+<p>自己寫一支只要四步，格式與權限不用自己記。</p>
+<p id="howto"><strong>不寫程式也可以：</strong>設定 → 外掛清單最下面有「怎麼做自己的外掛？」，會用瀏覽器打開 FocusCat 裡附的教學。
+裡面有三段可以直接複製給 Claude Code 的指令：做一支新的、幫它加一個設定、讓你的腳本出現在自動化看板。
+請 Claude Code 寫外掛時，叫它先跑 <code>focus plugin-guide</code>：這條指令會印出給 AI 看的外掛規格（<code>--path</code> 印檔案在哪），不用你自己複製貼上。</p>
+<p class="note">每一步在 app 裡都做得到，不用開終端機。想用指令列的 <code>focus</code> 也可以，
+它是<a href="#claude-kit">「一鍵安裝到 Claude Code」</a>那一包裝進來的，還沒裝的話先裝。</p>
+
+<h3 id="plugin-step1">第一步：建範本</h3>
+<p>到設定 → 外掛，在「新增外掛」那一列按「新增…」，填名字按「建立」。
+建好會直接打開那個資料夾，那一列也馬上出現在清單裡。指令列是：</p>
+<pre>focus plugins new mine</pre>
+<p><code>mine</code> 換成你要的名字：小寫英文開頭，只能用小寫英文、數字、<code>_</code> 和 <code>-</code>。
+指令會印出建在哪裡、下一步做什麼：</p>
+<pre>$ focus plugins new mine
+建好外掛 mine（~/.claude/focus-plugins/mine）
+  plugin.json   名字、標題、多久跑一次
+  run.mjs       程式本體：打開它，改「改這裡」那一段
+它預設是關著的。下一步：
+  1. focus plugins check mine    確認跑得起來、輸出形狀對
+  2. focus plugins enable mine   打開它，候選就會進建議清單
+  （或在 FocusCat 的設定 ▸ 外掛點進它的頁面，按「試跑」）</pre>
+<p>建好的外掛是<strong>關著的</strong>。同名的已經有了就不動，不會蓋掉你改過的檔。</p>
+
+<h3 id="plugin-step2">第二步：改「改這裡」那一段</h3>
+<p>打開那個資料夾裡的 <code>run.mjs</code>。設定 → 外掛「外掛資料夾」那一列的「打開」會直接開到上一層。
+範本長這樣，要改的只有 <code>── 改這裡 ──</code> 底下那幾行：把 <code>candidates</code> 換成你真正要列的事。</p>
+<pre>#!/usr/bin/env node
+// mine：FocusCat 外掛範本（focus plugins new 產生的）。
+// 核心從 stdin 送一行 JSON 進來（contract／now／today／settings），這支要在 stdout 回一份 JSON。
+// 讀不到來源時：exit 非 0，並在 stderr 寫一句人話——不要印一份空的候選然後 exit 0。
+// 除錯訊息寫到 stderr（console.error）；stdout 只能有那一份 JSON。
+// 改完跑 focus plugins check mine，會一條一條告訴你哪裡不對。
+
+let raw = '';
+process.stdin.on('data', (chunk) =&gt; { raw += chunk; });
+process.stdin.on('end', () =&gt; {
+  const request = JSON.parse(raw || '{}');
+  if (request.contract !== undefined &amp;&amp; request.contract !== 1) {
+    console.error(`看不懂 contract ${request.contract}`);
+    process.exit(4);
+  }
+
+  // ── 改這裡 ── 換成你真正要讀的東西（檔案、API、指令的輸出……）。
+  // 每一件的 key 一定要寫成 "mine:&lt;你自己的 id&gt;"，不然會被丟掉。
+  const candidates = [
+    { key: 'mine:sample', title: 'mine 的範例：打開 run.mjs 換成真的資料' },
+  ];
+
+  process.stdout.write(JSON.stringify({ contract: 1, candidates, excluded: [] }));
+});</pre>
+<ul>
+<li>每一件的 <code>key</code> 一定要寫成「外掛名字＋冒號＋你自己的編號」，例如 <code>mine:42</code>。</li>
+<li><code>title</code> 是面板上顯示的字。</li>
+<li>讀不到東西時，不要回一份空的清單。用 <code>process.exit(1)</code> 結束，再用 <code>console.error</code> 寫一句原因——
+這樣 FocusCat 才分得出「壞了」和「今天沒事」。</li>
+</ul>
+<p><code>plugin.json</code> 通常不用動。</p>
+
+<h3 id="plugin-step3">第三步：試跑</h3>
+<p>到設定 → 外掛，點你的外掛進它的頁面，在「狀態」那一列按「試跑」。跑完底下會多一行：
+成功寫「成功，拿到 N 件：」加前幾件的標題，失敗寫原因和怎麼修。
+成功但有提醒時，提醒接在後面，例如還沒打開的會寫「提醒：還沒開，候選不會進建議清單」。</p>
+<figure><img src="img/focuscat-settings-window-plugin-trial.png" alt="mine 的頁面：啟用關著、放進建議勾著；狀態寫「關著，不會自己跑」，右邊「試跑」，底下一行「成功，拿到 1 件：mine 的範例：打開 run.mjs 換成真的資料。提醒：還沒開，候選不會進建議清單」；下面是多久跑一次、類別、移除外掛"><figcaption>mine 的頁面，按過「試跑」之後（mine 是範本建的，還關著）</figcaption></figure>
+<p>想看完整的檢查，在終端機跑 <code>focus plugins check mine</code>。它一條一條查，每條一行：
+✓ 是過了、! 是提醒、✗ 是錯（下面多一行「怎麼修」）。「試跑」跟這條指令查的是同一份，結果一樣。
+外掛成功了、但在 stderr 留了話，會多一條提醒，原樣講出第一行。</p>
+<p>成功的樣子。最後那條「還沒開」是提醒，不是錯，第四步就會打開它：</p>
+<pre>$ focus plugins check mine
+檢查外掛 mine（~/.claude/focus-plugins/mine）
+✓ 外掛資料夾在
+✓ plugin.json 讀得懂，必填欄位都在
+✓ run 檔在：run.mjs
+✓ 用 node 跑，run 檔不需要可執行位
+✓ 權限沒問題（別人改不動這幾個檔）
+✓ 找得到 node：~/.nvm/versions/node/v20.20.1/bin/node
+✓ 沒有宣告 env
+✓ 試跑成功（結束碼 0）
+✓ 輸出形狀對，拿到 1 件：mine 的範例：打開 run.mjs 換成真的資料
+! 還沒開，候選不會進建議清單
+    怎麼修：focus plugins enable mine（或在設定 ▸ 外掛打開它）
+結論：跑得起來，但有 1 個提醒（標 ! 的那幾條）</pre>
+<p>失敗的樣子（<code>key</code> 忘了加 <code>mine:</code>）。照「怎麼修」那行改完，再跑一次：</p>
+<pre>$ focus plugins check mine
+檢查外掛 mine（~/.claude/focus-plugins/mine）
+✓ 外掛資料夾在
+✓ plugin.json 讀得懂，必填欄位都在
+✓ run 檔在：run.mjs
+✓ 用 node 跑，run 檔不需要可執行位
+✓ 權限沒問題（別人改不動這幾個檔）
+✓ 找得到 node：~/.nvm/versions/node/v20.20.1/bin/node
+✓ 沒有宣告 env
+✓ 試跑成功（結束碼 0）
+✗ 1 筆候選的 key 不是 mine:&lt;id&gt;（sample）
+    怎麼修：每一筆的 key 寫成 "mine:&lt;你自己的 id&gt;"
+! 還沒開，候選不會進建議清單
+    怎麼修：focus plugins enable mine（或在設定 ▸ 外掛打開它）
+結論：有 1 個問題要先修，修好再跑一次 focus plugins check mine
+focus: 外掛「mine」檢查沒過：有 1 個問題（每一條的怎麼修印在上面）</pre>
+
+<h3 id="plugin-step4">第四步：打開</h3>
+<p>在設定 → 外掛，把那一列的開關打開（或在它的頁面打開「啟用」），「放進建議」保持勾著。
+之後它回的事就會出現在面板的建議清單，排在內建那幾支後面，標題右邊的小標籤寫外掛的名字。
+指令列是 <code>focus plugins enable mine</code>。</p>
+<p>只想讓它照常跑、不要進建議清單，就取消「放進建議」（指令列是 <code>focus plugins suggest mine off</code>）。</p>
+
+<h3 id="plugin-settings">讓外掛有自己的設定</h3>
+<p>外掛要你填網址或開關的話，在 <code>plugin.json</code> 加一段 <code>settings</code>：</p>
+<pre>"settings": [
+  {"key": "endpoint", "label": "網址", "type": "text"},
+  {"key": "strict", "label": "嚴格模式", "type": "toggle", "default": false},
+  {"key": "team", "label": "組別", "type": "select", "options": ["甲", "乙"], "default": "甲"}
+]</pre>
+<p>那一支頁面的「設定」組就會多出這三格。一行字打完按「存」；開關與選單一改就存好。
+自己改過的那一格旁邊有「用預設值」，按了就回到 <code>default</code>。</p>
+<p>一行字的框只顯示你存過的值，空著時灰字寫「預設：…」；空著按「存」＝回到預設（等同 <code>unset</code>）。
+沒填值的開關旁邊會寫「沒設定，不會送」。</p>
+<p><strong>勾好幾個（多選，0.6.2）</strong>：<code>"type": "multi"</code>。選項可以寫死，也可以由外掛讀一次給：</p>
+<pre>{"key": "days", "label": "提醒哪幾天", "type": "multi", "options": ["週一", "週二", "週三"], "default": ["週一"]},
+{"key": "labels", "label": "收哪些標籤", "type": "multi", "options_from": "plugin",
+ "default": [{"value": "in progress", "label": "In Progress"}]}</pre>
+<p>寫死的那種，打開就是一排勾選框。<code>options_from</code> 的那種，要按「讀取」：FocusCat 叫你的外掛讀一次有哪些選項，讀到就變成勾選框，勾一下就存好。</p>
+<ul>
+<li>存過、但這次沒讀到的值不會消失：照樣列在最後、勾著，標「（沒讀到）」。</li>
+<li>讀不到時寫紅字原因，可以自己打，用逗號隔開，按「存」。</li>
+<li>全部取消＝一個都不收，畫面會用橘字講明。「用預設值」拿掉你的選擇。</li>
+<li><code>default</code> 可以寫成 <code>{"value", "label"}</code>：送給外掛的是 value，還沒讀選項時畫面寫 label，例如「現在：In Progress（預設）」。</li>
+</ul>
+<figure><img src="img/focuscat-settings-plugin-multi-loaded.png" alt="「設定」組：「收哪些標籤」讀到四個選項 To Do、In Progress、Code Review、Done，In Progress 勾著，下面一個灰字「重讀」；「提醒哪幾天」是寫死的週一到週五，週一、週三勾著"><figcaption>讀到選項之後（mine 是假外掛）</figcaption></figure>
+<figure><img src="img/focuscat-settings-plugin-multi-missing.png" alt="「收哪些標籤」：讀到的四個選項之後，多一列勾著的「QA Verify（沒讀到）」"><figcaption>存過、這次沒讀到的值照樣列出來</figcaption></figure>
+<figure><img src="img/focuscat-settings-plugin-multi-failed.png" alt="「收哪些標籤」：紅字「讀不到：MINE_TOKEN 沒設」，下面「或自己輸入，用逗號隔開」和一個輸入框（填著 In Progress）與「存」，再下面「重讀」「用預設值」"><figcaption>讀不到時可以自己打</figcaption></figure>
+<p>外掛讀選項那一次，請求裡多一欄 <code>"trigger": {"type": "options", "key": "labels"}</code>，要回 <code>{"contract": 1, "options": […]}</code>。寫法見 外掛規格 <code>plugins.md</code>「讀一次選項」。</p>
+<p>外掛每次跑的時候，會在收到的請求裡多一欄 <code>plugin_settings</code>，裡面就是這幾格的值。
+沒填、也沒有 <code>default</code> 的那一格不會出現。指令列也可以改：</p>
+<pre>focus plugins settings mine                      # 看現在的值
+focus plugins settings mine set strict on        # 改一格（開關只收 on／off）
+focus plugins settings mine set labels '["In Progress","Review"]'   # 多選只收 JSON 陣列；'[]'＝一個都不收
+focus plugins settings mine options labels       # 叫外掛讀一次選項
+focus plugins settings mine unset team           # 回到預設值（一行字不能 set 成空字串，要用 unset）
+focus plugins settings mine reset                # 這一支存的值全部清掉</pre>
+<p class="note">你改過 <code>plugin.json</code>（例如拿掉一個選項）之後，原本存的值可能對不上。
+對不上時這支外掛先不跑，免得它拿預設值替你做事。外掛清單那一列會用紅字寫是哪一格、存的是什麼，旁邊有「去重選」。
+點進去重新選一次，或按「用預設值」，它就會照常跑。
+設定存在 FocusCat 的資料庫裡，換「資料存在哪裡」時會跟著資料走。</p>
+<p class="note">Jira 的帳號和 token（<code>JIRA_USERNAME</code>、<code>JIRA_API_TOKEN</code>）只交給附帶的 Jira 外掛，別的外掛在 <code>env</code> 要了也拿不到。
+查 Jira 時只連 <code>https://</code> 開頭的網址，連線的程式只拿到 PATH 和代理設定。錯誤訊息裡的 token 和代理帳密會遮掉。
+其他變數，外掛要了就給。所以裝別人寫的外掛之前，先看一下它的 <code>env</code> 要了哪些東西。</p>
+<p class="note">外掛跑得比 2 秒慢也沒關係。面板不會等它：FocusCat 開著時會照 <code>plugin.json</code> 的
+<code>interval_seconds</code> 在背景跑它，最多等 <code>timeout_seconds</code> 那麼久。還沒更新完的那一下，
+面板先用上一次成功的結果。只有從來沒成功過、或上一次就失敗了，才會顯示原因。</p>
+
+<h3 id="plugin-fields">外掛的類別、狀態、按鈕和文字（0.6.1）</h3>
+<p>候選除了 <code>key</code>、<code>title</code>，還可以帶一行說明（<code>detail</code>）、網址（<code>url</code>）、狀態字（<code>status</code>）和按鈕（<code>actions</code>，最多 4 顆，只有打開網址、內建動作、交回外掛三種）。
+<code>plugin.json</code> 可以寫 <code>default_category</code> 建議放哪一類，或宣告它要的類別。
+<code>kind: "insight"</code> 是文字外掛：回一段文字而不是事情。欄位與規則寫在 外掛規格 <code>plugins.md</code> 的「類別」「狀態與按鈕」「文字外掛」幾節。</p>
+
+<h3 id="plugin-errors">常見的錯誤</h3>
+<table>
+<tr><th style="width:42%">檢查時看到</th><th>怎麼修</th></tr>
+<tr><td>✗ plugin 檔別人也能改，不跑（run.mjs）</td><td>檔案權限太寬，FocusCat 為了安全不跑它。照「怎麼修」那行跑 <code>chmod go-w "&lt;那個檔&gt;"</code>。</td></tr>
+<tr><td>✗ 試跑失敗：超過 … 秒還沒回應</td><td>跑太久。把 <code>plugin.json</code> 的 <code>timeout_seconds</code> 調大（「怎麼修」那行會寫現在幾秒、上限多少），或讓它跑快一點，例如先把結果存成檔，外掛只讀那個檔。</td></tr>
+<tr><td>✗ 1 筆候選的 key 不是 mine:&lt;id&gt;（sample）</td><td><code>key</code> 少了外掛名字。改成 <code>mine:&lt;你的編號&gt;</code>。寫錯的那幾筆會被丟掉，寫對的照常進來。</td></tr>
+</table>
+<p>更細的規則——FocusCat 送進來的請求有哪些欄位、怎麼讀 token 這類環境變數、多久跑一次、跑太久會怎樣、
+<code>check</code> 每一條查什麼——寫在外掛規格 <code>plugins.md</code>「怎麼寫一支 plugin」。</p>
+
+<!-- 3 -->
+<h2 id="daily">4. 每天怎麼用</h2>
+<p>全部從選單列的角色開始。點一下打開面板，做完事情點旁邊任何地方就收起來。</p>
+<p>面板最下面只有兩個文字按鈕：左邊「今天小結」、右邊「設定」。縮小版沒有這一排。使用手冊、回報問題、結束 FocusCat 都在設定視窗最底下（選單列的角色按右鍵也有「設定…」與「結束 FocusCat」）。「回報問題…」在「現在」那張卡右上的「⋯」最下面也有一個。</p>
+
+<h3 id="pick-one">選一件開始</h3>
+<span class="when">什麼時候用：手上沒有在做的事，要開始下一件</span>
+<p>上面那張卡寫「還沒挑，從下面點一件」時，代表現在沒在做任何一件。
+清單是空的時候（例如剛裝好），它會改寫「清單是空的，從最下面那一格丟一件進來」。</p>
+<figure><img src="img/focuscat-panel-nofocus-light.png" alt="面板：上面那張卡沒有正在做的事，主按鈕是「開始計時（不指定事情）」，下面是接下來與建議加進來"><figcaption>沒在專注時的面板</figcaption></figure>
+<p>「接下來」與「建議加進來」每一列右邊都有一顆「開始」，按了就開始做它；標題本身點了不會怎樣。
+「建議加進來」平常收成一顆膠囊「建議加進來 N」，跟「晚點再做」「今天做完」「快到期」排在同一排，點了才展開；
+每一列的「⋯」裡有「加到接下來」，先排進來、晚一點再做。</p>
+<p>這時候主按鈕寫「開始計時（不指定事情）」：按了只開始計時，不會替你挑一件。番茄鐘與專注的事是分開的，
+可以只專注不計時，也可以只計時不指定做哪一件。</p>
+
+<h3 id="switch">換一件</h3>
+<span class="when">什麼時候用：做到一半被打斷、卡住了、或有更急的事</span>
+<p>這兩項在「現在」那張卡右上「⋯」選單的最上面：</p>
+<ul>
+<li><strong>換一件</strong>：這件等一下再做，先換下一件（回到「接下來」）。</li>
+<li><strong>晚點再做</strong>：這件今天先不碰，放進「晚點再做」。放完會問「為什麼晚點再做？」，
+下面三個原因「卡住了」「被打斷」「有更急的」可以挑一個（再按一次就取消，不挑也行），再留一句「做到哪？」。
+按 Enter 就過，那一格不會自己消失（0.6.10 起；以前只有一個「卡住了」小勾）。</li>
+</ul>
+<p>同一個「⋯」選單裡還有「預計幾個番茄」「改名稱」「在等」「跳過這段」「重新計時…」。最下面隔一條線是「回報問題…」；手上沒事時，選單裡只剩「跳過這段」「重新計時…」和「回報問題…」。
+「重新計時…」會把這一段倒數歸零，所以按了會先問一次，按「重新計時」才算數，按「不要」什麼都不動。</p>
+<p>選完面板上會說一句結果（「已放到晚點再做」或「先換到：⋯」），不用自己猜有沒有生效。</p>
+<p>換走時它會問你「做到哪了」，留一句就好（不想留就按跳過）。
+這一格<strong>不會自己消失</strong>，留到你按 Enter、跳過或 Esc 為止。
+點面板外面、點選單列的角色關掉面板時它還在，打到一半的字也還在，回來可以接著打。
+還沒收起就又換了一件的話，上一件那一格會先照當時的樣子記下來（打的字、挑的原因都記在上一件），再換成新的空白格。
+下次回到這件事，那句話會顯示在標題底下。</p>
+<figure><img src="img/focuscat-panel-note-prompt-light.png" alt="面板問「做到哪了」，底下一個輸入框"><figcaption>留一句，回來時才接得上</figcaption></figure>
+<p>被打斷的事，下次會以「做到一半」排在建議前面。</p>
+<p>想直接換到「接下來」、「晚點再做」或建議裡的某一件，按那一列的「開始」，<strong>按下去就換過去</strong>，不用再按一次。
+換完，選單列角色底下會跳一個小視窗：</p>
+<ul>
+<li>最上面寫「✓ 已經換成「…」」，下面問「「原本那件」為什麼先放下？」。</li>
+<li>三格並排，每格底下寫會發生什麼：<strong>有更急的</strong>（回到接下來）、<strong>被打斷</strong>（回到接下來）、<strong>卡住了</strong>（放到晚點再做）。預設是「有更急的」。選了的那一格是紅框，右上角有一個勾。</li>
+<li>「做到哪？（可空白）」：留一句，下次回到那件事時會顯示。這個流程只問這一次，面板上不會再跳「做到哪？」那一格。</li>
+<li><strong>記下來</strong>（Enter，按鈕上標著 ↩，紅色、在最右邊）：照你選的記。選「卡住了」，原本那件會從「接下來」搬到「晚點再做」。</li>
+<li>點小視窗以外的地方（包括又按了另一件的「開始」）：跟按「記下來」一樣，照你當下選的原因和打的字記下來。沒動過就是預設。注音還在選字時點別處不算，小視窗會留著。</li>
+<li><strong>略過</strong>（Esc，按鈕上標著 esc）：照預設，原本那件在「接下來」，打的字不要了。</li>
+<li>放著不管：換已經發生了，不用等你回答，也不會卡住任何事。小視窗留著，你下次點別的地方時，照當時選的和打的記下來。</li>
+<li>記不進去的時候（例如那件剛好被別的地方移走了），小視窗會留著，選的原因和打的字都還在，上面寫原因。</li>
+<li><strong>換回去</strong>（按錯的時候）：整個撤銷。剛換過去的那件回到原本的位置（從「晚點再做」開始的，放回去時照舊是原本放進去的時間；從「在等」開始的回到「在等」，開始等的時間、到了沒都照舊），原本那件回到手上，計時接著跑。只有小視窗還開著時才有；關掉之後要換回去，就再按一次那件的「開始」。</li>
+</ul>
+<p>鍵盤：一打開游標就在「做到哪」，打字直接進去；「做到哪」還沒打字時按 ← → 換原因。
+小視窗還開著又按了另一件的「開始」：前一個照你當下選的原因和打的字記下來（跟按「記下來」一樣，沒動過就是預設），換成新的小視窗。
+用快捷鍵、指令列或 Claude 換的時候本來就會帶原因，不會跳這個小視窗。</p>
+
+<h3 id="park">晚點再做</h3>
+<span class="when">什麼時候用：這件今天不做了，但不想忘記</span>
+<p>在「⋯」選單按「晚點再做」。要拿回來就點下面那排的「晚點再做 N」膠囊，每一列右邊有三顆：
+「拿回接下來」放回「接下來」最前面；「開始」直接變成現在這件（手上有事時一樣直接換過去，換完問原因）；
+「完成」是那件其實已經做完了，按了算進今天做完（不算專心時間）。</p>
+<p>留過「做到哪」的那一列，第二行寫「做到：…」。</p>
+<p>放進「在等」、或從一起做的幾件裡「移出現在」時，也會像這樣問原因和做到哪（0.6.10）。問的那一格在面板最上面，寫著是哪一件。</p>
+<figure><img src="img/focuscat-panel-reason-ask-light.png" alt="面板最上面：灰字「為什麼晚點再做？」，下一行「整理收件夾」，三格「卡住了」（紅框、右上角打勾）「被打斷」「有更急的」，再下面一格「等 IT 開權限」和「跳過」"><figcaption>晚點再做之後：挑一個原因、留一句做到哪，按 Enter 就過（假資料）</figcaption></figure>
+<p>「接下來」沒有件數上限，一次顯示 5 件，其餘收成「還有 N 件」。</p>
+
+<h3 id="reorder">排順序</h3>
+<span class="when">什麼時候用：想先做的事不在最上面</span>
+<p>「接下來」「在等」，還有一起做的那幾件，都可以<strong>上下拖曳</strong>換順序（0.6.10）：</p>
+<ul>
+<li>按住一列往上或往下拉。整列都能抓，要移動一小段才算拖，所以只是點「開始」「⋯」不會拖到。</li>
+<li>拖起來的那一列會浮起來，旁邊的讓出位置。放開就排好：那一列順著你的手滑進新位置。還在滑的時候，也能再抓起來（0.6.12）。</li>
+<li>一起做的那幾件，拖到第一個就是主要那件，番茄時間算給它。</li>
+<li>只在同一區裡換，不能從「接下來」拖進「晚點再做」（換區照舊用按鈕）。到期的事一直排在「接下來」最前面，等到了的一直排在「在等」最前面，它們只在自己那幾件裡互換。</li>
+<li>拖到這一區（或到期那幾件）的上下邊，那一列只會再多走一點點，越拉越緊，不會飄進別區。放開就滑回最近的一格（0.6.14）。</li>
+<li>新丟進來的事照舊放在最上面，你排好的其他件順序不變。</li>
+</ul>
+<figure><img src="img/focuscat-panel-reorder-dragging-light.png" alt="「接下來」四件：「看一下 MR 留言」那一列浮起來、帶陰影，正被拖到「回信給 PM」下面，「整理桌面截圖的說明」「整理收件夾」往下讓了一格"><figcaption>拖曳中：拿起來的那一列浮起，旁邊的讓位（假資料）</figcaption></figure>
+<p>不方便拖的時候：那一列的「⋯」有「移到最上面」「上移」「下移」；或把滑鼠停在那一列上按 <strong>⌥↑／⌥↓</strong>。已經在最上面的那件，「上移」「移到最上面」不能按。</p>
+<figure><img src="img/focuscat-panel-reorder-menu-light.png" alt="「⋯」選單的項目，由上到下：「完成」「加到現在（一起做）」「晚點再做」「在等（不算專心）」，分隔線，「移到最上面」「上移」「下移」，分隔線，「改名稱」「寫註解…」「移除…」"><figcaption>「⋯」裡的「移到最上面」「上移」「下移」（照選單的排法畫出來的示意，不是系統選單本身；假資料）</figcaption></figure>
+<p><strong>拖錯了按得回來。</strong>排完面板最上面長出一行「已移動：…」，旁邊一顆「還原」，按了排回原本的位置。做了別的事那一行就收掉。</p>
+<figure><img src="img/focuscat-panel-reorder-undo-light.png" alt="面板最上面一行「已移動：看一下 MR 留言」，右邊一顆「還原」；「接下來」第二件是「看一下 MR 留言」"><figcaption>排完之後那一行「已移動」和「還原」（假資料）</figcaption></figure>
+<p>某一類的事不想讓它被拖：到「設定 → 類別」，把那一類的「這一類可以拖曳換順序」關掉（預設打開），那一類的事就不能用滑鼠拖；「⋯」的移到最上面、上移、下移和 ⌥↑／⌥↓ 照常能用。</p>
+<p id="no-drag"><strong>拖不動的時候</strong>（0.6.14）：拉那一列，它會跟著動一點點，越拉越緊，放開就彈回去。這樣你知道有按到，只是這件不能拖。
+如果是因為類別關掉了拖曳，面板最上面會多一行「這一類關掉了拖曳・可以用「⋯」排」，旁邊一顆「去設定」。按了打開設定的類別頁，直接捲到那一類。
+每次拖都會出現；你做了別的事，那一行就收起來。那一區只有一件、或面板正在忙時，拉了也會動一點點再彈回，但不出這一行。</p>
+<figure><img src="img/focuscat-panel-drag-stuck-hint-light.png" alt="面板最上面一行「這一類關掉了拖曳・可以用「⋯」排」，右邊一顆「去設定」；「接下來」第二件「整理桌面截圖的說明」被往下拉了一點點"><figcaption>拉一件拖不動的事：它只動一點點，最上面講原因（假資料）</figcaption></figure>
+<p><strong>拖不動的那件，位置也固定</strong>（0.6.14）：別件拖過它時會跳過它，它留在原本的格子。「⋯」的上移、下移、移到最上面和 ⌥↑／⌥↓ 經過它也會跳過。
+例如「讀完規格、夜間建置、回覆留言」，夜間建置拖不動，把讀完規格拖到最下面，會變成「回覆留言、夜間建置、讀完規格」。
+這時一次動到兩件，兩件一起存，不會只存進一半。要排它自己，用「⋯」或 ⌥↑／⌥↓，它照樣會動。</p>
+<p>系統開了「減少動態效果」：一樣拖得動。旁邊的直接換位、不滑動，放開的那一列淡淡地出現，「已移動」那一行直接出現。</p>
+<p>終端機或 Claude：<code>focus move &lt;key&gt; --to 1</code>（排到第幾個）、<code>--before &lt;key&gt;</code>／<code>--after &lt;key&gt;</code>（排在某一件前後）、<code>focus move --order &lt;key&gt; &lt;key&gt;…</code>（這幾件照給的先後排，一次存完；0.6.14）。</p>
+
+<h3 id="row-note">寫註解</h3>
+<span class="when">什麼時候用：想在某一件旁邊記一句想法、卡在哪、下一步</span>
+<p>每一列右邊的「⋯」有「寫註解…」（現在、接下來、晚點再做、在等都有）。按了那一列變成一格輸入框，裡面先填好原本的註解：</p>
+<ul>
+<li>打完按 <strong>Enter</strong> 或「記下來」存起來。</li>
+<li>按 <strong>Esc</strong> 不改。</li>
+<li>清成空白再按 Enter，就是把註解拿掉。</li>
+</ul>
+<figure><img src="img/focuscat-panel-row-note-edit-light.png" alt="「接下來」第一件「回信給 PM」那一列變成輸入框，裡面寫著「先算每人每月用量，再決定上限」，右邊一顆「記下來」"><figcaption>「⋯」→「寫註解…」：那一列原地變成輸入框（假資料）</figcaption></figure>
+<p>註解就是「做到哪」那一句，寫在那一列第二行，開頭是「上次做到：」。太長會被截掉，滑鼠移上去看得到全文。</p>
+<figure><img src="img/focuscat-panel-row-note-shown-light.png" alt="一起做三件：第二件「改設定頁的字」第二行寫「上次做到：剩外掛頁」；「在等」那一件第二行「等了 42 分鐘・到了按『等到了』・上次做到：問…」；「接下來」的「整理桌面截圖的說明」第二行「上次做到：先挑出要換…」"><figcaption>註解寫在每一列的第二行（假資料）</figcaption></figure>
+<p>終端機或 Claude：<code>focus note &lt;key&gt; -- 一句話</code>；不帶字就是拿掉。</p>
+
+<h3 id="rename">改名稱</h3>
+<span class="when">什麼時候用：名字太長、看不懂，或想換成自己習慣的說法</span>
+<p>每一件右邊的「⋯」裡有「改名稱」。按了之後，標題變成輸入框，裡面先填好原本的名字：</p>
+<ul>
+<li>改好按 <strong>Enter</strong> 存起來。</li>
+<li>按 <strong>Esc</strong>，或點到別的地方，就是取消，名字不變。</li>
+<li>清成空白、或沒改就按 Enter，也當作取消。</li>
+</ul>
+<p>四格都能改：現在、接下來、晚點再做、在等。一次改一件。</p>
+<p>Jira 與外掛帶來的卡，輸入框下面會多一行小字，提醒你這裡只改自己看到的名字，
+Jira 或外掛那邊的標題不會跟著變。之後那邊重新整理，也不會把你取的名字蓋回去。</p>
+<p>終端機或 Claude：<code>focus rename &lt;key&gt; &lt;新名稱&gt;</code>。
+key 是那件事的代號，例如 <code>jira:</code> 或外掛名字開頭的那串，<code>focus now</code> 會列出來。
+新名稱不用加引號，後面的字會接成一句。
+要改的是現在專注那一件，不用先查 key：<code>focus rename --current -- &lt;新名稱&gt;</code>。</p>
+<p class="note">指令名跟面板上的字不一樣（例如 <code>park</code> 是「晚點再做」、<code>watch</code> 是「在等」）。跑 <code>focus help</code> 會印整張對照表。</p>
+
+<h3 id="done">完成</h3>
+<span class="when">什麼時候用：這件做完了</span>
+<p>按「完成」。完成的事不會再出現在建議裡；下一件<strong>不會自動開始</strong>，要你自己點。</p>
+<p><strong>按錯了可以拉回來。</strong>按完成之後，面板上多一行「已完成：…」，旁邊一顆「復原」。
+按了那件回到「接下來」最前面，今天做完少一件；已經算進的專心時間照算，那段時間真的有做。</p>
+<p>那一行不見了也可以：點「今天做完」膠囊，每一列右邊有「拿回接下來」，效果一樣。</p>
+<p id="row-done"><strong>「接下來」裡的事也能直接完成。</strong>點那一列右邊的「⋯」，第一項就是「完成」，不用先開始。
+每一列都有，不管是你自己丟進來的、對話來的，還是 Jira、自動化或別的外掛帶來的。
+外掛帶來的那件只在 FocusCat 記成做完，不會去改 Jira 或外掛那邊。這樣做完的不算專心時間。按錯了一樣按「復原」。</p>
+<figure><img src="img/focuscat-panel-row-done-light.png" alt="面板最上面一行綠勾「已完成：DEMO-88 匯入 CSV 時遇到全形逗號」，右邊一顆「復原」；「接下來」剩「回信給 PM」「整理桌面截圖的說明」兩件；「今天做完 3」"><figcaption>在「接下來」那一列的「⋯」按「完成」之後：那件不見了，上面多一行「已完成」和「復原」（假資料）</figcaption></figure>
+<p>終端機或 Claude：<code>focus done &lt;key&gt;</code> 直接做完「接下來」「晚點再做」或「在等」裡的某一件；
+<code>focus undone &lt;key&gt;</code> 把今天做完的某一件拿回「接下來」。</p>
+
+<h3 id="remove">移除一件</h3>
+<span class="when">什麼時候用：這件不做了，也不想留著</span>
+<p>那一件右邊的「⋯」選「移除…」。確認就在那一列原地出現：按鈕暫時換成紅字「移除」和「不要」，旁邊寫「移除了就不在清單裡了」。按「移除」才真的拿掉；按「不要」或放著不管，那件留著。</p>
+<figure><img src="img/focuscat-panel-remove-in-place.png" alt="面板「接下來」最後一列「把舊的設定頁截圖換成新版」：第二行寫「移除了就不在清單裡了」，右邊兩顆「移除」（紅字）「不要」"><figcaption>按了「移除…」之後，確認就在那一列（假資料）</figcaption></figure>
+
+<h3 id="daily-quick-add">丟一件進來</h3>
+<span class="when">什麼時候用：突然想到一件事，先記下來，不想現在做</span>
+<p>三種方式，結果一樣：</p>
+<ul>
+<li>面板最下面那一格打字，按 Enter 或右邊的圓形「＋」。</li>
+<li>任何時候按你在 設定 ▸ 收件 ▸ 快捷鍵 ▸ 丟一件進來 選的那一組（沒選過的話，會自動挑一組不跟 macOS 衝突的，多半是 ⌃⇧Space），跳出小輸入框。</li>
+<li>終端機或 Claude：<code>focuscat add "回信給客戶"</code>。</li>
+</ul>
+<p class="note"><code>--due 2026-09-20</code> 會記成這件事的到期日，在「接下來」排前面、用紅字標。
+快到期的時候，app 會在早上 10:00、下午 4:00 跳通知。
+不想收到的話，關掉 設定 ▸ 提醒 ▸「到期的事跳通知」。</p>
+<p>輸入框右邊那顆小日曆是到期日：按了才多出一列「要在哪天之前做完」和日期，不要了按「不設」。</p>
+<p>旁邊的下拉是「來源」，預設「手動」。下拉裡沒有想要的，選最後一項「新增來源…」當場加一個。</p>
+<p>丟進來的事會排在「接下來」最前面（快捷鍵小框也一樣），送出後會說一句「已記下，排在「接下來」最前面」。</p>
+
+<h3 id="sources">管理來源</h3>
+<span class="when">什麼時候用：想看有哪些來源、加一個新的，或刪掉用不到的</span>
+<p>「設定 → 收件 → 管理來源」。標「內建」的是 Teams、對話、手動，自動化會用到，不能刪。</p>
+<ul>
+<li><strong>新增</strong>：填名稱送出。</li>
+<li><strong>刪除…</strong>：不是內建的才有這顆。按了，那一列先問你：寫出有幾件事會失去這個標籤，旁邊是「刪除」和「不要」。事情本身不會刪，只是不再標這個來源，之後也不能再選它。10 秒沒按就自己收回。</li>
+</ul>
+<p>來源清單存在資料目錄的 <code>focus.db</code> 裡。你沒有自己加過的時候，用內建的五個：手動、Teams、對話、會議、Email。</p>
+
+<h3 id="tell-claude">跟 Claude 說</h3>
+<span class="when">什麼時候用：正在跟 Claude 聊天，順手交代</span>
+<table>
+<tr><th>你說</th><th>Claude 會做</th></tr>
+<tr><td>「幫我記一下 X」</td><td>把 X 記到「接下來」最前面，來源記成「對話」（面板上那一列的小標籤也寫「對話」）</td></tr>
+<tr><td>「開始 X」</td><td>把 X 設成現在專注。已經在做別件時不能直接開始，要先換一件、完成或晚點再做</td></tr>
+<tr><td>「換下一件」</td><td>問你原因（被打斷／卡住／有更急的），再換</td></tr>
+<tr><td>「這件在等 PM 回信」</td><td>問過你之後，把它放進「在等」</td></tr>
+<tr><td>「PM 回信了」</td><td>標成等到了</td></tr>
+</table>
+<p>它背後跑的是同一支 <code>focus</code> 指令、讀同一顆資料，所以面板上看到的會一樣。</p>
+
+<!-- 3 -->
+<h2 id="reminders">5. 提醒會從哪裡來</h2>
+<p>所有到期提醒都讀同一份資料：你自己填的到期日（丟一件進來時按小日曆，或 <code>focuscat add --due</code>），
+加上到期外掛帶進來的事（有裝的話，見<a href="#plugins">「自己寫外掛」</a>）。</p>
+
+<h3>面板上的「快到期」膠囊</h3>
+<p><strong>什麼時候有東西：</strong>有事今天、明天到期，或已經過期，而且還沒做完。</p>
+<p><strong>看到後做什麼：</strong>點「快到期 N」膠囊，每一件寫標題和日期，例如「今天到期」「明天到期」。
+想排進來就按那一列的「加到接下來」；已經在「接下來」的寫「已在接下來」。</p>
+<p>數字是 0 也寫 0。讀不到到期資料時，膠囊上寫「讀不到」，不會寫成 0。選單列上不放紅點，只放角色和時間。</p>
+<figure><img src="img/focuscat-panel-due-open-light.png" alt="面板下面那排膠囊：晚點再做 2、今天做完 2、建議加進來 3、快到期 2；「快到期」展開了，兩件快到期的事寫著標題與日期，右邊各有「加到接下來」"><figcaption>點開「快到期」：每一件寫標題和日期，右邊是「加到接下來」</figcaption></figure>
+
+<h3>到期通知</h3>
+<p><strong>什麼時候出現：</strong>每天 10:00、16:00，有快到期的事才跳。同一組事一天最多跳兩次。app 要開著。</p>
+<p><strong>看到後做什麼：</strong>點角色打開面板，看「快到期」那幾件。</p>
+<p class="note">通知長這樣：標題「⏰ 今天要動（N 件）」，內文是那幾件事的標題。專注模式開著時它可能不跳橫幅，只進通知中心。
+不想收到就關掉 設定 ▸ 提醒 ▸「到期的事跳通知」。</p>
+
+<!-- 7 -->
+<h2 id="trouble">6. 出問題怎麼辦</h2>
+<p>每一種都照「看到什麼 → 為什麼 → 怎麼做」寫。先找你看到的那一種。
+都不是的話，用<a href="#report">「回報問題」</a>把狀況整理給作者。</p>
+
+<div class="trouble">
+<h3>選單列的角色不見了</h3>
+<dl>
+<dt>看到什麼</dt><dd>選單列右上角沒有角色，點不到面板。</dd>
+<dt>為什麼</dt><dd>FocusCat 沒在跑（可能剛重開機，而還沒打開「開機後自動打開」）。</dd>
+<dt>怎麼做</dt><dd>打開它：
+<pre>open -a ~/Applications/FocusCat.app</pre>
+想以後自己開，到「設定 → 一般」打開「開機後自動打開」（系統會請你確認一次）。</dd>
+</dl>
+</div>
+
+<div class="trouble">
+<h3>面板上顯示讀不到，或按鈕按了沒反應</h3>
+<dl>
+<dt>看到什麼</dt><dd>面板某一區寫「讀不到」，或按了「完成」畫面沒變。</dd>
+<dt>為什麼</dt><dd><code>focus</code> 指令跑失敗或沒有回應。錯誤的第一行會寫在面板上。</dd>
+<dt>怎麼做</dt><dd>自己跑一次同樣的指令：
+<pre>~/.claude/bin/focus now</pre>
+如果它說資料讀不懂（exit 2），它<strong>一個 byte 都不會寫</strong>，免得把紀錄洗掉——
+這時拿 <code>~/.claude/state/backup/</code> 裡最近那一份蓋回 <code>~/.claude/state/focus.db</code> 就好。<br>
+如果它說「資料夾沒有寫入權限，連讀都不行」，那是權限問題不是資料壞掉，先修 <code>~/.claude/state</code> 的權限。<br>
+資料放 App Support 時路徑是 <code>~/Library/Application Support/FocusCat/</code>。</dd>
+</dl>
+</div>
+
+<div class="trouble" id="t-notify">
+<h3>通知沒跳</h3>
+<dl>
+<dt>看到什麼</dt><dd>有快到期的事，10:00 或 16:00 右上角卻什麼都沒有。</dd>
+<dt>為什麼</dt><dd>通知是 app 自己發的，要 app 開著、通知權限給了、設定裡的開關開著；同一組事一天最多跳兩次。</dd>
+<dt>怎麼做</dt><dd>
+<ul>
+<li>點角色打開面板，看「快到期」膠囊的數字。是 0 就是今天沒有到期的事，本來就不會跳。</li>
+<li>到 設定 ▸ 提醒 看「到期的事跳通知」有沒有打開。</li>
+<li>到「系統設定 → 通知」確認 FocusCat 允許通知。面板上若一直提醒你沒給通知權限，就是這個。</li>
+<li>專注模式開著時通知可能只進通知中心，打開通知中心看。</li>
+<li>那個時間電腦闔上睡著、或 FocusCat 沒開，那一次就不會跳。</li>
+</ul></dd>
+</dl>
+</div>
+
+<div class="trouble">
+<h3>選單寫「Jira 讀不到」，或建議裡都沒有 Jira 卡</h3>
+<dl>
+<dt>看到什麼</dt><dd>選單出現「jira 讀不到（…）」，或建議裡都沒有 Jira 的卡。</dd>
+<dt>為什麼</dt><dd>登入項目起的 app 環境很乾淨，要經過 <code>/bin/zsh</code> 才讀得到 <code>~/.zshenv</code> 裡的 Jira 帳密。<br>沒寫「讀不到」，卻還是沒有 Jira 卡，通常是 Jira 那邊沒有「球在你手上」的卡：在等別人的那些狀態不會列進來。要收哪些狀態，在設定 ▸ 外掛 ▸ Jira 我的卡的「收哪些狀態」自己勾（見<a href="#jira-statuses">這裡</a>）；沒勾過的話只收「In Progress」。</dd>
+<dt>怎麼做</dt><dd>先確認設定 → 外掛裡已經裝了 Jira（「可以加的外掛」還列著它就是還沒裝）。再用同樣很乾淨的環境跑一次，看 <code>sources</code> 每一格是不是 <code>ok</code>：
+<pre>env -i HOME=$HOME PATH=/usr/bin:/bin /bin/zsh -c 'exec "$0" "$@"' ~/.claude/bin/focus suggest</pre>
+<code>off</code> 是你自己把那支外掛關了，不是壞掉。<code>unavailable: &lt;原因&gt;</code> 才是讀不到。
+<code>jira</code> 是 <code>unavailable</code> 時，檢查 <code>~/.zshenv</code> 有沒有 <code>JIRA_URL</code>、<code>JIRA_USERNAME</code>、<code>JIRA_API_TOKEN</code>。
+<code>JIRA_URL</code> 要是 <code>https://</code> 開頭。帳號或 token 裡混了換行，也會被擋下，不會送出去。</dd>
+</dl>
+</div>
+
+<div class="trouble">
+<h3>按了完成，那件還在清單</h3>
+<dl>
+<dt>看到什麼</dt><dd>完成的事又出現在建議接下來。</dd>
+<dt>為什麼</dt><dd>建議會跳過「最後一次動作是完成」的事。它又出現，可能是之後又被開始過，或某個來源讀不到，排除規則沒生效。</dd>
+<dt>怎麼做</dt><dd>先看那件的最後幾次動作，<code>&lt;key&gt;</code> 換成像 <code>jira:DEMO-202</code> 的字：
+<pre>~/.claude/bin/focus log --jsonl | grep '&lt;key&gt;' | tail -3</pre>
+最後一行不是 <code>done</code>，就再按一次完成。是 <code>done</code> 的話，照上一段的指令看 <code>sources</code>。</dd>
+</dl>
+</div>
+
+
+<!-- 回報問題 -->
+<h2 id="report">7. 回報問題</h2>
+<span class="when">什麼時候用：遇到 bug，或<a href="#trouble">「出問題怎麼辦」</a>找不到你看到的那一種</span>
+<h3>從哪裡打開</h3>
+<ul>
+<li>面板上「現在」那張卡右上的「⋯」，最下面的「回報問題…」。</li>
+<li>設定視窗最底下那排按鈕的「回報問題」（面板右下「設定」，或按 <strong>⌘,</strong>）。兩個入口打開的是同一個視窗。</li>
+</ul>
+
+<h3>怎麼填</h3>
+<figure><img src="img/focuscat-bug-report-window.png" alt="回報問題的預覽視窗：上面三欄「發生什麼事」「本來預期什麼」「怎麼重現」已填好範例；下面「會送出的報告」一段一張卡，每段前面一個勾，「目前的待辦標題」沒勾、寫著「這段不送」；最底下左邊「安全問題請私下回報」，右邊「打開 GitHub…」「存到桌面」「複製」"><figcaption>回報問題的預覽視窗（圖裡的內容與除錯資訊都是範例）</figcaption></figure>
+<table>
+<tr><th style="width:30%">欄位</th><th>寫什麼</th></tr>
+<tr><td>發生什麼事</td><td>你看到的，例如「按了完成，那件還在」。沒填的話「打開 GitHub…」不能按</td></tr>
+<tr><td>本來預期什麼</td><td>你以為會怎樣</td></tr>
+<tr><td>怎麼重現</td><td>一步一步寫，別人照著做能不能看到一樣的事</td></tr>
+</table>
+<p>下面「會送出的報告」是<strong>真的會送出去的那一份</strong>，一段一張卡：你寫的三欄、版本與系統、外掛、來源、最近的錯誤、目前的待辦標題。
+上面三欄一填，它就跟著變。</p>
+
+<h3 id="report-masks">黃底的字是遮掉的地方</h3>
+<p>報告會遮掉看起來像個資的字：家目錄換成 <code>~</code>；卡號、email、token 遮掉；網址、主機名稱、IP 位址（IPv6 也算）換成「‹網址›」「‹主機›」「‹IP›」。
+像 <code>focus.db.bak</code>、<code>run.mjs</code> 這種檔名照留。你的電腦帳號名稱自己單獨出現時，換成「‹使用者›」。
+錯誤訊息裡帶到的待辦、會議名字，還有夾在「」裡的名字，換成「[標題已遮]」。</p>
+<p>遮掉的地方上了黃底。報告上方那一行寫遮了幾處、各是什麼，例如「遮了 4 處：IP 1、待辦標題 1、家目錄 1、使用者 1」。</p>
+<figure><img src="img/focuscat-bug-report-reveal.png" alt="「來源」那段的「‹IP›」被點開：底下一格寫「這裡原本是（只有你看得到）：10.20.30.40」「如果這不是個資，可以留下原本的字。」和兩顆按鈕「保持遮掉」「這處不用遮」；「外掛」那段沒勾，寫著「這段不送」"><figcaption>點黃底的字，看得到原本是什麼（範例）</figcaption></figure>
+<ul>
+<li><strong>點一個黃底的字</strong>：底下展開一格，寫著原本的字。這格只有你自己電腦上看得到。</li>
+<li>遮錯了（例如把一個檔名當成主機）：按「這處不用遮」，送出去的就是原本的字。留下的字畫虛線底，點它可以「再遮掉」。</li>
+<li>留下只算這一份報告。之後再改字，那一處也不會被遮回去；關掉視窗就沒了。</li>
+</ul>
+<p class="note">黃底只認得形狀。公司名稱、客戶名稱它認不出來，送出前請自己再看一眼。</p>
+
+<h3 id="report-paste">自己打、自己貼的字也會遮</h3>
+<figure><img src="img/focuscat-bug-report-paste.png" alt="「怎麼重現」貼了一段假 log，欄位底下黃底一行「剛剛幫你遮了 5 處：主機 1、IP 1、token 1、email 1、家目錄 1」和「還原」按鈕；下面「你寫的三欄」那段裡主機、IP、token、email、家目錄都換成黃底記號"><figcaption>貼上一段 log，停手後自動遮（範例）</figcaption></figure>
+<p>三欄裡打字或貼上一段 log，停手一下，報告那一份就會遮掉主機、IP、email、token、家目錄這類字。
+欄位底下會跳一行「剛剛幫你遮了 N 處」，講各是什麼。不想遮就按「還原」，這次遮的全部放回去。</p>
+<p>你在欄位裡打的字不會被改，遮的是報告那一份。GitHub 上那張回報的標題取「發生什麼事」的第一行，也一樣遮。
+你在三欄裡提到哪一件待辦，不會被遮：那是你自己寫的。</p>
+
+<h3 id="report-parts">每一段都可以勾掉</h3>
+<p>每段前面一個勾。勾掉的那段收成一行「這段不送」，位置不動；勾回來，那段又出現，你改過的字還在。
+複製、存到桌面、打開 GitHub 都只拿有勾的段。「你寫的三欄」一定會送，勾不掉。</p>
+<p><strong>「目前的待辦標題」預設不勾。</strong>標題可能寫到工作內容，要你自己勾才會放進去。</p>
+<p>報告會附上的除錯資訊：版本、macOS、晶片、資料存在哪裡（只寫是哪一種，不寫完整路徑）、每支外掛開沒開和上次跑的結果、來源狀態、最近的錯誤訊息。
+寫報告時不會跑外掛、不連網，外掛與來源寫的是上一次跑的結果。</p>
+<p>想改某一段的字，按那段右上的「編輯」，改好按「改好了」，那一段會再遮一次。
+改過之後上方多一行「重新產生」：按了改的字回到原本那一份，留下的字也會遮回去，勾選不變。</p>
+
+<h3>按下去之後</h3>
+<p>最底下三顆，各做一件事：</p>
+<ul>
+<li><strong>複製</strong>（按 Enter 就是它）：報告放進剪貼簿，直接貼到聊天或 GitHub。</li>
+<li><strong>存到桌面</strong>：桌面多一個檔 <code>FocusCat-回報-&lt;日期&gt;-&lt;時間&gt;.md</code>，內容就是那份報告。同一秒存兩份，第二份檔名後面加 <code>-2</code>。</li>
+<li><strong>打開 GitHub…</strong>：先跳一個確認框，再打開瀏覽器。</li>
+</ul>
+<figure><img src="img/focuscat-bug-report-confirm.png" alt="確認框：「這份報告會公開在網路上」「任何人不用登入就看得到。送出後你自己刪不掉，要請維護者刪。」；一格寫「會送：你寫的三欄、版本與系統、外掛、最近的錯誤」「不送：來源、目前的待辦標題」「已遮：4 處」；底下「送完整報告」（選著）「只送摘要」，按鈕「取消」「打開 GitHub」"><figcaption>按「打開 GitHub…」之後的確認框，每次都會問（範例）</figcaption></figure>
+<p>確認框第一句講清楚：<strong>這份報告會公開在網路上</strong>，送出後你自己刪不掉。
+它列出會送哪幾段、不送哪幾段、遮了幾處。勾了待辦標題，「會送」那格會多一行紅字，寫有幾個。
+按「取消」或 Esc 什麼都沒送，勾選和改過的字都留著。按「打開 GitHub」，瀏覽器打開 GitHub 的回報頁，標題與內容都預填好。
+你在 GitHub 按「Create」之前，什麼都還沒送出去。</p>
+<p>報告太長、網址放不下整份時，網頁上只放你填的三欄，最後一行寫「完整內容已複製，請貼在這裡」。
+完整的報告已經放進剪貼簿，在 GitHub 的內容欄貼上就好。視窗底下也會說。</p>
+
+<h3 id="report-summary">只送摘要</h3>
+<figure><img src="img/focuscat-bug-report-summary.png" alt="確認框選了「只送摘要」：底下「GitHub 上只會有這些：」一格，裡面只有三欄與「FocusCat 版本・macOS 版本」一行，最後一行「（完整的除錯資訊沒有公開，回報的人會私下提供）」；再下面「完整報告會存到桌面：FocusCat-回報-日期-時間.md」，按鈕「取消」「存檔並打開 GitHub」"><figcaption>只送摘要：GitHub 上只有三欄與版本（範例）</figcaption></figure>
+<p>錯誤訊息裡有公司或客戶名稱、黃底又認不出來的時候，在確認框選「只送摘要」。
+GitHub 上只放三欄和版本那一行，完整的報告存到桌面，由你私下傳給維護者。按鈕會變成「存檔並打開 GitHub」：先存檔，存成了才打開網頁。</p>
+<figure><img src="img/focuscat-bug-report-saved.png" alt="按鈕底下綠字兩行「已打開 GitHub，網頁上只有摘要，按「Create」才會送出。」「完整報告存在桌面：FocusCat-回報-日期-時間.md」，旁邊一個連結「在 Finder 中顯示」"><figcaption>存好了：按「在 Finder 中顯示」找到那個檔（範例）</figcaption></figure>
+<p>存好之後，按鈕底下會寫檔名，按「在 Finder 中顯示」就找得到它。
+桌面存不進去時不會打開網頁，紅字寫原因和「GitHub 沒有打開」。這時改按「複製」，貼給維護者。</p>
+
+<h3 id="report-security">安全問題</h3>
+<p>視窗左下「安全問題請私下回報」打開 GitHub 的私下回報頁。那裡寫的東西不會公開，安全漏洞請走這裡，不要開公開的回報。</p>
+
+<h3>用指令列</h3>
+<pre>focus report --what "按了完成，那件還在" --expected "那件從清單消失" --steps "選一件開始，按完成"</pre>
+<ul>
+<li>預設<strong>只印出報告</strong>，不存檔、不開網頁，先看一眼內容。</li>
+<li><code>--save</code>：存到桌面（檔名同上），印出存在哪。</li>
+<li><code>--open</code>：先印出整份報告給你看，還不會打開。看過覺得可以公開，加上 <code>--yes</code> 再跑一次才會打開 GitHub 的回報頁並預填內容。報告太長時跟 app 一樣，完整的放進剪貼簿。可以跟 <code>--save</code> 一起用。</li>
+<li>三欄與標題跟 app 一樣會遮（主機、IP、email、token、家目錄、卡號）。指令列沒有「還原」：真的要送原字，改用 app 的預覽視窗。</li>
+<li><code>--print-url</code>：只印出會打開的那條網址，不開網頁、不動剪貼簿。</li>
+<li><code>--include-todos</code>：附上目前的待辦標題（預設不附）。</li>
+</ul>
+<p>跟 app 的預覽視窗全部勾著時是同一份報告，組法一樣（待辦標題照 <code>--include-todos</code>）。</p>
+
+<!-- 9 -->
+<h2 id="data">8. 我的資料存在哪</h2>
+<span class="when">什麼時候看：想知道「我記下來的事會不會被傳到別的地方」</span>
+<p><strong>全部存在你自己這台電腦的檔案裡。沒有線上資料庫、沒有帳號、沒有雲端同步，也不會回報使用狀況。</strong>
+把網路關掉，FocusCat 照常能用。</p>
+<p>資料放在一顆標準的 SQLite 檔裡。想確認它到底記了什麼，用系統內建的 <code>sqlite3</code> 打開最快：</p>
+<pre>sqlite3 ~/.claude/state/focus.db 'select * from items'</pre>
+<p>任何一個能開 SQLite 的圖形工具也讀得到——那是公開格式，不是我們自己發明的。</p>
+
+<h3>東西放在哪幾個檔</h3>
+<table>
+<tr><th style="width:42%">檔案</th><th>裡面是什麼</th></tr>
+<tr><td><code>~/.claude/state/focus.db</code></td><td>三份清單的<strong>現況</strong>、流水帳（什麼時候開始、換走、做完，每件花幾分鐘，只加不改）、「來源」那幾個標籤，全在這一顆裡</td></tr>
+<tr><td><code>~/.claude/state/backup/focus-&lt;日期&gt;.db</code></td><td>每天自動做一份的整檔備份，留最近 14 份</td></tr>
+<tr><td><code>~/.claude/state/focuscat.json</code></td><td>番茄鐘現在跑到哪，給 <code>focuscat</code> 指令和 Claude 讀</td></tr>
+<tr><td><code>~/Library/Application Support/FocusCat/</code></td><td>「資料存在哪裡」選 App Support 時用的資料夾（剛裝好、送人的那份就是這個），裡面也是一顆 <code>focus.db</code>。角色造型 <code>skins/</code> 永遠放這裡，不看那個設定</td></tr>
+<tr><td><code>&lt;資料目錄&gt;/inbox/</code></td><td>收件資料夾。app 沒開時丟進來的事會先放這裡，下次打開才收進去</td></tr>
+<tr><td><code>~/Desktop/FocusCat-回報-&lt;日期&gt;-&lt;時間&gt;.md</code></td><td>只有你按「回報問題」的「存到桌面」（或 <code>focus report --save</code>）時才會寫，內容就是你在預覽視窗看到的那份報告</td></tr>
+<tr><td><code>~/Library/Logs/FocusCat/placement.log</code></td><td>只記面板開在螢幕哪個位置，<strong>沒有任何待辦內容</strong>，最多留 200 行</td></tr>
+<tr><td><code>~/Library/Logs/FocusCat/update-check.log</code></td><td>只記「有新版時告訴我」沒問到新版的原因（例如連不上），<strong>沒有任何待辦內容</strong>，最多留 200 行。上次查的結果另外存在 FocusCat 的偏好設定（時間、查到沒有、版本號、網址、原因一句），給設定 ▸ 一般的「新版狀態」用</td></tr>
+</table>
+<p>FocusCat 的設定（番茄幾分鐘、造型、快捷鍵、開會偵測開關）存在 macOS 自己的設定區，
+那裡<strong>只有設定，沒有待辦內容</strong>。</p>
+<p class="note">外掛讀的外部來源（例如 Jira），FocusCat <strong>只讀不寫</strong>，不會改你那邊的卡。</p>
+
+<h3>什麼時候會連上網路</h3>
+<p>只有下面這幾個地方。除了你自己按下的「回報問題」，都是「往內讀」，沒有任何一條把你的待辦送出去。</p>
+<table>
+<tr><th style="width:30%">哪裡</th><th>做什麼</th><th style="width:18%">預設</th></tr>
+<tr><td>行事曆網址</td><td>去讀你貼的那個 ICS 網址，只用來判斷「現在在不在開會」。讀回來的東西不會變成待辦、也不會存檔</td><td>關（沒貼網址就不啟用）</td></tr>
+<tr><td>Jira</td><td>只有 jira 外掛開著、而且三個環境變數都設好時，去查「指派給我、還沒完成」的卡，用來排建議順序。送出去的只有那句查詢和帳密</td><td>關</td></tr>
+<tr><td>GitHub 新版檢查</td><td>打開 FocusCat 時（上次查完不到 1 小時就等滿 1 小時）、之後每天一次（沒查到的話 1 小時後再試；設定 ▸ 一般按「檢查更新」也會問一次，查完 1 分鐘內不能再按），問 GitHub 最新版是幾號（見<a href="#update-notice">「有新版的時候」</a>）。送出去的只有這個請求本身和「FocusCat/版本號」，不帶任何你的資料。設定 ▸ 一般「有新版時告訴我」關掉就不問</td><td>開</td></tr>
+<tr><td>GitHub 回報頁</td><td>按「回報問題」的「打開 GitHub」（或 <code>focus report --open --yes</code>；只打 <code>--open</code> 會先印預覽、不開網頁）時，叫瀏覽器打開 GitHub 的回報頁，報告預填在網址裡。你在 GitHub 按送出之前什麼都沒送；待辦標題只有自己勾了才在裡面</td><td>—</td></tr>
+</table>
+<p>另外兩個常被誤會的：<strong>麥克風</strong>只是問系統「現在有沒有人在用它」，<strong>不錄音也不讀音訊</strong>；
+<strong>Apple 提醒事項</strong>走的是 macOS 本機介面，預設是關的，打開才會跳權限視窗。
+不過提醒事項自己會不會同步到 iCloud，那是 Apple 的設定，跟 FocusCat 無關。</p>
+
+<h3>送人的版本會不會夾到你的東西</h3>
+<p>不會。資料檔在你的家目錄底下，本來就不在 app 裡面。打包時另外還有一支掃描器，
+把 app 裡每一個檔逐字掃過，只要出現你的路徑、名字、公司名或卡號，就直接中止、不產出 zip。</p>
+
+<h3>換電腦、還有壞掉的時候</h3>
+<ul>
+<li><strong>要帶走的</strong>：資料放 App Support 時整個複製 <code>~/Library/Application Support/FocusCat/</code>；
+資料放 <code>~/.claude/state</code> 時複製 <code>~/.claude/state/backup/</code> 裡最近那一份 <code>focus-&lt;日期&gt;.db</code>（它是自足的一顆檔），
+再加 <code>~/.claude/state/focuscat/</code>。
+⚠️ 直接複製 <code>focus.db</code> 一個檔是不夠的——旁邊的 <code>-wal</code> 沒跟著走，最後那幾筆會不見。</li>
+<li><strong>設定不會跟著走</strong>：番茄長度、造型、快捷鍵要重設一次，通知權限也要重新允許。</li>
+<li><strong>現在有每日備份了</strong>：每天第一次用到的時候會自己做一份 <code>backup/focus-&lt;日期&gt;.db</code>，
+留最近 14 份。沒有「復原上一版」按鈕，但要回到昨天就是把昨天那一份蓋回去。<br>
+除此之外程式保證兩件事：斷電不會留下半個壞檔；資料讀不懂時它直接停下來報錯，<strong>而且一個 byte 都不寫</strong>，
+免得把還救得回來的內容洗掉。再保險一點就靠 Time Machine。</li>
+</ul>
+<p class="src">技術版（每一句都附 <code>檔案:行號</code>）在原始碼 repo 的 <code>docs/data-flow.md</code>（目前沒有公開）。</p>
+
+<!-- 10 -->
+<h2 id="tests">9. 跑測試</h2>
+<p class="note">第 9、10 章寫給改 FocusCat 原始碼的人。裡面的 <code>scripts/</code>、<code>hooks/</code>、<code>pomodoro/</code>、<code>docs/</code> 這些路徑都在原始碼 repo，不在這個公開 repo。</p>
+<span class="when">什麼時候用：改完東西，要確認沒有順手弄壞別的地方</span>
+<pre>./scripts/test-all.sh          # 完整的一輪
+./scripts/test-all.sh --quick  # 平常改東西時用的快跑</pre>
+<p>從 repo 根目錄跑。任何一組失敗、或有一組跑出 0 條測試，都會回傳非 0。</p>
+
+<h3>平常用 --quick，推前跟發版跑完整的</h3>
+<p><code>--quick</code> 會跳過最慢的兩組：<code>privacy</code> 的全掃（打一個 <code>.app</code> 再掃它、掃版控裡當前的樹、掃歷史）和 <code>heartbeat</code>（真實啟動路徑的心跳，要真的起三次 app、等好幾輪心跳）。</p>
+<p><strong>跳過不等於通過。</strong>被跳過的組在摘要裡是 <code>SKIP</code> 並標「（--quick 跳過）」，最後還會再提醒一次，而且不跟基準數字比對——所以 <code>--quick</code> 不會因為少跑了東西就比較容易變綠。<code>--quick</code> 也不能拿來寫基準（<code>--write-baseline</code> 遇到有組被跳過會直接 FAIL）。有任何一組紅的時候也一樣不寫：紅的數字不可以變成下次的標準。唯一的例外是不列入基準的 <code>installed-copies</code>：它紅只代表這台電腦還沒裝新版，基準照寫，但這一輪照樣算失敗、回傳非 0。</p>
+<p><code>privacy</code> 就算在 <code>--quick</code> 也照跑 self-test：個資掃描器自己壞掉的樣子正好是「一切乾淨」，那件事不可以連快跑都看不到。self-test 沒過是 FAIL，不是跳過。</p>
+<p><strong>要推上去、要發版、CI 上，一律跑完整的一輪。</strong></p>
+
+<h3>它分成三段跑，為什麼</h3>
+<p>先跑<strong>平行池</strong>，最多 4 組同時跑：<span data-test-pool="PARALLEL_GROUPS"><code>hooks</code>、<code>docrefs</code>、<code>view-io</code>、<code>focuscat</code>、<code>privacy</code>、<code>privacy-gate</code>、<code>manual-images</code>、<code>kit</code>、<code>mods</code>、<code>runner</code></span>。這幾組只讀檔案、算邏輯，不會改到同一個檔，同時跑不會互相影響。上限訂 4，不是「有幾核就開幾個」：你的電腦同時還在做別的事，全開會卡住。</p>
+<p>平行池跑完，<span data-test-pool="SOLO_GROUPS"><code>buildinfo</code></span> 自己跑一段。它會改寫再還原 repo 裡記版本的那個檔。平行池的 <code>privacy</code> 也會改這個檔，兩組一起跑會互相蓋掉；序列池又要那個檔從頭到尾不動，所以它夾在兩池中間。</p>
+<p>最後是<strong>序列池</strong>，一次只跑一組：<span data-test-pool="SERIAL_GROUPS"><code>focus</code>、<code>golden</code>、<code>pomodoro</code>、<code>swift-cli</code>、<code>plugins</code>、<code>selftest</code>、<code>shortcut</code>、<code>uitest</code>、<code>isolation</code>、<code>heartbeat</code></span>。<code>focus</code>、<code>golden</code> 排最前面：它們只要編好的 <code>focus</code> 執行檔，跑得快，先確認轉接層沒弄壞參數與輸出。其他幾組會真的把 app 跑起來，量的是「現在最前面的是哪個 app」「選單列有幾個 FocusCat」「偏好設定有沒有被動到」。這些東西整台電腦只有一份，兩組同時跑會看到對方留下的痕跡，測試會無緣無故變紅。<code>pomodoro</code>（<code>swift test</code>）、<code>swift-cli</code>、<code>plugins</code> 也放這一池：它們會吃滿 CPU，跟別組同時跑的話，和時間有關的檢查會無故變紅。</p>
+<p class="src">上面三段的組名由 <code>scripts/test-runner.sh</code> 比對 <code>scripts/test-all.sh</code> 的 <code>PARALLEL_GROUPS</code>、<code>SOLO_GROUPS</code>、<code>SERIAL_GROUPS</code>：改了一邊沒改另一邊，<code>runner</code> 那組會紅。</p>
+<p class="src">序列池開始前只編一次 <code>swift build</code>，路徑用 <code>FOCUSCAT_BIN</code> 傳給各組；以前是那五組各自編一次。圖檔的文字辨識（OCR）也加了快取，key 是圖片內容的 sha256，放在 <code>pomodoro/.build/ocr-cache/</code>（不進版控）。改過的圖會重新辨識，沒改的直接用上次的結果；<code>FOCUSCAT_OCR_NO_CACHE=1</code> 可以整個關掉。</p>
+<p class="src">各組的基準數字寫在 <code>docs/manual/test-baseline.txt</code>——那個檔由 <code>scripts/test-all.sh --write-baseline</code> 寫，不是手抄的。平常跑 <code>test-all.sh</code> 只會拿這次的數字跟它比對，對不上就 FAIL（數字比基準少就是有測試沒被執行，要去查），不會動到那個檔。<code>installed-copies</code> 比對的是這台機器上已安裝的複本，跟機器有關，刻意不列入基準。<code>swift-cli</code> 與 <code>plugins</code> 裡「黃金檔全部通過」「JS 合約全部通過」那幾條，期望值不讀這個檔，而是當場從來源數：黃金檔數 <code>scripts/golden/fixtures/</code> 裡有幾份，JS 合約數 <code>scripts/focus.test.mjs</code> 宣告了幾條（<code>scripts/expected-counts.sh</code>）。所以新增黃金檔時不用先改基準；少跑一步照樣會紅。<code>uitest</code> 的數字以 <code>swift build</code> 出來的裸執行檔為準；從帶 <code>FocusCatSponsorURL</code> 的打包 .app 跑 <code>--uitest</code> 會少一條（sponsorRow 負向檢查的前提守門會改記一條 FAIL）。</p>
+
+<h3>單獨跑某一組</h3>
+<pre>node --test scripts/focus.test.mjs
+(cd hooks &amp;&amp; python3 -m unittest discover -s . -p 'test_*.py' -v)
+swift test --package-path pomodoro</pre>
+<p>另外有幾支「真的把 app 跑起來」的測試（啟動卡死、面板漂走、開會偵測、自動開勿擾按錯次數），單元測試看不到它們抓的東西，<code>test-all.sh</code> 都會跑。</p>
+
+<h3>最後一次跑的紀錄</h3>
+<p class="src">0.6.14 在發版前一組一組跑完，2026-10-12 約 16:30 到 17:12（台北時間），21 組全過。
+一次完整的 <code>test-all.sh</code> 要超過 10 分鐘，所以每組用 <code>--only</code> 各跑一次，每組一個結果目錄，最後收進同一個目錄，用 <code>FOCUS_TEST_ALL_SUMMARIZE_ONLY=1</code> 加 <code>--write-baseline</code> 讓它自己寫基準。
+21 組都在最後一個改程式的 commit 上跑：其他 20 組 16:30 到 16:42，<code>uitest</code> 16:58 到 17:12，一輪全過，即時螢幕守門一次都沒抓到視窗上螢幕。之後的 commit 只改這段紀錄和基準檔。
+同一份程式上前一次跑 <code>uitest</code>（16:43 到 16:57）有一條紅：「休息圓環 ▸ 剩餘時間在走」只讀到半個數字「04:5」。重跑就過；這一版沒改那段，記成偶發，原因還沒查。
+<code>installed-copies</code> 這次沒跑：它比對的是這台機器上裝好的複本，跟機器有關、不列入基準。
+這一版多的測試：<code>pomodoro</code> 與 <code>uitest</code> 多的是排順序那幾組（拖不動時只動一點點、彈回、出提示，出界變緊，固定的卡不讓位，放開彈回不穿過原位，拖到一半換一列接手，改了類別面板馬上照新規則）；
+<code>view-io</code> 多檢查了一個新的畫面檔（拍手冊截圖用的拖不動畫面）。
+手冊截圖在改畫面那個 commit 整批重產過，留下的是拖不動的提示、類別頁的兩張新圖，和有版本字的幾張；之後只改了拖曳的動作與判斷，畫面沒變，所以這一輪沒有重產。
+各組的通過數<strong>不抄在這裡</strong>：抄一份，總有一天會跟實際的對不上，而且沒人發現。
+要看數字請直接開 <code>docs/manual/test-baseline.txt</code>。</p>
+<p class="src"><code>privacy</code> 117.0 秒，<code>pomodoro</code> 268.7 秒，<code>uitest</code> 850.6 秒。這一輪沒有逐分鐘記負載。
+逐組的結果與 log 在作者自己的量測紀錄裡（不在 repo 裡）。</p>
+<p class="src">更早的量測（2026-09-19，那時測試少很多）：完整的一輪約 220–240 秒，<code>--quick</code> 約 186 秒；
+逐輪的負載與各組耗時在 <code>test-timing-round2.txt</code>（同上，不在 repo 裡）。</p>
+
+<!-- 9 -->
+<h2 id="maintain">10. 給維護的人</h2>
+<p><code>install.sh</code> 會把 repo 裡的程式接回 <code>~/.claude</code>，大多是 symlink。背景程式會讀的檔例外：launchd 起的行程沒有權限讀 <code>~/Documents</code>，所以 <code>install.sh</code> 把 <code>launchd/copied-files.txt</code> 列的檔複製成實體檔。改了這些檔，要再跑一次 <code>./install.sh --apply</code>；<code>test-all.sh</code> 的 <code>installed-copies</code> 組會抓到。外掛預設只更新已經裝過的，<code>--plugins</code> 才連沒裝過的也裝。</p>
+<table>
+<tr><th style="width:36%">路徑</th><th>是什麼</th></tr>
+<tr><td><code>~/.claude/bin/focus</code></td><td>專注工具本體（指令列版），資料在 <code>~/.claude/state/focus.db</code></td></tr>
+<tr><td><code>scripts/focus.mjs</code></td><td>轉接層，把參數交給上面那一支。留給既有腳本用，下一版會刪</td></tr>
+<tr><td><code>scripts/test-all.sh</code></td><td>一次跑全部測試</td></tr>
+<tr><td><code>hooks/</code></td><td>分心提醒 hook</td></tr>
+<tr><td><code>plugins/</code></td><td>正式版附的外掛（Jira 與自動化工作），封進 app，設定裡按「安裝」才裝</td></tr>
+<tr><td><code>pomodoro/</code></td><td>FocusCat（選單列的角色、面板、番茄鐘）；<code>build.sh</code> 編成 app</td></tr>
+<tr><td><code>pomodoro/Resources/app-icon/</code></td><td>app 圖示的 SVG 原稿（大尺寸一份、16／32px 一份）；改完跑 <code>pomodoro/scripts/make-app-icon.sh</code> 重產 <code>AppIcon.icns</code>，不要手改 icns</td></tr>
+<tr><td><code>launchd/</code></td><td><code>install.sh</code> 用的清單：哪些檔要複製成實體檔、外掛有哪些檔</td></tr>
+<tr><td><code>install.sh</code></td><td>建 symlink、複製背景程式要讀的實體檔、更新已經裝過的外掛、build FocusCat.app</td></tr>
+<tr><td><code>docs/manual/</code></td><td>這份手冊與截圖（截圖由 <code>scripts/make-manual-images.sh</code> 用假資料產生）</td></tr>
+</table>
+
+<h3>裝到新電腦</h3>
+<pre>./install.sh           # 只印出會做什麼
+./install.sh --apply   # 真的做</pre>
+<p>重複跑沒關係。目標位置已經有別的檔案、或 plist 內容不一樣時，它會整個停下來，什麼都不改。</p>
+
+<h3>改完功能之後</h3>
+<ul>
+<li>更新這份手冊。畫面變了就跑 <code>scripts/make-manual-images.sh</code> 用假資料重產截圖，<strong>不要手動把圖放進 <code>img/</code></strong>。
+完整流程寫在 <code>docs/skills/focuscat-manual/SKILL.md</code>。</li>
+<li>在 <code>CHANGELOG.md</code> 加一條，寫使用者感受到的變化。</li>
+<li>測試數字變了，跑 <code>./scripts/test-all.sh --write-baseline</code> 更新基準，並把第 9 章那行紀錄改成新的。</li>
+<li>發新版時改 <code>VERSION</code>。</li>
+</ul>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeBtn');
+  var root=document.documentElement;
+  try{var saved=localStorage.getItem('fk-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  btn.addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')==='dark' ||
+      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next=dark?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('fk-theme',next);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
