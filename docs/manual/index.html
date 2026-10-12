@@ -127,8 +127,6 @@ ul.issues li{margin:.5em 0}
 <li><a href="#trouble">出問題怎麼辦</a></li>
 <li><a href="#report">回報問題</a></li>
 <li><a href="#data">我的資料存在哪</a></li>
-<li><a href="#tests">跑測試</a></li>
-<li><a href="#maintain">給維護的人</a></li>
 </ol>
 </nav>
 
@@ -1226,81 +1224,6 @@ GitHub 上只放三欄和版本那一行，完整的報告存到桌面，由你�
 免得把還救得回來的內容洗掉。再保險一點就靠 Time Machine。</li>
 </ul>
 <p class="src">技術版（每一句都附 <code>檔案:行號</code>）在原始碼 repo 的 <code>docs/data-flow.md</code>（目前沒有公開）。</p>
-
-<!-- 10 -->
-<h2 id="tests">9. 跑測試</h2>
-<p class="note">第 9、10 章寫給改 FocusCat 原始碼的人。裡面的 <code>scripts/</code>、<code>hooks/</code>、<code>pomodoro/</code>、<code>docs/</code> 這些路徑都在原始碼 repo，不在這個公開 repo。</p>
-<span class="when">什麼時候用：改完東西，要確認沒有順手弄壞別的地方</span>
-<pre>./scripts/test-all.sh          # 完整的一輪
-./scripts/test-all.sh --quick  # 平常改東西時用的快跑</pre>
-<p>從 repo 根目錄跑。任何一組失敗、或有一組跑出 0 條測試，都會回傳非 0。</p>
-
-<h3>平常用 --quick，推前跟發版跑完整的</h3>
-<p><code>--quick</code> 會跳過最慢的兩組：<code>privacy</code> 的全掃（打一個 <code>.app</code> 再掃它、掃版控裡當前的樹、掃歷史）和 <code>heartbeat</code>（真實啟動路徑的心跳，要真的起三次 app、等好幾輪心跳）。</p>
-<p><strong>跳過不等於通過。</strong>被跳過的組在摘要裡是 <code>SKIP</code> 並標「（--quick 跳過）」，最後還會再提醒一次，而且不跟基準數字比對——所以 <code>--quick</code> 不會因為少跑了東西就比較容易變綠。<code>--quick</code> 也不能拿來寫基準（<code>--write-baseline</code> 遇到有組被跳過會直接 FAIL）。有任何一組紅的時候也一樣不寫：紅的數字不可以變成下次的標準。唯一的例外是不列入基準的 <code>installed-copies</code>：它紅只代表這台電腦還沒裝新版，基準照寫，但這一輪照樣算失敗、回傳非 0。</p>
-<p><code>privacy</code> 就算在 <code>--quick</code> 也照跑 self-test：個資掃描器自己壞掉的樣子正好是「一切乾淨」，那件事不可以連快跑都看不到。self-test 沒過是 FAIL，不是跳過。</p>
-<p><strong>要推上去、要發版、CI 上，一律跑完整的一輪。</strong></p>
-
-<h3>它分成三段跑，為什麼</h3>
-<p>先跑<strong>平行池</strong>，最多 4 組同時跑：<span data-test-pool="PARALLEL_GROUPS"><code>hooks</code>、<code>docrefs</code>、<code>view-io</code>、<code>focuscat</code>、<code>privacy</code>、<code>privacy-gate</code>、<code>manual-images</code>、<code>kit</code>、<code>mods</code>、<code>runner</code></span>。這幾組只讀檔案、算邏輯，不會改到同一個檔，同時跑不會互相影響。上限訂 4，不是「有幾核就開幾個」：你的電腦同時還在做別的事，全開會卡住。</p>
-<p>平行池跑完，<span data-test-pool="SOLO_GROUPS"><code>buildinfo</code></span> 自己跑一段。它會改寫再還原 repo 裡記版本的那個檔。平行池的 <code>privacy</code> 也會改這個檔，兩組一起跑會互相蓋掉；序列池又要那個檔從頭到尾不動，所以它夾在兩池中間。</p>
-<p>最後是<strong>序列池</strong>，一次只跑一組：<span data-test-pool="SERIAL_GROUPS"><code>focus</code>、<code>golden</code>、<code>pomodoro</code>、<code>swift-cli</code>、<code>plugins</code>、<code>selftest</code>、<code>shortcut</code>、<code>uitest</code>、<code>isolation</code>、<code>heartbeat</code></span>。<code>focus</code>、<code>golden</code> 排最前面：它們只要編好的 <code>focus</code> 執行檔，跑得快，先確認轉接層沒弄壞參數與輸出。其他幾組會真的把 app 跑起來，量的是「現在最前面的是哪個 app」「選單列有幾個 FocusCat」「偏好設定有沒有被動到」。這些東西整台電腦只有一份，兩組同時跑會看到對方留下的痕跡，測試會無緣無故變紅。<code>pomodoro</code>（<code>swift test</code>）、<code>swift-cli</code>、<code>plugins</code> 也放這一池：它們會吃滿 CPU，跟別組同時跑的話，和時間有關的檢查會無故變紅。</p>
-<p class="src">上面三段的組名由 <code>scripts/test-runner.sh</code> 比對 <code>scripts/test-all.sh</code> 的 <code>PARALLEL_GROUPS</code>、<code>SOLO_GROUPS</code>、<code>SERIAL_GROUPS</code>：改了一邊沒改另一邊，<code>runner</code> 那組會紅。</p>
-<p class="src">序列池開始前只編一次 <code>swift build</code>，路徑用 <code>FOCUSCAT_BIN</code> 傳給各組；以前是那五組各自編一次。圖檔的文字辨識（OCR）也加了快取，key 是圖片內容的 sha256，放在 <code>pomodoro/.build/ocr-cache/</code>（不進版控）。改過的圖會重新辨識，沒改的直接用上次的結果；<code>FOCUSCAT_OCR_NO_CACHE=1</code> 可以整個關掉。</p>
-<p class="src">各組的基準數字寫在 <code>docs/manual/test-baseline.txt</code>——那個檔由 <code>scripts/test-all.sh --write-baseline</code> 寫，不是手抄的。平常跑 <code>test-all.sh</code> 只會拿這次的數字跟它比對，對不上就 FAIL（數字比基準少就是有測試沒被執行，要去查），不會動到那個檔。<code>installed-copies</code> 比對的是這台機器上已安裝的複本，跟機器有關，刻意不列入基準。<code>swift-cli</code> 與 <code>plugins</code> 裡「黃金檔全部通過」「JS 合約全部通過」那幾條，期望值不讀這個檔，而是當場從來源數：黃金檔數 <code>scripts/golden/fixtures/</code> 裡有幾份，JS 合約數 <code>scripts/focus.test.mjs</code> 宣告了幾條（<code>scripts/expected-counts.sh</code>）。所以新增黃金檔時不用先改基準；少跑一步照樣會紅。<code>uitest</code> 的數字以 <code>swift build</code> 出來的裸執行檔為準；從帶 <code>FocusCatSponsorURL</code> 的打包 .app 跑 <code>--uitest</code> 會少一條（sponsorRow 負向檢查的前提守門會改記一條 FAIL）。</p>
-
-<h3>單獨跑某一組</h3>
-<pre>node --test scripts/focus.test.mjs
-(cd hooks &amp;&amp; python3 -m unittest discover -s . -p 'test_*.py' -v)
-swift test --package-path pomodoro</pre>
-<p>另外有幾支「真的把 app 跑起來」的測試（啟動卡死、面板漂走、開會偵測、自動開勿擾按錯次數），單元測試看不到它們抓的東西，<code>test-all.sh</code> 都會跑。</p>
-
-<h3>最後一次跑的紀錄</h3>
-<p class="src">0.6.14 在發版前一組一組跑完，2026-10-12 約 16:30 到 17:12（台北時間），21 組全過。
-一次完整的 <code>test-all.sh</code> 要超過 10 分鐘，所以每組用 <code>--only</code> 各跑一次，每組一個結果目錄，最後收進同一個目錄，用 <code>FOCUS_TEST_ALL_SUMMARIZE_ONLY=1</code> 加 <code>--write-baseline</code> 讓它自己寫基準。
-21 組都在最後一個改程式的 commit 上跑：其他 20 組 16:30 到 16:42，<code>uitest</code> 16:58 到 17:12，一輪全過，即時螢幕守門一次都沒抓到視窗上螢幕。之後的 commit 只改這段紀錄和基準檔。
-同一份程式上前一次跑 <code>uitest</code>（16:43 到 16:57）有一條紅：「休息圓環 ▸ 剩餘時間在走」只讀到半個數字「04:5」。重跑就過；這一版沒改那段，記成偶發，原因還沒查。
-<code>installed-copies</code> 這次沒跑：它比對的是這台機器上裝好的複本，跟機器有關、不列入基準。
-這一版多的測試：<code>pomodoro</code> 與 <code>uitest</code> 多的是排順序那幾組（拖不動時只動一點點、彈回、出提示，出界變緊，固定的卡不讓位，放開彈回不穿過原位，拖到一半換一列接手，改了類別面板馬上照新規則）；
-<code>view-io</code> 多檢查了一個新的畫面檔（拍手冊截圖用的拖不動畫面）。
-手冊截圖在改畫面那個 commit 整批重產過，留下的是拖不動的提示、類別頁的兩張新圖，和有版本字的幾張；之後只改了拖曳的動作與判斷，畫面沒變，所以這一輪沒有重產。
-各組的通過數<strong>不抄在這裡</strong>：抄一份，總有一天會跟實際的對不上，而且沒人發現。
-要看數字請直接開 <code>docs/manual/test-baseline.txt</code>。</p>
-<p class="src"><code>privacy</code> 117.0 秒，<code>pomodoro</code> 268.7 秒，<code>uitest</code> 850.6 秒。這一輪沒有逐分鐘記負載。
-逐組的結果與 log 在作者自己的量測紀錄裡（不在 repo 裡）。</p>
-<p class="src">更早的量測（2026-09-19，那時測試少很多）：完整的一輪約 220–240 秒，<code>--quick</code> 約 186 秒；
-逐輪的負載與各組耗時在 <code>test-timing-round2.txt</code>（同上，不在 repo 裡）。</p>
-
-<!-- 9 -->
-<h2 id="maintain">10. 給維護的人</h2>
-<p><code>install.sh</code> 會把 repo 裡的程式接回 <code>~/.claude</code>，大多是 symlink。背景程式會讀的檔例外：launchd 起的行程沒有權限讀 <code>~/Documents</code>，所以 <code>install.sh</code> 把 <code>launchd/copied-files.txt</code> 列的檔複製成實體檔。改了這些檔，要再跑一次 <code>./install.sh --apply</code>；<code>test-all.sh</code> 的 <code>installed-copies</code> 組會抓到。外掛預設只更新已經裝過的，<code>--plugins</code> 才連沒裝過的也裝。</p>
-<table>
-<tr><th style="width:36%">路徑</th><th>是什麼</th></tr>
-<tr><td><code>~/.claude/bin/focus</code></td><td>專注工具本體（指令列版），資料在 <code>~/.claude/state/focus.db</code></td></tr>
-<tr><td><code>scripts/focus.mjs</code></td><td>轉接層，把參數交給上面那一支。留給既有腳本用，下一版會刪</td></tr>
-<tr><td><code>scripts/test-all.sh</code></td><td>一次跑全部測試</td></tr>
-<tr><td><code>hooks/</code></td><td>分心提醒 hook</td></tr>
-<tr><td><code>plugins/</code></td><td>正式版附的外掛（Jira 與自動化工作），封進 app，設定裡按「安裝」才裝</td></tr>
-<tr><td><code>pomodoro/</code></td><td>FocusCat（選單列的角色、面板、番茄鐘）；<code>build.sh</code> 編成 app</td></tr>
-<tr><td><code>pomodoro/Resources/app-icon/</code></td><td>app 圖示的 SVG 原稿（大尺寸一份、16／32px 一份）；改完跑 <code>pomodoro/scripts/make-app-icon.sh</code> 重產 <code>AppIcon.icns</code>，不要手改 icns</td></tr>
-<tr><td><code>launchd/</code></td><td><code>install.sh</code> 用的清單：哪些檔要複製成實體檔、外掛有哪些檔</td></tr>
-<tr><td><code>install.sh</code></td><td>建 symlink、複製背景程式要讀的實體檔、更新已經裝過的外掛、build FocusCat.app</td></tr>
-<tr><td><code>docs/manual/</code></td><td>這份手冊與截圖（截圖由 <code>scripts/make-manual-images.sh</code> 用假資料產生）</td></tr>
-</table>
-
-<h3>裝到新電腦</h3>
-<pre>./install.sh           # 只印出會做什麼
-./install.sh --apply   # 真的做</pre>
-<p>重複跑沒關係。目標位置已經有別的檔案、或 plist 內容不一樣時，它會整個停下來，什麼都不改。</p>
-
-<h3>改完功能之後</h3>
-<ul>
-<li>更新這份手冊。畫面變了就跑 <code>scripts/make-manual-images.sh</code> 用假資料重產截圖，<strong>不要手動把圖放進 <code>img/</code></strong>。
-完整流程寫在 <code>docs/skills/focuscat-manual/SKILL.md</code>。</li>
-<li>在 <code>CHANGELOG.md</code> 加一條，寫使用者感受到的變化。</li>
-<li>測試數字變了，跑 <code>./scripts/test-all.sh --write-baseline</code> 更新基準，並把第 9 章那行紀錄改成新的。</li>
-<li>發新版時改 <code>VERSION</code>。</li>
-</ul>
 </div>
 <script>
 (function(){
