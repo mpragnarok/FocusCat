@@ -98,6 +98,7 @@ ul.issues li{margin:.5em 0}
 <li><a href="#skins">換角色</a></li>
 <li><a href="#storage">它把東西記在哪</a></li>
 <li><a href="#claude-kit">一鍵安裝到 Claude Code</a></li>
+<li><a href="#claude-kit-folders">用 ~/.claude 以外的資料夾</a></li>
 <li><a href="#permissions">要你自己按的系統詢問</a></li>
 </ol></li>
 <li><a href="#plugins">自己寫外掛</a>
@@ -622,23 +623,12 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li>按「安裝…」（還沒安裝時只有這一顆按得下去）。確認框會列出要寫幾個檔、寫到哪裡、<code>settings.json</code> 要加哪一段、原檔備份在哪。按「安裝」。</li>
 <li>裝好之後狀態那一列寫「已安裝」加版本號。之後新開的 Claude Code 對話就用得到。</li>
 </ol>
-<p id="claude-kit-folders"><strong>Claude Code 設定資料夾不只一個時（0.6.17 起）：</strong>Claude Code 平常把設定放在 <code>~/.claude</code>。如果你用 <code>CLAUDE_CONFIG_DIR</code> 開了另一份（例如 <code>~/.claude-work</code>），套件要裝進那個資料夾，那邊的 Claude Code 才用得到。</p>
-<ul>
-<li><strong>每個資料夾一組。</strong>組名寫著是哪個資料夾，例如「Claude Code 套件：~/.claude-work」。每一組有自己的狀態和「安裝…」「更新…」「移除…」，只動那個資料夾。移除其中一個，另一個不受影響。</li>
-<li><strong>加一個資料夾。</strong>家目錄裡找到別的 <code>.claude</code> 開頭、看起來是 Claude Code 設定的資料夾，會列在最後一組，旁邊一顆「加入」。按了才加，還不會裝任何東西；要裝再按那一組的「安裝…」。沒列出來的話，按「加入資料夾…」自己選。選的資料夾裡要有 <code>settings.json</code> 或 <code>projects</code>，不然不加，並說原因：那表示 Claude Code 還沒用過它，先用它開一次 Claude Code 再加。捷徑（替身）指到清單裡已經有的資料夾，也不加：那其實是同一個資料夾，兩組會互相拿掉對方的檔。</li>
-<li><strong>從清單拿掉。</strong>還沒裝套件的資料夾，那一組會多一列「不用在這裡裝？」和「從清單拿掉」。拿掉只是不再列在這裡，資料夾裡的東西都不動。裝著套件的要先按「移除…」。清單至少留一個。</li>
-<li><strong>兩個開關大家共用。</strong>「有新版就自動更新」對每個裝了套件的資料夾都算；「沒在計時時提醒我」也只有一個。番茄狀態全機只有一份，每個資料夾的套件讀的都是同一份。</li>
-<li><strong>面板上的提醒只有一行。</strong>某個資料夾的專注提示沒接上，面板講的是那一個；按「接回去」也是接回那一個。</li>
-</ul>
-<figure><img src="img/focuscat-settings-kit-folders.png" alt="設定 ▸ 外掛的 Claude Code 套件：兩組，組名「Claude Code 套件：~/.claude」「Claude Code 套件：~/.claude-work」，各一列「已安裝 0.0.1」和「安裝…」「更新…」「移除…」；最後一組是「用 CLAUDE_CONFIG_DIR 換過設定資料夾？」加「加入資料夾…」、「有新版就自動更新」「沒在計時時提醒我」兩個開關"><figcaption>兩個 Claude Code 設定資料夾都裝好套件（假資料夾、假套件）</figcaption></figure>
-<figure><img src="img/focuscat-settings-kit-folder-suggestion.png" alt="只有「Claude Code 套件：~/.claude」一組時，最後一組最上面多一列「~/.claude-work」，灰字「找到 Claude Code 的設定，還沒加進來」，右邊按鈕「加入」"><figcaption>家目錄裡找到另一個設定資料夾，按「加入」才加（假資料夾）</figcaption></figure>
-<figure><img src="img/focuscat-settings-kit-folder-added.png" alt="按了「加入」之後多一組「Claude Code 套件：~/.claude-work」，狀態「還沒安裝」，底下一列「不用在這裡裝？」和「從清單拿掉」；最後一組多一行灰字「已加入 ~/.claude-work」"><figcaption>加進來之後還沒安裝，要裝再按「安裝…」（假資料夾）</figcaption></figure>
 <p id="claude-kit-band"><strong>輸入框上方的番茄那一行（0.6.10 起）：</strong>裝好套件之後，新開的 Claude Code 對話在輸入框上方多一行，例如「🍅 番茄 12:30 · 寫規格」：番茄還剩幾分、你正在做哪一件。休息時寫「休息 4:10」，暫停時前面多「暫停 ·」，沒在計時就不顯示。FocusCat 沒開、被強制結束（狀態檔超過 90 秒沒更新），或狀態檔讀不到時，這一行是灰字「讀不到番茄狀態」，不會留著舊的倒數，不會擋住你打字。系統時間往回調過時，狀態檔記的時間會比現在晚；晚 5 秒以上也算讀不到。FocusCat 開著的話，大約 30 秒內它寫下一次狀態，這一行就恢復。打 <code>/focus-panel</code> 會打開番茄面板，列出你現在在做的幾件，每件旁邊有「完成」，按了會再問一次「確定完成？」。這一行只讀 FocusCat 的狀態檔，不改任何東西。</p>
 <p id="claude-kit-band-await"><strong>在等你按開始時（0.6.16 起）：</strong>工作段做完還沒按「開始休息」，這一行換成黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」」；休息走完還沒按「開始」，寫「⏰ 休息完了 · 到 FocusCat 按「開始」」。等超過 1 分鐘會加「（等了 N 分鐘）」。按了開始就回到平常的倒數。「沒按開始時再提醒」關掉、或今天按過「今天不再提醒休息」（只影響該休息了那一種）時不顯示。FocusCat 還是舊版時沒有這個資訊，這一行跟以前一樣。</p>
 <figure><img src="img/focuscat-claude-kit-band-await-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」（等了 8 分鐘）」；第二格「⏰ 休息完了 · 到 FocusCat 按「開始」（等了 6 分鐘）」"><figcaption>輸入框上方那一行：在等你按開始休息（上）、在等你按開始（下）。字是套件的程式用假狀態算出來的（假資料）</figcaption></figure>
 <figure><img src="img/focuscat-claude-kit-band-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行紅字「🍅 番茄 12:30 · 寫番茄鐘使用手冊」；第二格輸入框上方一行灰字「讀不到番茄狀態」"><figcaption>輸入框上方那一行：番茄在跑（上）、讀不到狀態（下）。字是套件的程式用假狀態算出來的，框是示意，實際樣子跟著你的終端機配色（假資料）</figcaption></figure>
 <ul>
-<li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>（裝在別的設定資料夾時就在那個資料夾的 <code>skills/</code> 底下），Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
+<li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>（裝在<a href="#claude-kit-folders">別的設定資料夾</a>時就在那個資料夾的 <code>skills/</code> 底下），Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
 <li><strong>關掉：</strong>在終端機跑 <code>claude plugin disable focuscat-band@skills-dir</code>，或在 Claude Code 裡打 <code>/plugin</code> 找到 focuscat-band 停用。下一個對話起就不顯示，套件更新也不會再打開它。要打開回來就把 <code>disable</code> 換成 <code>enable</code>。這兩個做法都是 Claude Code 自己在 <code>settings.json</code> 記一筆「關著」，FocusCat 不碰。</li>
 <li>不想留這幾個檔，也可以直接刪掉 <code>~/.claude/skills/focuscat-band</code>。套件更新時不會裝回去，跟其他你刪掉的檔一樣列在「你刪掉的檔，不會裝回」。</li>
 </ul>
@@ -681,6 +671,33 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li>用 <code>install.sh</code> 裝過的機器（開發者模式），這一區會寫「這台用 install.sh 裝過（開發者模式），app 不動這些檔」，按鈕全灰。</li>
 </ul>
 <p>裝好之後，資料放 App Support 的人用 Claude 跑 <code>focus now</code>，讀到的也是 app 那一顆，不會是空的。</p>
+
+<h3 id="claude-kit-folders">用 ~/.claude 以外的資料夾</h3>
+<p>Claude Code 平常把設定和對話紀錄放在 <code>~/.claude</code>。有人會多開一份，例如工作用一份、自己用一份。FocusCat 的套件要裝進你用的那個資料夾，那邊的 Claude Code 才用得到（0.6.17 起）。照順序做兩步。</p>
+<p><strong>第一步：讓 Claude Code 用另一個資料夾。</strong>在終端機打這一行，例子裡的資料夾叫 <code>~/.claude-work</code>：</p>
+<pre>CLAUDE_CONFIG_DIR=~/.claude-work claude</pre>
+<p><code>CLAUDE_CONFIG_DIR</code> 是 Claude Code 自己認的設定，意思是「這次用這個資料夾」。第一次這樣開，Claude Code 會請你登入，因為每個資料夾各記各的登入。之後設定和對話紀錄都存在那個資料夾。開過一次，FocusCat 就認得它，可以做第二步了。</p>
+<p>每次都打這麼長很累。可以在 <code>~/.zshrc</code> 最後加一行：</p>
+<pre>alias claude-work='CLAUDE_CONFIG_DIR=~/.claude-work claude'</pre>
+<p>新開一個終端機視窗，之後打 <code>claude-work</code> 就是用這個資料夾；打 <code>claude</code> 還是用 <code>~/.claude</code>。</p>
+<p><strong>第二步：在 FocusCat 加進來並安裝。</strong>點角色 → 設定 → 外掛，往下捲到「Claude Code 套件」。</p>
+<ol>
+<li>家目錄裡有別的 <code>.claude</code> 開頭、看起來是 Claude Code 設定的資料夾，會列在最後一組，旁邊一顆「加入」。按「加入」。</li>
+<li>沒列出來的話，按「加入資料夾…」自己選。選的資料夾裡要有 <code>settings.json</code> 或 <code>projects</code>，不然不加，並說原因：那表示 Claude Code 還沒用過它，回第一步用它開一次 Claude Code 再加。</li>
+<li>加進來的只是清單，還沒裝任何東西。多出來的那一組寫著是哪個資料夾，例如「Claude Code 套件：~/.claude-work」。按那一組的「安裝…」。</li>
+</ol>
+<figure><img src="img/focuscat-settings-kit-folder-suggestion.png" alt="只有「Claude Code 套件：~/.claude」一組時，最後一組最上面多一列「~/.claude-work」，灰字「找到 Claude Code 的設定，還沒加進來」，右邊按鈕「加入」"><figcaption>家目錄裡找到另一個設定資料夾，按「加入」才加（假資料夾）</figcaption></figure>
+<figure><img src="img/focuscat-settings-kit-folder-added.png" alt="按了「加入」之後多一組「Claude Code 套件：~/.claude-work」，狀態「還沒安裝」，底下一列「不用在這裡裝？」和「從清單拿掉」；最後一組多一行灰字「已加入 ~/.claude-work」"><figcaption>加進來之後還沒安裝，要裝再按「安裝…」（假資料夾）</figcaption></figure>
+<figure><img src="img/focuscat-settings-kit-folders.png" alt="設定 ▸ 外掛的 Claude Code 套件：兩組，組名「Claude Code 套件：~/.claude」「Claude Code 套件：~/.claude-work」，各一列「已安裝 0.0.1」和「安裝…」「更新…」「移除…」；最後一組是「用 CLAUDE_CONFIG_DIR 換過設定資料夾？」加「加入資料夾…」、「有新版就自動更新」「沒在計時時提醒我」兩個開關"><figcaption>兩個 Claude Code 設定資料夾都裝好套件（假資料夾、假套件）</figcaption></figure>
+<p>裝好之後：</p>
+<ul>
+<li><strong>每個資料夾一組，各管各的。</strong>每一組有自己的狀態和「安裝…」「更新…」「移除…」，只動那個資料夾。移除其中一個，另一個不受影響。</li>
+<li><strong>捷徑不算另一個資料夾。</strong>捷徑（替身）指到清單裡已經有的資料夾，不會加進來：那其實是同一個資料夾，兩組會互相拿掉對方的檔。</li>
+<li><strong>從清單拿掉。</strong>還沒裝套件的資料夾，那一組會多一列「不用在這裡裝？」和「從清單拿掉」。拿掉只是不再列在這裡，資料夾裡的東西都不動。裝著套件的要先按「移除…」。清單至少留一個。</li>
+<li><strong>兩個開關大家共用。</strong>「有新版就自動更新」對每個裝了套件的資料夾都算；「沒在計時時提醒我」也只有一個。番茄狀態全機只有一份，每個資料夾的套件讀的都是同一份。</li>
+<li><strong>面板上的提醒只有一行。</strong>某個資料夾的專注提示沒接上，面板講的是那一個；按「接回去」也是接回那一個。</li>
+</ul>
+<p class="src">依據：Claude Code 官方文件 <a href="https://code.claude.com/docs/en/env-vars">Environment variables</a> 的 <code>CLAUDE_CONFIG_DIR</code>（換掉預設的 <code>~/.claude</code>，設定、對話紀錄、外掛都存在那裡，<code>alias claude-work</code> 那一行照抄它的例子）、<a href="https://code.claude.com/docs/en/authentication">Authentication</a>（每個資料夾各有自己的登入）；2026-10-14 查。FocusCat 這邊：<code>pomodoro/Sources/PomodoroCore/ClaudeConfigFolders.swift</code>（好幾個設定資料夾的規則與字）。改了那裡要改這裡。</p>
 
 <h3 id="permissions">要你自己按的系統詢問</h3>
 <ul>
