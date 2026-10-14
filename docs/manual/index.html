@@ -66,7 +66,7 @@ ul.issues li{margin:.5em 0}
 <div class="wrap">
 <button class="theme-btn" type="button" id="themeBtn">切換深淺色</button>
 <h1>FocusCat 使用手冊</h1>
-<p class="sub">版本 0.6.15 · 2026-10-12 · 網頁版 · <a href="../">回到介紹頁</a></p>
+<p class="sub">版本 0.6.16 · 2026-10-14 · 網頁版 · <a href="../">回到介紹頁</a></p>
 
 <nav class="toc">
 <strong>目錄</strong>
@@ -77,6 +77,7 @@ ul.issues li{margin:.5em 0}
 <li><a href="#character-motion">角色什麼時候跑、什麼時候走</a></li>
 <li><a href="#pomodoro">番茄鐘</a></li>
 <li><a href="#break-reminder">休息提醒</a></li>
+<li><a href="#start-nudge">沒按開始時再提醒</a></li>
 <li><a href="#current-focus">現在專注</a></li>
 <li><a href="#motion">面板的小動畫</a></li>
 <li><a href="#long-title">名稱太長的時候</a></li>
@@ -177,7 +178,7 @@ ul.issues li{margin:.5em 0}
 隔天開始的第一個番茄從第 1 顆重新算，昨天沒做滿的不會接到今天。</p>
 <p>一段時間到的時候會發生三件事：</p>
 <ul>
-<li><strong>面板自己打開</strong>。它會出現在你上次自己點開面板的那個螢幕，不會跟著滑鼠換到另一個螢幕。選單列擠不下、角色被藏起來時，也放在上次的位置。不想要就到「設定 → 提醒 → 時間到的時候」關掉「打開面板」。</li>
+<li><strong>面板自己打開</strong>。它會出現在你上次自己點開面板的那個螢幕，不會跟著滑鼠換到另一個螢幕。選單列擠不下、角色被藏起來時，也放在上次的位置。面板開著時接上或拔掉外接螢幕、主螢幕換了，面板會照同一套規則重新放一次，不會停在舊的位置只露出一截（0.6.16）。不想要就到「設定 → 提醒 → 時間到的時候」關掉「打開面板」。</li>
 <li><strong>響一聲</strong>。聲音在「設定 → 提醒 → 提示音」的下拉選單選：Mac 內建的提示音（低音、吹氣、瓶子、青蛙、放克、玻璃聲、英雄、摩斯、叮聲、啵、呼嚕、Sosumi、潛艇聲、叮噹）、角色的叫聲，或關。選的時候會當場播一次。</li>
 <li><strong>角色做「時間到」的表情</strong>：面板上的角色坐下來，旁邊冒兩道響鈴線，3 秒後恢復。</li>
 </ul>
@@ -188,7 +189,7 @@ ul.issues li{margin:.5em 0}
 <figure><img src="img/focuscat-settings-window-remind-character-sound.png" alt="設定 → 提醒：提示音選「角色的叫聲」，內建角色時底下寫它是什麼叫聲"><figcaption>內建角色有叫聲：底下寫它是什麼叫聲</figcaption></figure>
 <p>另外還會跳一則通知。不想要就關掉「設定 → 提醒 → 時間到的時候 → 跳通知」。</p>
 <p>做完一個番茄，角色頭上會冒一顆愛心，「今天完成 N 個」加一。</p>
-<figure><img src="img/focuscat-settings-window-remind.png" alt="設定 → 提醒整頁：「時間到的時候」一組是跳通知、打開面板、提示音（下拉選單，預設玻璃聲）；「到期的事」一組是到期的事跳通知；「休息」一組是休息時提醒我"><figcaption>設定 → 提醒（整頁）</figcaption></figure>
+<figure><img src="img/focuscat-settings-window-remind.png" alt="設定 → 提醒整頁：「時間到的時候」一組是跳通知、打開面板、提示音（下拉選單，預設玻璃聲）；「沒按開始時再提醒」一組是再提醒我、隔多久、最多幾次；「到期的事」一組是到期的事跳通知；「休息」一組是休息時提醒我"><figcaption>設定 → 提醒（整頁）</figcaption></figure>
 
 <h3 id="break-reminder">休息提醒</h3>
 <p>工作段一結束，面板會跳出來（「打開面板」開著時），最上面寫「<strong>該休息了</strong>」，
@@ -214,6 +215,27 @@ ul.issues li{margin:.5em 0}
 <tr><td>休息時提醒我（休息一開始就打開面板，提醒你起來動一動）</td><td>開</td></tr>
 </table>
 <p>「今天不再提醒休息」要在休息畫面上按。今天按過的話，這一組最後會多一列「已靜音到明天 00:00」，旁邊有一顆「恢復提醒」；平常沒有這一列。</p>
+
+<h3 id="start-nudge">沒按開始時再提醒（0.6.16）</h3>
+<p>時間到時，面板只跳一次。你沒看到、或看到了忘了按，FocusCat 會再提醒你：</p>
+<ul>
+<li><strong>工作段做完，還沒按「開始休息」或「跳過休息」</strong>：5 分鐘後跳一則通知「該休息了」。</li>
+<li><strong>休息走完，還沒按「開始」</strong>：5 分鐘後跳一則通知「休息完了」。</li>
+</ul>
+<p>點通知會打開面板。之後每 5 分鐘再提醒一次，連第一次最多 3 次就停，不會一直吵。</p>
+<p>第一次提醒起，選單列的角色會<strong>坐下來、旁邊冒兩道響鈴線</strong>，意思是「在等你」。提醒停了，角色還是這個樣子，等你按任何一顆才恢復。開始、跳過休息、換一件、晚點再做、丟一件進來，都算按了。</p>
+<figure><img class="small" src="img/focuscat-menubar-waiting.png" alt="選單列：角色坐著，旁邊兩道橘色響鈴線"><figcaption>選單列・在等你按開始</figcaption></figure>
+<figure><img src="img/focuscat-notification-start-nudge.png" alt="兩則通知的示意：一則標題「該休息了」，內文「這段番茄做完了。點這裡打開面板，按「開始休息」或「跳過休息」（第 1 次，共 3 次）」；另一則標題「休息完了」，內文「要開始下一段了嗎？點這裡打開面板，按「開始」（第 2 次，共 3 次）」"><figcaption>通知的字（示意圖：字跟 app 真的送出的一樣，外框是示意）</figcaption></figure>
+<p><strong>這些時候不提醒：</strong></p>
+<ul>
+<li>開會中、螢幕鎖住、電腦睡著。回來之後從頭算 5 分鐘，不會一回來就跳。</li>
+<li>勿擾模式開著：通知不跳出來，收在通知中心（macOS 自己擋的）。角色照樣換成在等你的樣子。</li>
+<li>今天按過「今天不再提醒休息」：工作段做完那種不提醒，角色也不換。提醒過之後才按，角色也會回到平常的樣子。休息走完那種照舊提醒。</li>
+</ul>
+<p>結束 FocusCat 再打開時，番茄照存的樣子接回來（見<a href="#quit-restore">上面</a>）。關著的時候就該結束的那一段，打開那一刻算做完，從那一刻起算 5 分鐘。</p>
+<p>設定在「設定 → 提醒 → 沒按開始時再提醒」：可以關掉，也可以改「隔多久」（1～30 分）和「最多幾次」（1～10 次）。關掉之後，「隔多久」和「最多幾次」會收起來。角色已經在等你時才關掉，它也會回到平常的樣子。
+系統沒有允許 FocusCat 發通知時，這一組多一行「通知權限沒開，只會換角色的樣子」，這時只換角色、不跳通知。</p>
+<figure><img src="img/focuscat-settings-start-nudge.png" alt="設定 → 提醒 →「沒按開始時再提醒」：再提醒我（開關）、隔多久 5 分、最多幾次 3 次"><figcaption>設定 → 提醒 →「沒按開始時再提醒」（預設：每 5 分鐘、最多 3 次）</figcaption></figure>
 
 <h3 id="current-focus">現在專注</h3>
 <p>平常一次做一件（要同時追好幾件，見下一段「同時追好幾件」）。卡上三顆按鈕：主按鈕（開始、暫停、繼續…）、<strong>完成</strong>、<strong>⋯</strong>。
@@ -601,6 +623,8 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li>裝好之後狀態那一列寫「已安裝」加版本號。之後新開的 Claude Code 對話就用得到。</li>
 </ol>
 <p id="claude-kit-band"><strong>輸入框上方的番茄那一行（0.6.10 起）：</strong>裝好套件之後，新開的 Claude Code 對話在輸入框上方多一行，例如「🍅 番茄 12:30 · 寫規格」：番茄還剩幾分、你正在做哪一件。休息時寫「休息 4:10」，暫停時前面多「暫停 ·」，沒在計時就不顯示。FocusCat 沒開、被強制結束（狀態檔超過 90 秒沒更新），或狀態檔讀不到時，這一行是灰字「讀不到番茄狀態」，不會留著舊的倒數，不會擋住你打字。系統時間往回調過時，狀態檔記的時間會比現在晚；晚 5 秒以上也算讀不到。FocusCat 開著的話，大約 30 秒內它寫下一次狀態，這一行就恢復。打 <code>/focus-panel</code> 會打開番茄面板，列出你現在在做的幾件，每件旁邊有「完成」，按了會再問一次「確定完成？」。這一行只讀 FocusCat 的狀態檔，不改任何東西。</p>
+<p id="claude-kit-band-await"><strong>在等你按開始時（0.6.16 起）：</strong>工作段做完還沒按「開始休息」，這一行換成黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」」；休息走完還沒按「開始」，寫「⏰ 休息完了 · 到 FocusCat 按「開始」」。等超過 1 分鐘會加「（等了 N 分鐘）」。按了開始就回到平常的倒數。「沒按開始時再提醒」關掉、或今天按過「今天不再提醒休息」（只影響該休息了那一種）時不顯示。FocusCat 還是舊版時沒有這個資訊，這一行跟以前一樣。</p>
+<figure><img src="img/focuscat-claude-kit-band-await-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」（等了 8 分鐘）」；第二格「⏰ 休息完了 · 到 FocusCat 按「開始」（等了 6 分鐘）」"><figcaption>輸入框上方那一行：在等你按開始休息（上）、在等你按開始（下）。字是套件的程式用假狀態算出來的（假資料）</figcaption></figure>
 <figure><img src="img/focuscat-claude-kit-band-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行紅字「🍅 番茄 12:30 · 寫番茄鐘使用手冊」；第二格輸入框上方一行灰字「讀不到番茄狀態」"><figcaption>輸入框上方那一行：番茄在跑（上）、讀不到狀態（下）。字是套件的程式用假狀態算出來的，框是示意，實際樣子跟著你的終端機配色（假資料）</figcaption></figure>
 <ul>
 <li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>，Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
@@ -612,7 +636,7 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <ul>
 <li><strong>你現在在做哪一件</strong>，這件拿在手上幾分鐘。同時在做好幾件時，它知道全部是哪幾件。</li>
 <li><strong>番茄還剩幾分鐘。</strong>番茄在跑時，它知道「現在在番茄中，還剩 N 分鐘」。休息時是「現在是休息時間」，暫停時是「番茄暫停中」。</li>
-<li><strong>沒有番茄在跑時提醒你。</strong>FocusCat 開著但沒有在計時，它會在回覆開頭用一行提醒你，並問要不要幫你按「開始」。你在那段對話裡說好，它才會按；之前說過好的不算。這句最多每 20 分鐘講一次，不會每句都講。剛關掉 FocusCat 時不提醒。這個提醒預設關閉：要打開，到「設定 → 外掛 → Claude Code 套件」打開「沒在計時時提醒我」，關掉就不再提醒。以前用 <code>touch ~/.claude/state/focuscat-idle-reminder.on</code> 打開過的話，升級後這個開關就是開著的，不用重設。</li>
+<li><strong>沒有番茄在跑時提醒你。</strong>FocusCat 開著但沒有在計時，它會在回覆開頭用一行提醒你，並問要不要幫你按「開始」。你在那段對話裡說好，它才會按；之前說過好的不算。這句最多每 20 分鐘講一次，不會每句都講。剛關掉 FocusCat 時不提醒。0.6.16 起講得更準：工作段做完、還沒按開始休息時，它提醒「該休息了」；休息走完、還沒按開始時，它提醒「休息完了」。這個提醒預設關閉：要打開，到「設定 → 外掛 → Claude Code 套件」打開「沒在計時時提醒我」，關掉就不再提醒。以前用 <code>touch ~/.claude/state/focuscat-idle-reminder.on</code> 打開過的話，升級後這個開關就是開著的，不用重設。</li>
 <li><strong>你要它做別件事時，它第一句先問你。</strong>手上只有一件：要換過去，還是先記到晚點再做？換的話會問原因：被打斷、卡住，還是有更急的。
 手上有好幾件：要換掉其中哪一件、加進來一起做，還是先記到晚點再做？</li>
 <li><strong>講的是同一件就不問。</strong>你提到那件的卡號，或打出它完整的名稱（至少 4 個字），它就知道是同一件。</li>
