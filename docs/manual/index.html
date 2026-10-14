@@ -66,7 +66,7 @@ ul.issues li{margin:.5em 0}
 <div class="wrap">
 <button class="theme-btn" type="button" id="themeBtn">切換深淺色</button>
 <h1>FocusCat 使用手冊</h1>
-<p class="sub">版本 0.6.16 · 2026-10-14 · 網頁版 · <a href="../">回到介紹頁</a></p>
+<p class="sub">版本 0.6.17 · 2026-10-14 · 網頁版 · <a href="../">回到介紹頁</a></p>
 
 <nav class="toc">
 <strong>目錄</strong>
@@ -521,9 +521,9 @@ app 裡附的 <code>connect-your-stuff.html</code>（在 <code>FocusCat.app/Cont
 <li><strong>下載</strong>、<strong>看更新內容</strong>：用瀏覽器打開 GitHub 上那一版的頁面。FocusCat 不會自己換掉自己，下載後照平常的方式裝。</li>
 <li><strong>這版先不要</strong>：卡片收掉，這一版不再提醒。原地留兩行字，第二行是「要反悔到設定&nbsp;▸&nbsp;一般。」下一版出來才會再出現。</li>
 </ul>
-<figure><img src="img/focuscat-panel-update-notice-light.png" alt="面板最下面、「今天小結」「設定」那排上面多一張小卡：粗體「FocusCat 有新版 0.6.11」，下一行灰字「你現在用的是 0.6.10。」，再下面兩顆灰底按鈕「下載」「看更新內容」和一行字按鈕「這版先不要」"><figcaption>有新版時，面板最下面多一張小卡（淺色，假資料）</figcaption></figure>
-<figure><img src="img/focuscat-panel-update-notice-dark.png" alt="同一張新版小卡的深色樣子：「FocusCat 有新版 0.6.11」「你現在用的是 0.6.10。」，按鈕「下載」「看更新內容」「這版先不要」"><figcaption>深色的樣子</figcaption></figure>
-<figure><img src="img/focuscat-panel-update-skipped-light.png" alt="按了「這版先不要」之後，小卡的位置留兩行置中灰字：「好，0.6.11 不再提醒。下一版出了才會再出現。」換行「要反悔到設定 ▸ 一般。」"><figcaption>按了「這版先不要」之後留下的兩行字（假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-notice-light.png" alt="面板最下面、「今天小結」「設定」那排上面多一張小卡：粗體「FocusCat 有新版」加新的版本號，下一行灰字「你現在用的是」加你手上的版本號，再下面兩顆灰底按鈕「下載」「看更新內容」和一行字按鈕「這版先不要」"><figcaption>有新版時，面板最下面多一張小卡（淺色，假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-notice-dark.png" alt="同一張新版小卡的深色樣子：「FocusCat 有新版」加新的版本號、「你現在用的是」加你手上的版本號，按鈕「下載」「看更新內容」「這版先不要」"><figcaption>深色的樣子</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-skipped-light.png" alt="按了「這版先不要」之後，小卡的位置留兩行置中灰字：「好，」加那個版本號「不再提醒。下一版出了才會再出現。」換行「要反悔到設定 ▸ 一般。」"><figcaption>按了「這版先不要」之後留下的兩行字（假資料）</figcaption></figure>
 <p>FocusCat 打開時看一次（上次查完不到 1 小時的話，等滿 1 小時再看），查到之後每天看一次；沒查到（例如沒網路）的話，1 小時後再試。只問 GitHub「最新版是幾號」，不會送出你的任何資料。
 面板上不講「沒查到」，也不跳錯誤；原因寫在設定 ▸ 一般的「新版狀態」那一列，也記在 <code>~/Library/Logs/FocusCat/update-check.log</code>。
 不想要的話，到設定 ▸ 一般把「有新版時告訴我」關掉，關掉之後就完全不連網。</p>
@@ -622,16 +622,27 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li>按「安裝…」（還沒安裝時只有這一顆按得下去）。確認框會列出要寫幾個檔、寫到哪裡、<code>settings.json</code> 要加哪一段、原檔備份在哪。按「安裝」。</li>
 <li>裝好之後狀態那一列寫「已安裝」加版本號。之後新開的 Claude Code 對話就用得到。</li>
 </ol>
+<p id="claude-kit-folders"><strong>Claude Code 設定資料夾不只一個時（0.6.17 起）：</strong>Claude Code 平常把設定放在 <code>~/.claude</code>。如果你用 <code>CLAUDE_CONFIG_DIR</code> 開了另一份（例如 <code>~/.claude-work</code>），套件要裝進那個資料夾，那邊的 Claude Code 才用得到。</p>
+<ul>
+<li><strong>每個資料夾一組。</strong>組名寫著是哪個資料夾，例如「Claude Code 套件：~/.claude-work」。每一組有自己的狀態和「安裝…」「更新…」「移除…」，只動那個資料夾。移除其中一個，另一個不受影響。</li>
+<li><strong>加一個資料夾。</strong>家目錄裡找到別的 <code>.claude</code> 開頭、看起來是 Claude Code 設定的資料夾，會列在最後一組，旁邊一顆「加入」。按了才加，還不會裝任何東西；要裝再按那一組的「安裝…」。沒列出來的話，按「加入資料夾…」自己選。選的資料夾裡要有 <code>settings.json</code> 或 <code>projects</code>，不然不加，並說原因：那表示 Claude Code 還沒用過它，先用它開一次 Claude Code 再加。捷徑（替身）指到清單裡已經有的資料夾，也不加：那其實是同一個資料夾，兩組會互相拿掉對方的檔。</li>
+<li><strong>從清單拿掉。</strong>還沒裝套件的資料夾，那一組會多一列「不用在這裡裝？」和「從清單拿掉」。拿掉只是不再列在這裡，資料夾裡的東西都不動。裝著套件的要先按「移除…」。清單至少留一個。</li>
+<li><strong>兩個開關大家共用。</strong>「有新版就自動更新」對每個裝了套件的資料夾都算；「沒在計時時提醒我」也只有一個。番茄狀態全機只有一份，每個資料夾的套件讀的都是同一份。</li>
+<li><strong>面板上的提醒只有一行。</strong>某個資料夾的專注提示沒接上，面板講的是那一個；按「接回去」也是接回那一個。</li>
+</ul>
+<figure><img src="img/focuscat-settings-kit-folders.png" alt="設定 ▸ 外掛的 Claude Code 套件：兩組，組名「Claude Code 套件：~/.claude」「Claude Code 套件：~/.claude-work」，各一列「已安裝 0.0.1」和「安裝…」「更新…」「移除…」；最後一組是「用 CLAUDE_CONFIG_DIR 換過設定資料夾？」加「加入資料夾…」、「有新版就自動更新」「沒在計時時提醒我」兩個開關"><figcaption>兩個 Claude Code 設定資料夾都裝好套件（假資料夾、假套件）</figcaption></figure>
+<figure><img src="img/focuscat-settings-kit-folder-suggestion.png" alt="只有「Claude Code 套件：~/.claude」一組時，最後一組最上面多一列「~/.claude-work」，灰字「找到 Claude Code 的設定，還沒加進來」，右邊按鈕「加入」"><figcaption>家目錄裡找到另一個設定資料夾，按「加入」才加（假資料夾）</figcaption></figure>
+<figure><img src="img/focuscat-settings-kit-folder-added.png" alt="按了「加入」之後多一組「Claude Code 套件：~/.claude-work」，狀態「還沒安裝」，底下一列「不用在這裡裝？」和「從清單拿掉」；最後一組多一行灰字「已加入 ~/.claude-work」"><figcaption>加進來之後還沒安裝，要裝再按「安裝…」（假資料夾）</figcaption></figure>
 <p id="claude-kit-band"><strong>輸入框上方的番茄那一行（0.6.10 起）：</strong>裝好套件之後，新開的 Claude Code 對話在輸入框上方多一行，例如「🍅 番茄 12:30 · 寫規格」：番茄還剩幾分、你正在做哪一件。休息時寫「休息 4:10」，暫停時前面多「暫停 ·」，沒在計時就不顯示。FocusCat 沒開、被強制結束（狀態檔超過 90 秒沒更新），或狀態檔讀不到時，這一行是灰字「讀不到番茄狀態」，不會留著舊的倒數，不會擋住你打字。系統時間往回調過時，狀態檔記的時間會比現在晚；晚 5 秒以上也算讀不到。FocusCat 開著的話，大約 30 秒內它寫下一次狀態，這一行就恢復。打 <code>/focus-panel</code> 會打開番茄面板，列出你現在在做的幾件，每件旁邊有「完成」，按了會再問一次「確定完成？」。這一行只讀 FocusCat 的狀態檔，不改任何東西。</p>
 <p id="claude-kit-band-await"><strong>在等你按開始時（0.6.16 起）：</strong>工作段做完還沒按「開始休息」，這一行換成黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」」；休息走完還沒按「開始」，寫「⏰ 休息完了 · 到 FocusCat 按「開始」」。等超過 1 分鐘會加「（等了 N 分鐘）」。按了開始就回到平常的倒數。「沒按開始時再提醒」關掉、或今天按過「今天不再提醒休息」（只影響該休息了那一種）時不顯示。FocusCat 還是舊版時沒有這個資訊，這一行跟以前一樣。</p>
 <figure><img src="img/focuscat-claude-kit-band-await-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行黃色粗體「⏰ 該休息了 · 到 FocusCat 按「開始休息」（等了 8 分鐘）」；第二格「⏰ 休息完了 · 到 FocusCat 按「開始」（等了 6 分鐘）」"><figcaption>輸入框上方那一行：在等你按開始休息（上）、在等你按開始（下）。字是套件的程式用假狀態算出來的（假資料）</figcaption></figure>
 <figure><img src="img/focuscat-claude-kit-band-dark.png" alt="深色底上兩格示意：第一格輸入框上方一行紅字「🍅 番茄 12:30 · 寫番茄鐘使用手冊」；第二格輸入框上方一行灰字「讀不到番茄狀態」"><figcaption>輸入框上方那一行：番茄在跑（上）、讀不到狀態（下）。字是套件的程式用假狀態算出來的，框是示意，實際樣子跟著你的終端機配色（假資料）</figcaption></figure>
 <ul>
-<li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>，Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
+<li><strong>不用改 <code>settings.json</code>。</strong>套件把它放在 <code>~/.claude/skills/focuscat-band/</code>（裝在別的設定資料夾時就在那個資料夾的 <code>skills/</code> 底下），Claude Code 開新對話時自己會載入（在 <code>/plugin</code> 裡叫 <code>focuscat-band@skills-dir</code>）。已經開著的對話要重開才看得到。</li>
 <li><strong>關掉：</strong>在終端機跑 <code>claude plugin disable focuscat-band@skills-dir</code>，或在 Claude Code 裡打 <code>/plugin</code> 找到 focuscat-band 停用。下一個對話起就不顯示，套件更新也不會再打開它。要打開回來就把 <code>disable</code> 換成 <code>enable</code>。這兩個做法都是 Claude Code 自己在 <code>settings.json</code> 記一筆「關著」，FocusCat 不碰。</li>
 <li>不想留這幾個檔，也可以直接刪掉 <code>~/.claude/skills/focuscat-band</code>。套件更新時不會裝回去，跟其他你刪掉的檔一樣列在「你刪掉的檔，不會裝回」。</li>
 </ul>
-<p class="src">依據：<code>mods/focuscat-band/hooks/band.mjs</code>（這一行寫什麼、讀不到時那句、狀態檔位置照 <code>FOCUSCAT_STATE</code>）、<code>mods/focuscat-band/hooks/register.tsx</code>（每秒重讀、<code>/focus-panel</code>）、<code>launchd/kit-files.txt</code>（套件帶哪幾個檔）。改了那裡要改這裡。</p>
+<p class="src">依據：<code>mods/focuscat-band/hooks/band.mjs</code>（這一行寫什麼、讀不到時那句、狀態檔位置照 <code>FOCUSCAT_STATE</code>、<code>focus</code> 指令照 <code>CLAUDE_CONFIG_DIR</code> 找）、<code>pomodoro/Sources/PomodoroCore/ClaudeConfigFolders.swift</code>（好幾個設定資料夾的規則與字）、<code>mods/focuscat-band/hooks/register.tsx</code>（每秒重讀、<code>/focus-panel</code>）、<code>launchd/kit-files.txt</code>（套件帶哪幾個檔）。改了那裡要改這裡。</p>
 <p id="claude-kit-together"><strong>裝好之後 Claude 會怎麼配合你：</strong>你每次送訊息給 Claude Code，套件會先在背後告訴它幾件事。你不用多講。</p>
 <ul>
 <li><strong>你現在在做哪一件</strong>，這件拿在手上幾分鐘。同時在做好幾件時，它知道全部是哪幾件。</li>
@@ -645,7 +656,7 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <p>讀不到就不講，也不會擋住你送出的訊息。FocusCat 沒開、超過 90 秒沒更新、記的時間比現在晚 5 秒以上（系統時間往回調過），或狀態讀不懂，就不講番茄那一句。
 問不到你在做哪一件，就不講那一句。</p>
 <p class="src">依據：<code>hooks/focus-context.py</code>（專注那句、要換時怎麼問、怎樣算講到同一件、讀不到不擋）、<code>hooks/pomodoro_state.py</code>（番茄那句、90 秒、晚 5 秒 <code>FUTURE_TOLERANCE_SECONDS</code>、沒有番茄在跑那句、20 分鐘 <code>IDLE_REMIND_SECONDS</code> 與開關檔 <code>IDLE_OPT_IN_NAME</code>）、<code>docs/skills/focuscat/SKILL.md</code>「規矩」（先問過才動）。改了那裡要改這裡。</p>
-<figure><img src="img/focuscat-settings-window-kit.png" alt="設定 → 外掛最底下的「Claude Code 套件」：狀態寫「還沒安裝」，右邊三顆按鈕「安裝…」「更新…」「移除…」，後兩顆是灰的；下面兩列開關：「有新版就自動更新」（開著）、「沒在計時時提醒我」（關著）"><figcaption>設定 → 外掛 → Claude Code 套件（還沒安裝）</figcaption></figure>
+<figure><img src="img/focuscat-settings-window-kit.png" alt="設定 → 外掛最底下的「Claude Code 套件：~/.claude」：狀態寫「還沒安裝」，右邊三顆按鈕「安裝…」「更新…」「移除…」，後兩顆是灰的；下面一組是「用 CLAUDE_CONFIG_DIR 換過設定資料夾？」加「加入資料夾…」，和兩列開關：「有新版就自動更新」（開著）、「沒在計時時提醒我」（關著）"><figcaption>設定 → 外掛 → Claude Code 套件（還沒安裝）</figcaption></figure>
 <p>之後 app 換新版，打開時會自動更新套件，面板上講一行「Claude Code 套件已自動更新到」加版本號。這是「有新版就自動更新」那個開關管的，預設開著。</p>
 <p>自動更新只換檔，不動 <code>settings.json</code>。Claude Code 的使用者設定裡沒有專注提示的話（例如你自己拿掉了那條 hook），面板警告區會一直講「使用者設定裡沒有專注提示；接在專案設定裡的看不到。」：FocusCat 只看使用者設定，接在某個專案設定裡的它看不到，所以不說成「沒接上」。旁邊有兩顆按鈕：</p>
 <ul>
@@ -659,9 +670,9 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li><strong>你改過的檔不會被蓋掉。</strong>自動更新也一樣，面板那一行會列出這幾個檔。更新時會列在「你改過的檔（不會覆蓋）」底下；真的要換成新版，
 按「這幾個也用新版（舊的備份）」，舊的會另存成 <code>&lt;檔名&gt;.bak-focuscat-&lt;時間&gt;</code>。</li>
 <li><strong>你刪掉的檔不會被裝回去。</strong>更新（自動或手動）都不會把它放回來，這一區多一列「你刪掉的檔，不會裝回」寫出是哪幾個；按「裝回來」只寫回這幾個，不另外問，其他檔不動。更新的確認框也會多一句「你刪掉的 N 個檔不會裝回。」
-<figure><img src="img/focuscat-settings-kit-deleted.png" alt="Claude Code 套件：已安裝 0.0.1，下面是「有新版就自動更新」「沒在計時時提醒我」兩列開關，再下面「你刪掉的檔，不會裝回」寫著 skills/focuscat/SKILL.md，右邊一顆「裝回來」"><figcaption>你刪掉的檔列在這裡（假套件）</figcaption></figure></li>
+<figure><img src="img/focuscat-settings-kit-deleted.png" alt="Claude Code 套件：~/.claude：已安裝 0.0.1，下面「你刪掉的檔，不會裝回」寫著 skills/focuscat/SKILL.md，右邊一顆「裝回來」；最後一組是「加入資料夾…」和兩列開關"><figcaption>你刪掉的檔列在這裡（假套件）</figcaption></figure></li>
 <li><strong>專注提示小程式不見了。</strong>如果你刪了 <code>focus-context.py</code>，Claude Code 的設定卻還記著每次先跑它，之後每次送訊息給 Claude Code 都會被擋下。這一區會用紅字講這件事，面板警告區也會講一行「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」兩邊都有兩顆按鈕：「裝回來」只把那個檔放回去；「拿掉那條設定」先備份 <code>settings.json</code> 再拿掉 app 加的那一條，之後 Claude 就不會知道你在做哪件事。
-<figure><img src="img/focuscat-settings-kit-script-missing.png" alt="Claude Code 套件：紅字「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」，下面灰字說明它是 focus-context.py，兩顆按鈕「裝回來」「拿掉那條設定」"><figcaption>設定頁這樣講（假套件）</figcaption></figure>
+<figure><img src="img/focuscat-settings-kit-script-missing.png" alt="Claude Code 套件：~/.claude：紅字「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」，下面灰字說明它是 focus-context.py，兩顆按鈕「裝回來」「拿掉那條設定」"><figcaption>設定頁這樣講（假套件）</figcaption></figure>
 <figure><img src="img/focuscat-panel-kit-script-missing.png" alt="面板上面那張卡底下一行橘字警告「專注提示小程式不見了。不處理的話，每次送訊息給 Claude Code 都會被擋下。」，下面兩顆「裝回來」「拿掉那條設定」"><figcaption>面板也講一行（假資料）</figcaption></figure></li>
 <li><strong><code>settings.json</code> 只加一條 hook</strong>，寫之前先備份。整份會重新排版，內容不變。
 它讀不懂（例如裡面有註解）的話一個字都不改，改成顯示那幾行讓你自己貼，旁邊有「複製這幾行」。</li>
