@@ -593,6 +593,19 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li><strong>維護</strong>：「移除…」把外掛資料夾丟進垃圾桶、開關記成關，先問一次。卡片、你存的設定都不動。附帶的外掛跟這一版附的不一樣時，這裡還有「換成附的版本…」（見<a href="#replace">下面</a>）。</li>
 </ul>
 <figure><img src="img/focuscat-settings-plugin-jira.png" alt="Jira 我的卡的頁面：最上面「‹ 外掛 Jira 我的卡」和一行說明「把指派給你、還沒做完的卡放進建議」；下面依序是啟用、放進建議、狀態（還沒跑過＋試跑）、多久跑一次（外掛預設（每 5 分鐘））、類別、設定（建議名稱的格式、收哪些狀態、不收哪些狀態，各有「讀取」）、維護（移除外掛）"><figcaption>設定 → 外掛 → Jira 我的卡（假外掛）</figcaption></figure>
+<p id="jira-setup"><strong>第一次用 Jira 我的卡，要先給它 Jira 的帳號。</strong>還沒給的話，那一列會寫「讀不到：Jira env 缺（JIRA_URL／JIRA_USERNAME／JIRA_API_TOKEN）」。照下面做：</p>
+<ol>
+<li>到 Atlassian 建一個 API token：<a href="https://id.atlassian.com/manage-profile/security/api-tokens">id.atlassian.com/manage-profile/security/api-tokens</a>，按「Create API token」。token 只顯示一次，先複製起來。</li>
+<li>打開 <code>~/.zshenv</code>（沒有就新建一個），加這三行，換成你自己的值：
+<pre>export JIRA_URL="https://your-team.atlassian.net"
+export JIRA_USERNAME="you@example.com"
+export JIRA_API_TOKEN="剛剛複製的 token"</pre>
+<code>JIRA_URL</code> 是你們 Jira 的網址，要 <code>https://</code> 開頭。<code>JIRA_USERNAME</code> 填你登入 Jira 用的 email。</li>
+<li>結束 FocusCat（選單列的角色按右鍵 →「結束 FocusCat」），再打開。它只在打開時讀一次這三個值，不重開就讀不到。</li>
+<li>到設定 → 外掛 → Jira 我的卡，在「狀態」那一列按「試跑」。紅字不見了就好了。</li>
+</ol>
+<p>還是紅字的話，常見原因有兩個：三行寫在 <code>~/.zshrc</code>，或改完沒重開 FocusCat。FocusCat 只讀 <code>~/.zshenv</code>，寫在 <code>~/.zshrc</code> 讀不到。
+帳號和 token 只交給附帶的 Jira 外掛，別的外掛拿不到。</p>
 <p id="jira-statuses"><strong>要收哪些 Jira 狀態</strong>，在 Jira 我的卡那一頁的「設定」：「收哪些狀態」按「讀取」，從 Jira 讀一次有哪些狀態，再勾。還沒讀時那一格寫現在用的是什麼，例如「現在：In Progress（預設）」。
 「不收哪些狀態」沒設的話，只排除 Done。以前在舊版設定頁勾過的狀態，升上 0.6.2 會自己搬過來，那一格旁邊標「（從 0.6.1 搬來）」。
 如果那一頁說存的設定讀不懂，按「清掉存的值」，舊版勾過的狀態會在那一刻搬回來。
