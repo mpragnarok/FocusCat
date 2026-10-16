@@ -66,7 +66,7 @@ ul.issues li{margin:.5em 0}
 <div class="wrap">
 <button class="theme-btn" type="button" id="themeBtn">切換深淺色</button>
 <h1>FocusCat 使用手冊</h1>
-<p class="sub">版本 0.6.17 · 2026-10-14 · 網頁版 · <a href="../">回到介紹頁</a></p>
+<p class="sub">版本 0.6.18 · 2026-10-16 · 網頁版 · <a href="../">回到介紹頁</a></p>
 
 <nav class="toc">
 <strong>目錄</strong>
@@ -95,6 +95,7 @@ ul.issues li{margin:.5em 0}
 <li><a href="#settings">設定視窗</a></li>
 <li><a href="#hover">滑鼠移上去</a></li>
 <li><a href="#update-notice">有新版的時候</a></li>
+<li><a href="#auto-update">自動更新</a></li>
 <li><a href="#skins">換角色</a></li>
 <li><a href="#storage">它把東西記在哪</a></li>
 <li><a href="#claude-kit">一鍵安裝到 Claude Code</a></li>
@@ -410,7 +411,7 @@ ul.issues li{margin:.5em 0}
 <p><strong>升級之後：</strong>外掛裝好就是你的檔，升級 FocusCat 不會自己換掉。
 這一版附的自動化工作跟你裝的不一樣時，面板上面會多一段橘字，問你要不要「換成附的版本…」，見<a href="#replace">「換成附的版本」</a>。</p>
 <p><strong>要自己寫狀態檔的人：</strong>格式寫在 外掛規格 <code>plugins.md</code>（裝好的 app 裡附一份：<code>FocusCat.app/Contents/Resources/docs/plugins.md</code>）「自動化工作外掛」那一節。
-不寫程式的話，照<a href="#howto">「怎麼做自己的外掛？」</a>那份教學的範例 3，請 AI 幫你改腳本。</p>
+不寫程式的話，照<a href="#howto">「自己寫外掛」那一章</a>的範例 3，請 AI 幫你改腳本。</p>
 
 <h3 id="insights">外掛寫的一段文字</h3>
 <p>有一種外掛不帶事情來，只寫一段文字，叫「文字外掛」。它在三個時候更新：番茄結束、打開今天小結、估了幾個番茄之後。寫出來的字畫在下面三個地方之一：</p>
@@ -519,7 +520,7 @@ app 裡附的 <code>connect-your-stuff.html</code>（在 <code>FocusCat.app/Cont
 <p>GitHub 上出了比你手上新的版本，面板最下面（「今天小結」「設定」那排上面）會多一張小卡：「FocusCat 有新版 0.6.10」（版本號是舉例），底下一行寫你現在用的是哪一版。
 它不跳通知、選單列也不多一個點，你打開面板才看得到。</p>
 <ul>
-<li><strong>下載</strong>、<strong>看更新內容</strong>：用瀏覽器打開 GitHub 上那一版的頁面。FocusCat 不會自己換掉自己，下載後照平常的方式裝。</li>
+<li><strong>下載</strong>、<strong>看更新內容</strong>：用瀏覽器打開 GitHub 上那一版的頁面。下載後照平常的方式裝。能自動更新時，小卡會換成「已下載」那一種，見下一節<a href="#auto-update">「自動更新」</a>。</li>
 <li><strong>這版先不要</strong>：卡片收掉，這一版不再提醒。原地留兩行字，第二行是「要反悔到設定&nbsp;▸&nbsp;一般。」下一版出來才會再出現。</li>
 </ul>
 <figure><img src="img/focuscat-panel-update-notice-light.png" alt="面板最下面、「今天小結」「設定」那排上面多一張小卡：粗體「FocusCat 有新版」加新的版本號，下一行灰字「你現在用的是」加你手上的版本號，再下面兩顆灰底按鈕「下載」「看更新內容」和一行字按鈕「這版先不要」"><figcaption>有新版時，面板最下面多一張小卡（淺色，假資料）</figcaption></figure>
@@ -542,6 +543,33 @@ app 裡附的 <code>connect-your-stuff.html</code>（在 <code>FocusCat.app/Cont
 上次查的結果會存起來，重開 FocusCat 後這一列馬上有東西看；存起來的只有時間、查到沒有、版本號、那一版的網址和沒查到的原因一句。</p>
 <figure><img src="img/focuscat-settings-window-general.png" alt="設定視窗的「一般」頁：「開機後自動打開」開關、「資料存在哪裡」與「換位置」按鈕、「有新版時告訴我」開關（開著）；最下面一列「新版狀態」：「GitHub 上有比手上新的版本」那一句，灰字「你按過「這版先不要」，面板不會提醒這一版。今天 14:02 查的。」，下面三顆按鈕「恢復提醒」「下載」「看更新內容」，右上一顆「檢查更新」"><figcaption>設定 → 一般 → 新版狀態（按過「這版先不要」，假資料）</figcaption></figure>
 <figure><img src="img/focuscat-settings-update-failed.png" alt="設定 → 一般的「新版狀態」沒查到時：橘色一行「上次沒查到（今天 14:02）。」，灰字「連不上 GitHub，可能是沒網路。下一次在 15:02 自動再查。」，右上「檢查更新」"><figcaption>沒查到時照實講原因和下一次的時間（假資料）</figcaption></figure>
+
+<h3 id="auto-update">自動更新</h3>
+<p>有新版時，FocusCat 會先在背景把新版下載好、檢查過，小卡才換成「FocusCat 0.6.19 已下載」（版本號是舉例）。
+按「現在換」才換，不按就不換。</p>
+<ul>
+<li><strong>現在換</strong>：FocusCat 關掉，換成新版，再自己打開。新版 30 秒內沒有開好，就自動換回你原本那一版，再打開它。</li>
+<li><strong>番茄在跑或暫停中</strong>：「現在換」是淡的，按不了。卡上寫「番茄在跑或暫停中，結束或重設之後才能換。」番茄結束或按「重設」之後就能按。</li>
+<li><strong>看更新內容</strong>、<strong>這版先不要</strong>：跟上一節一樣。想自己下載的話，設定 ▸ 一般「新版狀態」那一列一樣有「下載」。</li>
+</ul>
+<figure><img src="img/focuscat-panel-update-ready-light.png" alt="面板最下面的小卡：粗體「FocusCat」加新的版本號「已下載」，灰字「你現在用的是」加你手上的版本號「。換的時候 FocusCat 會關掉再打開；30 秒內沒開好，會自動換回」加你手上的版本號，下面一顆灰底按鈕「現在換」、一顆「看更新內容」、一行字按鈕「這版先不要」"><figcaption>新版已經下載、檢查過，按「現在換」就換（假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-ready-blocked-light.png" alt="同一張小卡，番茄正在跑：「現在換」變淡，按鈕列下面多一行灰字「番茄在跑或暫停中，結束或重設之後才能換。」"><figcaption>番茄在跑的時候不能換（假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-update-ready-blocked-dark.png" alt="番茄在跑時那張小卡的深色樣子：「現在換」變淡，下面一行灰字「番茄在跑或暫停中，結束或重設之後才能換。」"><figcaption>深色的樣子</figcaption></figure>
+<p><strong>怎麼確定下載的是真的</strong></p>
+<p>新版旁邊放著一份說明檔，上面有作者的數位簽章。簽章的鑰匙只有作者有，FocusCat 裡只放驗簽章用的那一半——一份清單，裡面有作者平常用的那一把和幾把備用的，哪一把簽的都認。作者弄丟或換掉鑰匙時，會在新的一版裡改這份清單。
+FocusCat 只從 GitHub 上 FocusCat 的發行頁下載。下載後一關一關檢查：簽章對不對、版本是不是比你手上的新、檔案有沒有被換過、
+壓縮檔裡有沒有不該有的東西、程式的簽章和指紋對不對得上。任何一關沒過就不換，小卡照舊只有「下載」。沒換的原因記在
+<code>~/Library/Logs/FocusCat/update-check.log</code>。</p>
+<p>下載的東西放在 <code>~/Library/Application Support/FocusCat/Updates/</code>，只有你自己讀得到。
+換下來的舊版會留一份在那裡面的 <code>previous/</code>，想手動換回去可以從那裡拿。</p>
+<p>極少數情況下，新版沒開起來、又換不回去，FocusCat 會直接從 <code>previous/</code> 打開舊版，讓你照常用。
+這時自動更新會先停著（電腦上別的位置還有一份 FocusCat 的話，那一份也停著），<code>update-check.log</code> 寫「上次換回舊版沒成功」，
+後面寫出原本 FocusCat.app 的完整位置，例如 <code>~/Applications/FocusCat.app</code>（家目錄寫成 <code>~</code>）。
+要恢復：結束 FocusCat，把 <code>~/Library/Application Support/FocusCat/Updates/previous/FocusCat.app</code> 搬回 log 寫的那個位置（換掉那裡沒開起來的那一份），再打開。
+搬走之後，自動更新就恢復了。</p>
+<p class="note">這些時候不會自動更新，小卡照舊只有「下載」：「有新版時告訴我」關著；按過「這版先不要」；
+FocusCat 不是從 FocusCat.app 打開的；這一份 FocusCat 沒有附齊驗簽章用的鑰匙清單（例如自己從原始碼編的）。
+上次換過去沒開起來的那一版也不會再自動換，小卡上會寫「上次換到 0.6.19 沒有開起來，已經換回 0.6.18。這一版不再自動換，要裝請按「下載」。」（版本號是舉例）</p>
 
 <h3 id="skins">換角色</h3>
 <p>「設定 → 外觀 → 角色造型」內建一款白底虎斑。想用自己的圖就放進
@@ -726,9 +754,22 @@ export JIRA_API_TOKEN="剛剛複製的 token"</pre>
 <p>外掛是一支小程式。FocusCat 定時叫它，它回一份清單，清單裡的事就會出現在面板的建議清單。
 正式版附的 Jira 也是一支外掛（設定 → 外掛「可以加的外掛」按「安裝」才會裝）。</p>
 <p>自己寫一支只要四步，格式與權限不用自己記。</p>
-<p id="howto"><strong>不寫程式也可以：</strong>設定 → 外掛清單最下面有「怎麼做自己的外掛？」，會用瀏覽器打開 FocusCat 裡附的教學。
-裡面有三段可以直接複製給 Claude Code 的指令：做一支新的、幫它加一個設定、讓你的腳本出現在自動化看板。
-請 Claude Code 寫外掛時，叫它先跑 <code>focus plugin-guide</code>：這條指令會印出給 AI 看的外掛規格（<code>--path</code> 印檔案在哪），不用你自己複製貼上。</p>
+<p id="howto"><strong>不寫程式也可以：</strong>設定 → 外掛清單最下面的「怎麼做自己的外掛？」會用瀏覽器打開線上手冊的這一章。
+把想要的事講給 Claude Code 聽，它會照 FocusCat 的外掛規格寫好。下面三段可以直接複製，改成你自己的那一句。
+每一段都叫它先跑 <code>focus plugin-guide</code>：這條指令會把外掛規格印給 AI 看，你不用自己複製貼上。</p>
+<p>範例 1：做一支新的</p>
+<pre>幫我做一個 FocusCat 外掛，名字叫 mine。每 10 分鐘讀一次 ~/notes/todo.md，把還沒打勾的項目放進建議。
+請先跑 focus plugin-guide 讀外掛規格再寫。
+用 focus plugins new mine 建範本再改，做完跑 focus plugins check mine，每一條都要通過。</pre>
+<p>範例 2：幫它加一個設定</p>
+<pre>幫我改 mine 外掛：加一個多選設定「收哪些標籤」，選項由外掛讀一次。
+請先跑 focus plugin-guide 讀外掛規格，照它寫，改完跑 focus plugins check mine，每一條都要通過。</pre>
+<p>範例 3：讓我的腳本出現在自動化看板</p>
+<pre>我有一支每天晚上跑的腳本 ~/bin/nightly.sh。幫我改它，讓它在跑的時候寫 FocusCat 自動化工作外掛的狀態檔：
+跑的時候是 running，要我處理時是 needs_you 並寫原因，失敗是 failed，做完是 done。
+請先跑 focus plugin-guide 讀外掛規格，格式照「自動化看板」那一節，先寫暫存檔再改名。</pre>
+<p>範例 3 還要你自己做一件事：到設定 → 外掛的「可以加的外掛」，找到「自動化工作」按「安裝」。
+AI 寫好之後，回到設定 → 外掛，點進那一支，打開「啟用」再按「試跑」。看到紅字，就把那句紅字整句貼回給 AI，請它修。</p>
 <p class="note">每一步在 app 裡都做得到，不用開終端機。想用指令列的 <code>focus</code> 也可以，
 它是<a href="#claude-kit">「一鍵安裝到 Claude Code」</a>那一包裝進來的，還沒裝的話先裝。</p>
 
@@ -1258,7 +1299,8 @@ GitHub 上只放三欄和版本那一行，完整的報告存到桌面，由你�
 <tr><td><code>&lt;資料目錄&gt;/inbox/</code></td><td>收件資料夾。app 沒開時丟進來的事會先放這裡，下次打開才收進去</td></tr>
 <tr><td><code>~/Desktop/FocusCat-回報-&lt;日期&gt;-&lt;時間&gt;.md</code></td><td>只有你按「回報問題」的「存到桌面」（或 <code>focus report --save</code>）時才會寫，內容就是你在預覽視窗看到的那份報告</td></tr>
 <tr><td><code>~/Library/Logs/FocusCat/placement.log</code></td><td>只記面板開在螢幕哪個位置，<strong>沒有任何待辦內容</strong>，最多留 200 行</td></tr>
-<tr><td><code>~/Library/Logs/FocusCat/update-check.log</code></td><td>只記「有新版時告訴我」沒問到新版的原因（例如連不上），<strong>沒有任何待辦內容</strong>，最多留 200 行。上次查的結果另外存在 FocusCat 的偏好設定（時間、查到沒有、版本號、網址、原因一句），給設定 ▸ 一般的「新版狀態」用</td></tr>
+<tr><td><code>~/Library/Application Support/FocusCat/Updates/</code></td><td>自動更新用的資料夾，只有你自己讀得到：下載好、檢查過的新版，換下來的舊版（<code>previous/</code>，只留一份），和新版打開時留的一個小記號。<strong>沒有任何待辦內容</strong></td></tr>
+<tr><td><code>~/Library/Logs/FocusCat/update-check.log</code></td><td>只記「有新版時告訴我」沒問到新版的原因（例如連不上）和自動更新沒換的原因，<strong>沒有任何待辦內容</strong>，最多留 200 行。上次查的結果另外存在 FocusCat 的偏好設定（時間、查到沒有、版本號、網址、原因一句），給設定 ▸ 一般的「新版狀態」用</td></tr>
 </table>
 <p>FocusCat 的設定（番茄幾分鐘、造型、快捷鍵、開會偵測開關）存在 macOS 自己的設定區，
 那裡<strong>只有設定，沒有待辦內容</strong>。</p>
@@ -1271,6 +1313,7 @@ GitHub 上只放三欄和版本那一行，完整的報告存到桌面，由你�
 <tr><td>行事曆網址</td><td>去讀你貼的那個 ICS 網址，只用來判斷「現在在不在開會」。讀回來的東西不會變成待辦、也不會存檔</td><td>關（沒貼網址就不啟用）</td></tr>
 <tr><td>Jira</td><td>只有 jira 外掛開著、而且三個環境變數都設好時，去查「指派給我、還沒完成」的卡，用來排建議順序。送出去的只有那句查詢和帳密</td><td>關</td></tr>
 <tr><td>GitHub 新版檢查</td><td>打開 FocusCat 時（上次查完不到 1 小時就等滿 1 小時）、之後每天一次（沒查到的話 1 小時後再試；設定 ▸ 一般按「檢查更新」也會問一次，查完 1 分鐘內不能再按），問 GitHub 最新版是幾號（見<a href="#update-notice">「有新版的時候」</a>）。送出去的只有這個請求本身和「FocusCat/版本號」，不帶任何你的資料。設定 ▸ 一般「有新版時告訴我」關掉就不問</td><td>開</td></tr>
+<tr><td>GitHub 下載新版</td><td>查到比手上新的版本、而且可以自動更新時，從 GitHub 上 FocusCat 的發行頁下載那一版（見<a href="#auto-update">「自動更新」</a>）。送出去的只有這個請求本身和「FocusCat/版本號」，不帶任何你的資料。「有新版時告訴我」關掉、或按過「這版先不要」就不下載</td><td>跟著「有新版時告訴我」</td></tr>
 <tr><td>GitHub 回報頁</td><td>按「回報問題」的「打開 GitHub」（或 <code>focus report --open --yes</code>；只打 <code>--open</code> 會先印預覽、不開網頁）時，叫瀏覽器打開 GitHub 的回報頁，報告預填在網址裡。你在 GitHub 按送出之前什麼都沒送；待辦標題只有自己勾了才在裡面</td><td>—</td></tr>
 </table>
 <p>另外兩個常被誤會的：<strong>麥克風</strong>只是問系統「現在有沒有人在用它」，<strong>不錄音也不讀音訊</strong>；
