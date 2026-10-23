@@ -66,7 +66,7 @@ ul.issues li{margin:.5em 0}
 <div class="wrap">
 <button class="theme-btn" type="button" id="themeBtn">切換深淺色</button>
 <h1>FocusCat 使用手冊</h1>
-<p class="sub">版本 0.6.18 · 2026-10-16 · 網頁版 · <a href="../">回到介紹頁</a></p>
+<p class="sub">版本 0.6.19 · 2026-10-23 · 網頁版 · <a href="../">回到介紹頁</a></p>
 
 <nav class="toc">
 <strong>目錄</strong>
@@ -77,7 +77,7 @@ ul.issues li{margin:.5em 0}
 <li><a href="#character-motion">角色什麼時候跑、什麼時候走</a></li>
 <li><a href="#pomodoro">番茄鐘</a></li>
 <li><a href="#break-reminder">休息提醒</a></li>
-<li><a href="#start-nudge">沒按開始時再提醒</a></li>
+<li><a href="#start-nudge">沒按開始時再提醒（0.6.16）</a></li>
 <li><a href="#current-focus">現在專注</a></li>
 <li><a href="#motion">面板的小動畫</a></li>
 <li><a href="#long-title">名稱太長的時候</a></li>
@@ -362,11 +362,13 @@ ul.issues li{margin:.5em 0}
 <ul>
 <li>第一行是名稱。點了會開網頁的，名稱後面有一個小箭頭。</li>
 <li>第二行左邊是外掛給的狀態字和一行說明。狀態字像是「輪到你」「可能卡住」「失敗」，一定寫出字來，不只靠顏色。</li>
+<li id="board-dots">狀態字前面有一個小點，只有兩種（0.6.19）：輪到你的那幾件是綠點，就算狀態字寫「失敗」也一樣；其他都是灰色空心點。紅色、橘色只在狀態字上，不在點上。</li>
+<li>有一列輪到你，狀態字卻寫「失敗了」，VoiceOver 會唸「失敗了，輪到你」。狀態字本來就是「輪到你」的，不會唸兩次。</li>
 <li>第二行右邊最多一顆按鈕，其他的收在「⋯」。</li>
 </ul>
 <p>按鈕只有三種：打開網址、內建的動作（拿到現在、加到接下來、放進在等）、交回外掛處理。交回外掛時，那一列寫「交回外掛中…」；失敗了寫紅字原因。</p>
 <p>外掛讀不到時，卡還在，寫出原因，上一次的內容留著。這一類一件都沒有時不畫這張卡。縮小版只寫一句，例如「建置 5 件，3 件輪到你」。</p>
-<figure><img src="img/focuscat-panel-board-light.png" alt="面板：「在等」下面一張「建置」卡，卡頭一把鎚子，右上「5 件・3 件輪到你」；每一列第一行是名稱，第二行是狀態字（輪到你、可能卡住、失敗、跑著、排隊中）和說明，有的列右邊有「打開連結」（前面一個地球圖示）或「重跑」，每列最右邊是「⋯」；「接下來」第一件底下有一行外掛寫的文字"><figcaption>類別看板（外掛與事情都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-board-light.png" alt="面板：「在等」下面一張「建置」卡，卡頭一把鎚子，右上「5 件・3 件輪到你」；每一列第一行是名稱，第二行是小點、狀態字（輪到你、可能卡住、失敗、跑著、排隊中）和說明；輪到你、可能卡住、失敗這三列是綠點（都輪到你），跑著、排隊中是灰色空心點，有的列右邊有「打開連結」（前面一個地球圖示）或「重跑」，每列最右邊是「⋯」；「接下來」第一件底下有一行外掛寫的文字"><figcaption>類別看板（外掛與事情都是假資料）</figcaption></figure>
 <figure><img src="img/focuscat-panel-board-dark.png" alt="深色模式的類別看板"><figcaption>深色模式</figcaption></figure>
 
 <h3 id="automation">自動化工作</h3>
@@ -379,19 +381,21 @@ ul.issues li{margin:.5em 0}
 這個資料夾外掛不會幫你建，第一次要自己建。</p>
 <p><strong>一件工作會是這幾種樣子：</strong></p>
 <table>
-<tr><th>這一列寫什麼</th><th>意思</th><th>通知你嗎</th></tr>
-<tr><td>名稱，例如「跑測試：編譯中（12 分）」</td><td>正在跑。腳本有寫現在在哪一步，名稱後面就接「：步驟中（N 分）」，N 是這一步做了多久</td><td>不通知</td></tr>
-<tr><td>「【排隊中】…」</td><td>排隊，還沒開始</td><td>不通知</td></tr>
-<tr><td>「【做完了】…」</td><td>做完了。會一直列著，等你的腳本把它從狀態檔拿掉</td><td>不通知</td></tr>
-<tr><td>「【要你處理】…」</td><td>停下來等你，後面接它寫的原因</td><td>通知</td></tr>
-<tr><td>「【失敗了】…」</td><td>失敗了，後面接它寫的原因</td><td>通知</td></tr>
-<tr><td>「【可能卡住了】…」</td><td>腳本太久沒更新狀態檔，後面寫幾分鐘沒動</td><td>通知</td></tr>
+<tr><th>第二行的狀態字</th><th>意思</th><th>通知你嗎</th></tr>
+<tr><td>「進行中」</td><td>正在跑。腳本有寫現在在哪一步，名稱後面就接「：步驟中（N 分）」，N 是這一步做了多久，例如「跑測試：編譯中（12 分）」</td><td>不通知</td></tr>
+<tr><td>「排隊中」</td><td>排隊，還沒開始</td><td>不通知</td></tr>
+<tr><td>「做完了」</td><td>做完了。會一直列著，等你的腳本把它從狀態檔拿掉</td><td>不通知</td></tr>
+<tr><td>「要你處理」</td><td>停下來等你。名稱後面接它寫的原因</td><td>通知</td></tr>
+<tr><td>「失敗了」</td><td>失敗了。名稱後面接它寫的原因</td><td>通知</td></tr>
+<tr><td>「可能卡住了」</td><td>腳本太久沒更新狀態檔，後面寫幾分鐘沒動</td><td>通知</td></tr>
 </table>
+<p id="automation-names">狀態只寫在第二行。名稱前面不再加「【要你處理】」這種字（0.6.19）。在終端機打 <code>focus suggest</code>，名稱前面照舊有這幾個字。</p>
 <p>通知只在一件工作「變成」要你處理、失敗了或可能卡住了的那一刻跳一次。第一次看到時就已經是這樣的，不跳。
 「設定 → 類別」裡「自動化」的「輪到我時通知」關掉的話，都不跳。
-狀態檔標成乾跑（只是試跑、不算數）的，名稱前面多「乾跑」兩個字，一律不通知。</p>
+狀態檔標成乾跑（只是試跑、不算數）的，名稱前面照舊有「【乾跑】」，一律不通知。</p>
+<p id="automation-icons"><strong>每一件從哪來，看第二行最左邊的小圖示</strong>（0.6.19）。圖示由寫狀態檔的腳本挑，同一份狀態檔的每一件都畫同一個，例如終端機、分支。沒挑或名字寫錯，就不畫圖，工作照樣列出來。舊的狀態檔不用改。</p>
 <p>有一份狀態檔讀不懂時，整張卡寫「讀不到」，並講是哪個檔，不會當成沒事。</p>
-<figure><img src="img/focuscat-panel-automation-light.png" alt="面板上的「自動化」卡，卡頭一道閃電，右上「4 件・1 件輪到你」：「【要你處理】登入頁文案 — 等你看過再合併」狀態是綠字「要你處理」，右邊一顆「看報告」，前面一個報表圖示；「跑測試：編譯中（12 分）」狀態「進行中」；「【排隊中】匯出報表」狀態「排隊中」；「【做完了】整理說明文件」狀態「做完了」，右邊一顆「看結果」，前面一個地球圖示；每一列的說明都是「每晚建置」"><figcaption>「自動化」卡：要你處理、在跑（寫了現在在哪一步）、排隊、做完各一件，有文件的那一列多一顆按鈕（工作與文件都是假資料）</figcaption></figure>
+<figure><img src="img/focuscat-panel-automation-light.png" alt="面板上的「自動化」卡，卡頭一道閃電，右上「5 件・2 件輪到你」。每一列第一行是名稱，名稱前面沒有【】字首；第二行最左邊是來源小圖示（第一列是分支，其他四列是終端機），接著一個小點和狀態字。「登入頁文案 — 等你看過再合併」綠點、綠字「要你處理」，右邊一顆「看報告」；「備份資料 — 磁碟空間不夠」綠點、紅字「失敗了」；「跑測試：編譯中（12 分）」灰色空心點「進行中」；「匯出報表」灰色空心點「排隊中」；「整理說明文件」灰色空心點「做完了」，右邊一顆「看結果」"><figcaption>「自動化」卡：名稱不帶狀態字首，第二行先是來源小圖示，再是小點和狀態字（工作與文件都是假資料）</figcaption></figure>
 <figure><img src="img/focuscat-panel-automation-dark.png" alt="深色模式的「自動化」卡"><figcaption>深色模式</figcaption></figure>
 <p><strong>按鈕打開要你看的東西。</strong>狀態檔可以帶幾份要你看的文件，例如報告或紀錄，最多 4 份。
 那一列會多幾顆按鈕，第一顆直接看得到，其他的收在「⋯」。按了就打開。</p>
@@ -620,7 +624,8 @@ app 會先問一次：<strong>兩邊各記各的</strong>，換過去看到的�
 <li><strong>設定</strong>：外掛自己要填的東西（網址、開關、選一個、勾好幾個）。一行字改完按「存」，開關、選單和勾選一改就存好。</li>
 <li><strong>維護</strong>：「移除…」把外掛資料夾丟進垃圾桶、開關記成關，先問一次。卡片、你存的設定都不動。附帶的外掛跟這一版附的不一樣時，這裡還有「換成附的版本…」（見<a href="#replace">下面</a>）。</li>
 </ul>
-<figure><img src="img/focuscat-settings-plugin-jira.png" alt="Jira 我的卡的頁面：最上面「‹ 外掛 Jira 我的卡」和一行說明「把指派給你、還沒做完的卡放進建議」；下面依序是啟用、放進建議、狀態（還沒跑過＋試跑）、多久跑一次（外掛預設（每 5 分鐘））、類別、設定（建議名稱的格式、收哪些狀態、不收哪些狀態，各有「讀取」）、維護（移除外掛）"><figcaption>設定 → 外掛 → Jira 我的卡（假外掛）</figcaption></figure>
+<figure><img src="img/focuscat-settings-plugin-jira.png" alt="Jira 我的卡的頁面：最上面「‹ 外掛 Jira 我的卡」和一行說明「把指派給你、還沒做完的卡放進建議」；下面依序是啟用、放進建議、狀態（還沒跑過＋試跑）、多久跑一次（外掛預設（每 5 分鐘））、類別、設定（建議名稱的格式；收哪些狀態、不收哪些狀態、「開始做」要移到哪個狀態，各有「讀取」）、維護（移除外掛）"><figcaption>設定 → 外掛 → Jira 我的卡（假外掛）</figcaption></figure>
+<p id="jira-upgrade"><strong>升級後看不到「輪到你」、「Jira」那張卡和「開始做」？</strong>已經裝好的 Jira 我的卡是你自己的那一份，FocusCat 升級時不會跟著換新。面板上會出現一行「附帶的外掛「Jira 我的卡」跟這一版 FocusCat 附的不同」，按旁邊的「換成附的版本…」；也可以到 設定 ▸ 外掛 ▸ Jira 我的卡，在最下面「維護」按「換成附的版本…」。舊的那份會整份留在備份，開關和設定不動。</p>
 <p id="jira-setup"><strong>第一次用 Jira 我的卡，要先給它 Jira 的帳號。</strong>還沒給的話，那一列會寫「讀不到：Jira env 缺（JIRA_URL／JIRA_USERNAME／JIRA_API_TOKEN）」。照下面做：</p>
 <ol>
 <li>到 Atlassian 建一個 API token：<a href="https://id.atlassian.com/manage-profile/security/api-tokens">id.atlassian.com/manage-profile/security/api-tokens</a>，按「Create API token」。token 只顯示一次，先複製起來。</li>
@@ -638,6 +643,15 @@ export JIRA_API_TOKEN="剛剛複製的 token"</pre>
 「不收哪些狀態」沒設的話，只排除 Done。以前在舊版設定頁勾過的狀態，升上 0.6.2 會自己搬過來，那一格旁邊標「（從 0.6.1 搬來）」。
 如果那一頁說存的設定讀不懂，按「清掉存的值」，舊版勾過的狀態會在那一刻搬回來。
 指令列是 <code>focus plugins settings jira options include_statuses</code>（看有哪些狀態）與 <code>set include_statuses '["in progress","in review"]'</code>。</p>
+<p id="jira-your-turn"><strong>輪到你的卡。</strong>Jira 外掛會讀每張卡的留言和改派紀錄。有人在留言標記你、你還沒回，那張卡就標「輪到你」。卡被別人改回給你、你還沒動過，也標「輪到你」。</p>
+<p>讀不到留言或改派紀錄時，那張卡標「查不到輪到誰」，後面寫原因。它不會被當成不輪到你。</p>
+<p><strong>Jira 有自己一張卡。</strong>指派給你的卡都在面板上的「Jira」那張卡，輪到你的排最前面。已經排進「接下來」的 Jira 卡留在原處，不會畫兩次。Jira 的卡也不再出現在「建議加進來」。
+不想要這張卡：到設定 ▸ 類別把「Jira」刪掉，或關掉「在面板上給「Jira」一張自己的卡」。刪掉之後卡回到「建議加進來」，輪到你的排最前面，理由寫「有人在等你」。</p>
+<figure><img src="img/focuscat-panel-jira-light.png" alt="面板「在等」下面一張「Jira」卡，卡頭一個公事包，右上「4 件・2 件輪到你」；前兩張綠字「輪到你」，說明分別是「有人在留言標記你」「卡被改回給你」；第三張寫 Jira 的狀態「In Progress」；第四張橘字「查不到輪到誰」和原因。每張右邊一顆「開始做」，旁邊是「⋯」，名稱後面有一個小箭頭"><figcaption>Jira 那張卡：輪到你的排前面，每張都有「開始做」（卡和名稱都是假資料）</figcaption></figure>
+<p><strong>「開始做」和「打開卡」。</strong>按「開始做」，FocusCat 先把卡移到你選的狀態，再把這張卡拿到「現在」、開始計時。「打開卡」收在「⋯」裡，用瀏覽器打開那張卡；點名稱也會打開。</p>
+<p>要移到哪個狀態，在 Jira 我的卡那一頁的「設定」選：「「開始做」要移到哪個狀態」按「讀取」，從 Jira 讀出有哪些狀態，只選一個。
+沒選的話，按「開始做」只開始計時、不改 Jira，面板上會寫去哪裡設。移不成時（沒權限、流程不允許、連不上）照樣開始計時，面板上寫沒移成的原因。</p>
+<p class="note">這是 Jira 外掛唯一會寫回 Jira 的時候：你按了「開始做」，而且選了狀態。其他時候它只讀。</p>
 <p>Jira 建議的名字也在那一頁改：「建議名稱的格式」填 <code>{卡號} {標題}</code>，建議就會變成「DEMO-1 卡片標題」；空著按「存」就回到只有標題。指令列是 <code>focus plugins settings jira set title_format "{卡號} {標題}"</code>。</p>
 <p>想自己寫一支，見<a href="#plugins">「自己寫外掛」</a>。清單上寫「還沒跑過」就是還沒跑；跑了但失敗會寫「讀不到：」加原因，兩種不會混在一起。
 開關開著卻掃不到那一支時，那一列會用紅字講（多半是那一支被移走或刪掉了）。</p>
@@ -645,6 +659,8 @@ export JIRA_API_TOKEN="剛剛複製的 token"</pre>
 這一版附的跟你裝的不一樣時，清單那一列寫「附的版本不同」。點進去，在「維護」按「換成附的版本…」，確認框會寫舊的搬到哪。
 舊的整份改名留在外掛資料夾（例如 <code>jira.bak-focuscat-20261004-093015</code>），開關和你存的設定都照舊。你自己改過的外掛也能換。
 指令列是 <code>focus plugins install &lt;名字&gt; --replace</code>。</p>
+<p><strong>新版多了自己的一區時</strong>（例如 Jira 那張卡），不用把外掛關掉再打開。換成附的版本那一刻，或 App 在背景更新的下一輪，就會建好那一區。
+你自己刪掉的一區不會再長回來。跟你自己建的類別同名時不建，照你的留著，並寫出原因。</p>
 <p><strong>升級後面板會先講。</strong>升級 FocusCat 之後，附帶的外掛跟這一版附的不同，面板上面那張卡會多一段橘字，一支一段。不會自己換。</p>
 <ul>
 <li>「換成附的版本…」：跟設定頁那顆一樣，先問一次。舊的整份留成備份，開關和存的設定照舊。</li>
@@ -920,6 +936,9 @@ focus plugins settings mine reset                # 這一支存的值全部清�
 <p>候選除了 <code>key</code>、<code>title</code>，還可以帶一行說明（<code>detail</code>）、網址（<code>url</code>）、狀態字（<code>status</code>）和按鈕（<code>actions</code>，最多 4 顆，只有打開網址、內建動作、交回外掛三種）。
 <code>plugin.json</code> 可以寫 <code>default_category</code> 建議放哪一類，或宣告它要的類別。
 <code>kind: "insight"</code> 是文字外掛：回一段文字而不是事情。欄位與規則寫在 外掛規格 <code>plugins.md</code> 的「類別」「狀態與按鈕」「文字外掛」幾節。</p>
+<p>交回外掛的按鈕做完時，外掛可以回 <code>{"start_timer":true}</code>。FocusCat 會把那一件拿到「現在」，再開始計時。
+也可以多回一個 <code>"problem"</code>，講沒做成的地方，那一列照你的字寫。回的格式不對時，那一列會講出來，也不開始計時。細節見 <code>docs/plugins.md</code>「交回外掛」（0.6.19）。</p>
+<p id="plugin-fields-0619">候選還可以多帶兩欄（0.6.19）：<code>icon</code> 是面板那一列第二行最左邊的來源小圖示，名字照<a href="#action-icons">按鈕圖示</a>那份清單；<code>panel_title</code> 是面板那一列要畫的名稱。終端機的 <code>focus suggest</code>、通知、「拿到現在」照舊用 <code>title</code>。</p>
 
 <h3 id="plugin-errors">常見的錯誤</h3>
 <table>
@@ -1304,14 +1323,14 @@ GitHub 上只放三欄和版本那一行，完整的報告存到桌面，由你�
 </table>
 <p>FocusCat 的設定（番茄幾分鐘、造型、快捷鍵、開會偵測開關）存在 macOS 自己的設定區，
 那裡<strong>只有設定，沒有待辦內容</strong>。</p>
-<p class="note">外掛讀的外部來源（例如 Jira），FocusCat <strong>只讀不寫</strong>，不會改你那邊的卡。</p>
+<p class="note">外掛讀的外部來源（例如 Jira），FocusCat <strong>只讀不寫</strong>，不會改你那邊的卡。只有一個例外：你在 Jira 的卡上按「開始做」，而且選了要移到哪個狀態，才會把那張卡移過去（見<a href="#jira-your-turn">「輪到你的卡」</a>）。</p>
 
 <h3>什麼時候會連上網路</h3>
-<p>只有下面這幾個地方。除了你自己按下的「回報問題」，都是「往內讀」，沒有任何一條把你的待辦送出去。</p>
+<p>只有下面這幾個地方。除了你自己按下的「回報問題」和 Jira 的「開始做」，都是「往內讀」，沒有任何一條把你的待辦送出去。</p>
 <table>
 <tr><th style="width:30%">哪裡</th><th>做什麼</th><th style="width:18%">預設</th></tr>
 <tr><td>行事曆網址</td><td>去讀你貼的那個 ICS 網址，只用來判斷「現在在不在開會」。讀回來的東西不會變成待辦、也不會存檔</td><td>關（沒貼網址就不啟用）</td></tr>
-<tr><td>Jira</td><td>只有 jira 外掛開著、而且三個環境變數都設好時，去查「指派給我、還沒完成」的卡，用來排建議順序。送出去的只有那句查詢和帳密</td><td>關</td></tr>
+<tr><td>Jira</td><td>只有 jira 外掛開著、而且三個環境變數都設好時，去查「指派給我、還沒完成」的卡，再讀每張卡的留言和改派紀錄，看輪到誰。送出去的只有查詢和帳密。你按「開始做」而且選了狀態時，多送一次「把這張卡移到那個狀態」</td><td>關</td></tr>
 <tr><td>GitHub 新版檢查</td><td>打開 FocusCat 時（上次查完不到 1 小時就等滿 1 小時）、之後每天一次（沒查到的話 1 小時後再試；設定 ▸ 一般按「檢查更新」也會問一次，查完 1 分鐘內不能再按），問 GitHub 最新版是幾號（見<a href="#update-notice">「有新版的時候」</a>）。送出去的只有這個請求本身和「FocusCat/版本號」，不帶任何你的資料。設定 ▸ 一般「有新版時告訴我」關掉就不問</td><td>開</td></tr>
 <tr><td>GitHub 下載新版</td><td>查到比手上新的版本、而且可以自動更新時，從 GitHub 上 FocusCat 的發行頁下載那一版（見<a href="#auto-update">「自動更新」</a>）。送出去的只有這個請求本身和「FocusCat/版本號」，不帶任何你的資料。「有新版時告訴我」關掉、或按過「這版先不要」就不下載</td><td>跟著「有新版時告訴我」</td></tr>
 <tr><td>GitHub 回報頁</td><td>按「回報問題」的「打開 GitHub」（或 <code>focus report --open --yes</code>；只打 <code>--open</code> 會先印預覽、不開網頁）時，叫瀏覽器打開 GitHub 的回報頁，報告預填在網址裡。你在 GitHub 按送出之前什麼都沒送；待辦標題只有自己勾了才在裡面</td><td>—</td></tr>
